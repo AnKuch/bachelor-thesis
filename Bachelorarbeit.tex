@@ -1,0 +1,96 @@
+\documentclass[pdftex,12pt,a4paper]{article}
+\usepackage{bachelorarbeit}
+\usepackage{subfigure}
+\usepackage[round]{natbib}
+
+% Zum Setzen von URLs
+\usepackage{color}
+\definecolor{darkred}{rgb}{.25,0,0}
+\definecolor{darkgreen}{rgb}{0,.2,0}
+\definecolor{darkmagenta}{rgb}{.2,0,.2}
+\definecolor{darkcyan}{rgb}{0,.15,.15}
+\usepackage[plainpages=false,bookmarks=true,bookmarksopen=true,colorlinks=true,
+  linkcolor=darkred,citecolor=darkgreen,filecolor=darkmagenta,
+  menucolor=darkred,urlcolor=darkcyan]{hyperref}
+
+% Hier die eigenen Daten eintragen
+\global\arbeit{Bachelorarbeit}
+\global\titel{Specification of a kernel}
+\global\bearbeiter{Andrea Kuchar}
+\global\betreuer{Dr Martin Hofmann, Ulrich Sch\"opp}
+\global\aufgabensteller{Dr Marin Hofmann}
+\global\abgabetermin{03-30-2018}
+\global\ort{Munich}
+\global\fach{Computer Science}
+
+\begin{document}
+	
+	% Cover
+	\deckblatt
+	
+	% Declaration of authorship
+	\erklaerung
+	
+	% Abstract
+	\clearpage
+	\pagenumbering{none}
+	\selectlanguage{english}
+	\section*{Abstract}
+	
+	 The thesis investigates the question if the specification of the seL4 access control system is strong enough to imply the Noninterference property. 
+Using the verification of the Take-Grant-Protection Model ["Verified Protection Model of the seL4 Microkernel" by Dhammika Elkaduwe, Gerwin Klein and Kevin Elphinstone] I deduce from it the Unwinding Theorem conditions of the nondeterministic intransitive Noninterference Model ["Noninterference for Operationg System Kernels" by Toby Murray, Daniel Matichuk, Matthew Brassil, Peter Gammie and Gerwin Klein]. 
+As the specifications and proofs of the take-grant model is developed in the theorem proof assistant Isabelle/HOL I use the same to verify the implication. 
+	
+	\clearpage
+	
+	% tableofcontents
+	\tableofcontents
+	\pagenumbering{Roman}
+	
+	\clearpage
+	% Hier beginnt der eigentliche Text
+	\section{Introduction}
+	\pagenumbering{arabic}
+	SeL4 is a high-assurance, high-performance microkernel, primarily developed, maintained and formally verified by NICTA (now Trustworthy Systems Group at Data61) for secure embedded systems.
+In this thesis, the access control specification in terms of a classical take-grant model is proven to be sound enough to deduce from it the Noninterference property.
+The classical security property of noninterference assures that there is no unwanted information flow within a system.
+For the proof of information flow security  \cite{NonOp} a variant of intransitive noninterference was applied.
+D. Elkaduwe, G. Klein and K. Elphinstone present in their paper \cite{TakeG} an abstract specification of the seL4 access control system in the context of a classical take-grant model and a formal proof of its decidability. With this, they showed how confined subsystems can be enforced.
+The presented security proofs are not yet connected with the actual kernel implementation.
+For the named noninterference property the authors \cite{NonOp} showed that it is preserved by refinement. So the goal of this thesis is the implication of the noninterference property from the take-grant specification. With this implication it is possible to create a connection with the actual kernel implementation.
+All proofs and specifications in this thesis are developed in the theorem proof assistant Isabelle/HOL
+
+	
+	\clearpage
+	
+	\section{Requirements}
+	\subsection{The seL4 Microkernel}
+	The seL4 microkernel provides three basic abstractions: threads, address spaces, inter-process comunication (IPC) and untyped memory. The abstractions are provided via named, first-class kernel objects. \\
+	Partitioned capabilites confer the authority over these objects and are stored inside kernel objects called CNodes. 
+	All system calls are invocations of capabilities and can either be data or other capabilities required to complete the system call. 
+	Beside the capabilities thread possess the have no intrinsic authority. System calls are authorised by the current distribution of capabilities. \\
+	An importan part of the seL4 design is that all memory - be it the memory directly used by an application or indirectly in the kernel, is fully accounted for yy capabilities. \\
+	At boot time, seL4 preallocates all memory required for ghe kernel to run - space for kernel code, data and kernel stack. The remainder of memory is divided into untyped memory (UM) objects. The initial thread, the resource manager, has full authority over these UM objects an is responsible for enforcing a suitable resource management policy and for boot strapping the rest of the system. \\
+	A parent capability to untyped memory can be refined into child capabilities to smaller sized untyped memory
+blocks or into other kernel objects via the retype operation on UM objects. \\
+Once a kernel object is created via the retype operation, the creator has full authority over the created object.
+	
+	
+	\cleardoublepage
+	\begin{thebibliography}{99}
+
+	\bibitem{NonOp}
+	T.\ Murray, D.\ Matichuk, M.\ Brassil, P.\ Gammie and G.\ Klein:	\\ 
+	\href{http://www.ssrg.nicta.com/publications/nicta_full_text/6004.pdf}{%
+		Noninterference for Operating System Kernels}. \\
+    International Conference on Certified Programs and Proofs, pp. 126–142, Kyoto, Japan, December, 2012
+
+	\bibitem{TakeG}
+	D.\ Elkaduwe, G.\ Klein and K.\ Elphinstone:	\\ 
+	\href{http://ts.data61.csiro.au/publications/nicta_full_text/1474.pdf}{%
+		Verified Protection Model of the seL4 Microkernel}. \\
+   	Technical Report NRL-1474, NICTA, October, 2007
+
+\end{thebibliography}
+	
+\end{document}
