@@ -18,6 +18,7 @@
 \RequirePackage{fancyhdr}
 \RequirePackage[nottoc]{tocbibind}
 \RequirePackage{graphicx}
+\RequirePackage{xspace}
 
 %%
 %% haeufig benutzte Symbole
@@ -70,14 +71,14 @@
   DER LUDWIG--MAXIMILIANS--UNIVERSIT\"AT M\"UNCHEN\\
   Lehr- und Forschungseinheit f\"ur theoretische Informatik
   
-  \vspace*{1cm}
+  \vspace*{2cm}
   
-  \includegraphics[width=0.3\textwidth]{./lmu_siegel.jpg}
+  \includegraphics[width=0.4\textwidth]{./Pictures/lmu_siegel.jpg}
   \end{center}
     
   \begin{center}
   
-      \vspace{2.5cm}\Large
+      \vspace{2cm}\Large
       \the\arbeit
     
       {\large in \the\fach}
@@ -103,13 +104,14 @@
 %% Ausgabe der Erklaerung ueber die selbstaendige Anfertigung
 %% einer Bachelorarbeit
 %%
-\newcommand{\erklaerung}{
+\newcommand{\declaration}{
   \begin{titlepage}
-  \addchaptertocentry{\authorshipname} % Add the declaration to the table of contents
+  
+ % \addchap{Declaration of authorship} % Add the declaration to the table of contents
     \vspace*{\fill}
     \parindent 0cm
     \begin{center}
-      \textbf{Declaration}
+      \textbf{Declaration of authorship}
 
       \vspace{1cm}
   
@@ -133,11 +135,3 @@
 }
 
 
-
-
-
-\newcommand{\emptypage}{
-\begin{titlepage}
-\vspace*{\fill}
-\end{titlepage}
-}

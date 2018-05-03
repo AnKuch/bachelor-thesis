@@ -1,5 +1,5 @@
 theory System_TI
-imports Main
+imports LaTeXsugar
 
 begin
 
