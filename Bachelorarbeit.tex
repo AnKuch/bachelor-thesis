@@ -10,6 +10,9 @@
 \usepackage{float}
 \usepackage{relsize}
 \usepackage{stmaryrd}
+\usepackage{latexsym}
+
+\setlength{\parindent}{0em} %Einrücken verhindern
 
 
 % Zum Setzen von URLs
@@ -278,7 +281,7 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 			&	|	&	SysRemove	entity$\_$id cap cap \\
 			&	|	&	SysRevoke entity$\_$id cap
 	\end{tabular}}} \\ \\
-	The entity$\_$id in each operation is the entity initiating the operation. The first named capability is the one tha is being invoked. The second capability for \texttt{SysCreate} points to the target entity for the new capability. For \texttt{SysGrant} it's the passed capability and for \texttt{SysRemove} it's the one that has to be removed. The rights set in \texttt{SysGrant} necessary for the initiating entity to have the option only to transport a subset of the authority it offers to the receiver. 	\\
+	The entity$\_$id in each operation is the entity initiating the operation. The first named capability is the one that is being invoked. The second capability for \texttt{SysCreate} points to the target entity for the new capability. For \texttt{SysGrant} it's the passed capability and for \texttt{SysRemove} it's the one that has to be removed. The rights set in \texttt{SysGrant} necessary for the initiating entity to have the option only to transport a subset of the authority it offers to the receiver. 	\\
 	The \texttt{diminish} function applies this mask on the given acces rights: \\ \\
 	{\relsize{-1}	
 	\texttt{
@@ -297,7 +300,7 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	| 	&	"legal 	&	(SysRemove e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ c$_1$ $\in$ caps$\_$of s e)" \\
 	|	&	"legal	&	(SysRevoke e c) s	&	=	&	isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e"
 	\end{tabular}}} \\ \\ \\
-	\texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}, \texttt{caps$\_$of} issues ge set of all capabilities  contained in the entity with the address \texttt{r} in state \texttt{s}. \\ \\
+	\texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}, \texttt{caps$\_$of} issues the set of all capabilities  contained in the entity with the address \texttt{r} in state \texttt{s}. \\ \\
 	The original executions of \texttt{SysRead} and \texttt{SysWrite} don't have an underlying function. For implying the noninterference property I have to include what happens if an entity reads or writes a value from another entity. For this purpose I defined a \texttt{readOperation} and a \texttt{writeOperation}. \\
 	The \texttt{step'} and \texttt{step} functions define the execution of a single system operation: \\ \\
 	{\relsize{-1}	
@@ -329,12 +332,113 @@ All proofs and specifications in this thesis are developed in the theorem proof 
             let & nullEntity = $\llparenthesis$cap = {}, eValue = NULL$\rrparenthesis$ ; \\
                 & newCap = $\llparenthesis$entity = next$\_$id s, rights = all$\_$rights$\rrparenthesis$; \\
                 & newTarget = $\llparenthesis$caps = {newCap} ∪ caps$\_$of s (entity c$_2$), eValue = NULL$\rrparenthesis$ \\
-             in & s$\llparenthesis$heap := (heap s)(entity c$_1$ := newTarget, next$\_$id s := nullEntity), next$\_$id := next$\_$id s+1$\rrparenthesis$"
+             in & s$\llparenthesis$heap := (heap s)(entity c$_2$ := newTarget, next$\_$id s := nullEntity), next$\_$id := next$\_$id s+1$\rrparenthesis$"
    \end{tabular} \\ \\ \\
     grantOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ rights set $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "grantOperation e c$_1$ c$_2$ \textit{R} s $\equiv$ \\
-  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$), eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}}
-
+  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$), eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"\\ \\ \\
+   removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
+  "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}} \\ \\ \\ 
+\section{Validation of Confidentiality}
+\textbf{Conditions:}
+\begin{itemize}
+\item e$\_1 \in$ H e$_2 \in$ L
+\item H equates a High level domain that implements the subsystem 'H'
+\item L equates a Low level domain that implements the subsystem 'L'
+\end{itemize}
+\subsection{writeOperation}
+\subsubsection{Write 1}\label{sec:Write 1}
+\begin{figure}[ht]
+		\includegraphics[width=1.1\textwidth]{./Pictures/write1Confidentality.png}
+		\caption[Confidentiality of Write 1]{Confidentiality of Write 1}
+	\label{fig:write1}
+\end{figure}	
+* s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
+** writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\
+*** writeOperation e$_2$ c$_1$ s = s' $\overset{\text{****}}{=}$ s \\
+**** legal(SysRead e$_2$ c$_1$) s = false \\ \\
+$\forall$ e$\in$L. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{***}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{**}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{***}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{***}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+\newpage
+\subsubsection{Write 2}\label{sec:Write 2}
+\begin{figure}[H]
+		\includegraphics[width=1.1\textwidth]{./Pictures/write2Confidentality.png}
+		\caption[Confidentiality of Write 2]{Confidentiality of Write 2}
+	\label{fig:write2}
+\end{figure}	
+* s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
+** writeOperation e$_2$ c$_1$ s changes e$\_1$ $\in$ H no e $\in$ L \\ 
+*** writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\ \\
+$\forall$ e$\in$L. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+\subsubsection{Write 3}\label{sec:Write 3}
+\begin{figure}[H]
+		\includegraphics[width=1.1\textwidth]{./Pictures/write3Confidentality.png}
+		\caption[Confidentiality of Write 3]{Confidentiality of Write 3}
+	\label{fig:write3}
+\end{figure}
+Precondition of confidentiality: 	s $\overset{\text{L}}{\sim}$ t $\wedge$ ... $\wedge$ (H  $\leadsto$ L $\rightarrow$ s $\overset{\text{H}}{\sim}$ t) \\
+In this case: H  $\leadsto$ L but not s $\overset{\text{H}}{\sim}$ t because write $\notin$ c$_1$ $\in$ s but write $\in$ c$_2$ $\in$ t \\
+$\Rightarrow$ false $\rightarrow$ true = true
+\subsubsection{Write 4}\label{sec:Write 4}
+\begin{figure}[H]
+		\includegraphics[width=1.1\textwidth]{./Pictures/write4Confidentality.png}
+		\caption[Confidentiality of Write 4]{Confidentiality of Write 4}
+	\label{fig:write4}
+\end{figure}
+* writeOperation e$_1$ c$_1$ s $\overset{\text{**}}{=}$ writeOperation e$_1$ c$_2$ t \\
+** c$_1$ = c$_2$ $\wedge$ value$\_$of e$_1$ s = value$\_$of e$_1$ t \\ \\
+$\forall$ e$\in$L. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{*}}{=}$  value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{*}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{*}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+\subsection{readOperation}
+\subsubsection{Read 1}\label{sec:Read 1}
+\begin{figure}[H]
+		\includegraphics[width=1.1\textwidth]{./Pictures/read1Confidentality.png}
+		\caption[Confidentiality of Read 1]{Confidentiality of Read 1}
+	\label{fig:read1}
+\end{figure}	
+* s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
+** readOperation e$_1$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\
+*** readOperation e$_1$ c$_1$ s = s' $\overset{\text{****}}{=}$ s \\
+**** legal(SysRead e$_1$ c$_1$) s = false \\ \\
+$\forall$ e$\in$L. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{***}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{**}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{***}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{***}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+\subsubsection{Read 2}\label{sec:Read 2}
+\begin{figure}[H]
+		\includegraphics[width=1.1\textwidth]{./Pictures/read2Confidentality.png}
+		\caption[Confidentiality of Read 2]{Confidentiality of Read 2}
+	\label{fig:read2}
+\end{figure}	
+* s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
+** readOperation e$_1$ c$_1$ s changes e$\_1$ $\in$ H no e $\in$ L \\ 
+*** readOperation e$_1$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\ \\
+$\forall$ e$\in$L. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
 	\cleardoublepage
 	\begin{thebibliography}{99}
 
