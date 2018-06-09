@@ -26,13 +26,17 @@
   menucolor=darkred,urlcolor=darkcyan]{hyperref}
 
 % Hier die eigenen Daten eintragen
-\global\arbeit{Bachelorarbeit}
-\global\titel{Specification of a kernel}
+\global\arbeit{Bachelor-Thesis}
+\global\titel{The Noninterference property proven for the access control specifation of the seL4 microkernel}
 \global\bearbeiter{Andrea Kuchar}
 \global\betreuer{Dr Martin Hofmann, Ulrich Sch\"opp}
 \global\abgabetermin{03-30-2018}
 \global\ort{Munich}
 \global\fach{Computer Science}
+
+\pgfdeclareimage [ width =15 cm ]{RemoveGraphic1}{RemoveGraphic1}
+\pgfdeclareimage [ width =15 cm ]{WriteGraphic1}{WriteGraphic1}
+\pgfdeclareimage [ width =15 cm ]{WriteGraphic2}{WriteGraphic2}
 
 \begin{document}
 	
@@ -239,20 +243,10 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	      & rights :: rights set
 	\end{tabular}} }
 	\\ \\ \\
-	In the paper an entity only include a set of capabilites. For my purpose I need the option to access the content of the entities. This ist because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
-	Therefore I extendet the original record \texttt{entity} by adding a \textit{value} modelled by a natural number. \\ \\
-	Original entity type: \\ \\
+	An entity has a set of capabilities: \\ \\
 	{\relsize{-1}
 	\textbf{record } \texttt{ 						
 	entity = caps :: cap set}} \\ \\
-	My entity type: \\ \\
-	{\relsize{-1}
-	\textbf{record} 
-	\texttt{
-	\begin{tabular}[t]{ll}
-	entity = & caps :: cap set \\
-			 & eValue :: nat														
-	\end{tabular}}} \\ \\ \\
 	The systems state includes two flields: 
 	\begin{enumerate}
 	\item The \texttt{heap}, which stores the entities of the system like an arry form address \texttt{0} up to and excluding \texttt{next$\_$id}.
@@ -340,21 +334,30 @@ All proofs and specifications in this thesis are developed in the theorem proof 
    removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}} \\ \\ \\ 
 \section{Validation of Confidentiality}
-\textbf{Conditions:}
+First I tried to validate confidentiality for the different system operations as they are defined in the take-grant-model. With this model it's impossible to decide whether a change of value has been recognized by another domain. \\
+In the paper an entity only include a set of capabilites. For my purpose I need the option to access the content of the entities. This ist because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
+Therefore I extendet the original record \texttt{entity} by adding a \textit{value} modelled by a natural number. \\ \\
+My entity type: \\ \\
+	{\relsize{-1}
+	\textbf{record} 
+	\texttt{
+	\begin{tabular}[t]{ll}
+	entity = & caps :: cap set \\
+			 & eValue :: nat 														
+	\end{tabular}}} \\ \\ \\
+After this change it was feasible to deside confidentiality for this model in the following way.\\ \\
+I took one Low-level-Subsystem and one High-level-Subsystem with entities in them and tested for different right-sets and different operations if the confidentiality-property holds. The following shows an example of this approach: \\ 
 \begin{itemize}
-\item e$\_1 \in$ H e$_2 \in$ L
+\item e$\_1 \in$ H, e$_2 \in$ L, c$_1$ $\in$ s,  c$_2$ $\in$ t
 \item H equates a High level domain that implements the subsystem 'H'
 \item L equates a Low level domain that implements the subsystem 'L'
 \end{itemize}
-\subsection{writeOperation}
-\subsubsection{Write 1}\label{sec:Write 1}
-\begin{figure}[ht]
-		\includegraphics[width=1.1\textwidth]{./Pictures/write1Confidentality.png}
-		\caption[Confidentiality of Write 1]{Confidentiality of Write 1}
-	\label{fig:write1}
-\end{figure}	
+\begin{figure}[H]
+\pgfuseimage{WriteGraphic1}
+\caption{Confidentiality of Write 1}
+\end{figure}
 * s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
-** writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\
+** writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H not e $\in$ L \\
 *** writeOperation e$_2$ c$_1$ s = s' $\overset{\text{****}}{=}$ s \\
 **** legal(SysRead e$_2$ c$_1$) s = false \\ \\
 $\forall$ e$\in$L. \\
@@ -363,14 +366,11 @@ $\forall$ e$\in$L. \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{***}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{***}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
-\newpage
-\subsubsection{Write 2}\label{sec:Write 2}
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' \\ \\
 \begin{figure}[H]
-		\includegraphics[width=1.1\textwidth]{./Pictures/write2Confidentality.png}
-		\caption[Confidentiality of Write 2]{Confidentiality of Write 2}
-	\label{fig:write2}
-\end{figure}	
+\pgfuseimage{WriteGraphic2}
+\caption{Confidentiality of Write 2}
+\end{figure}
 * s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
 ** writeOperation e$_2$ c$_1$ s changes e$\_1$ $\in$ H no e $\in$ L \\ 
 *** writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\ \\
@@ -381,9 +381,16 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+\subsection{Redesign of the take-grant-model}
+This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability an with that also an object in another domain:
+\begin{figure}[H]
+\pgfuseimage{RemoveGraphic1}
+\caption{No confidentiality for Remove}
+\end{figure}
+To research into this problem I desided to classify the entities by their types,corresponding to the kernel specification. 
 \subsubsection{Write 3}\label{sec:Write 3}
 \begin{figure}[H]
-		\includegraphics[width=1.1\textwidth]{./Pictures/write3Confidentality.png}
+	\includegraphics[width=1.1\textwidth]{./Pictures/write3Confidentality.png}
 		\caption[Confidentiality of Write 3]{Confidentiality of Write 3}
 	\label{fig:write3}
 \end{figure}
@@ -465,6 +472,12 @@ $\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$
 	\href{https://pdfs.semanticscholar.org/21ea/6c722535ed0a22175187796b43c114e14ee8.pdf}{%
 		Information flow control revisited: Noninfluence = Noninterference + Nonleakage}. \\
    	In \textit{9th ESORICS}, volume 3193 of \textit{LNCS}, pages 225-243, 2004.
+   	
+   	 	\bibitem{PhDseL4}
+	D.\ Elkaduwe:	\\ 
+	\href{https://ts.data61.csiro.au/publications/papers/Elkaduwe:phd.pdf}{%
+		A Principled Approach To Kernel Memory Management}. \\
+   	PhD Thesis, UNSW CSE, Sydney, Australia, March, 2010
 
 \end{thebibliography}
 	

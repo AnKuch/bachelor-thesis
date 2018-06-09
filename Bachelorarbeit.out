@@ -14,12 +14,10 @@
 \BOOKMARK [2][]{subsection.3.1}{Capabilities}{section.3}% 14
 \BOOKMARK [2][]{subsection.3.2}{System Operations}{section.3}% 15
 \BOOKMARK [1][]{section.4}{Validation of Confidentiality}{}% 16
-\BOOKMARK [2][]{subsection.4.1}{writeOperation}{section.4}% 17
-\BOOKMARK [3][]{subsubsection.4.1.1}{Write 1}{subsection.4.1}% 18
-\BOOKMARK [3][]{subsubsection.4.1.2}{Write 2}{subsection.4.1}% 19
-\BOOKMARK [3][]{subsubsection.4.1.3}{Write 3}{subsection.4.1}% 20
-\BOOKMARK [3][]{subsubsection.4.1.4}{Write 4}{subsection.4.1}% 21
-\BOOKMARK [2][]{subsection.4.2}{readOperation}{section.4}% 22
-\BOOKMARK [3][]{subsubsection.4.2.1}{Read 1}{subsection.4.2}% 23
-\BOOKMARK [3][]{subsubsection.4.2.2}{Read 2}{subsection.4.2}% 24
-\BOOKMARK [1][]{section*.16}{References}{}% 25
+\BOOKMARK [2][]{subsection.4.1}{Redesign of the take-grant-model}{section.4}% 17
+\BOOKMARK [3][]{subsubsection.4.1.1}{Write 3}{subsection.4.1}% 18
+\BOOKMARK [3][]{subsubsection.4.1.2}{Write 4}{subsection.4.1}% 19
+\BOOKMARK [2][]{subsection.4.2}{readOperation}{section.4}% 20
+\BOOKMARK [3][]{subsubsection.4.2.1}{Read 1}{subsection.4.2}% 21
+\BOOKMARK [3][]{subsubsection.4.2.2}{Read 2}{subsection.4.2}% 22
+\BOOKMARK [1][]{section*.17}{References}{}% 23
