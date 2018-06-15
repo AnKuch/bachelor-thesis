@@ -51,29 +51,28 @@
 \draw[->] (PT2.east) -- (P4.south west);
 \draw[->] (PT2.east) -- (P5.west);
 \node[draw, rectangle, rounded corners, fill=white, drop shadow={color=black}] (CNode2) [below right =of P5] {CNodes};
-\draw[->] (T3.south) -- (CNode2.north);
-\path (CNode2) edge [loop right,thick] node [right, midway, rectangle split,rectangle split parts=2]{%
+\draw[->] (T3.south) -- (CNode2.north)node [right, midway, rectangle split,rectangle split parts=2]{%
   imitate, mint, Remove,
   \nodepart{second}
   Revoke, Move, Recycle%
-  } (CNode2);
-\draw[->] (CNode2.west) -- (AEP.east) node[ midway , above ] {Wait Event};
+  };
+\draw[->] (CNode2.west) -- (AEP.east) node[ midway , above, left ] {Wait Event};
 \draw[black, dotted, rounded corners] (-2,-7) rectangle (13.75,5);
-\node[thick] at (-1,-7.5) {Domain 1};
-\draw[black, dotted, rounded corners] (15.5,-7) rectangle (30,5);
-\node[thick] at (16.5,-7.5) {Domain 2};
+\node[font=\bfseries] at (-1,-7.5) {Domain 1};
+\draw[black, dotted, rounded corners] (15.5,-7) rectangle (27,5);
+\node[font=\bfseries] at (16.5,-7.5) {Domain 2};
 \draw[dashed] (3,-1.5) -- (11,-1.5);
 \draw[dashed] (11,-1.5) -- (11,1);
 \draw[dashed] (11,1) -- (13,2);
 \draw[dashed] (13,2) -- (13,4);
 \draw[dashed] (13,4) -- (3,4);
 \draw[dashed] (3,4) -- (3,-1.5);
-\node[thick] at (4,4.25) {VSpace};
+\node[font=\bfseries] at (4,4.25) {VSpace};
 \draw[dashed] (15.75,-1.5) -- (22,-1.5) -- (22,1) -- (20.5,3) -- (19.5,3) -- (19.5,4) -- (15.75,4) -- (15.75,-1.5);
-\node[thick] at (16.75,4.25) {VSpace};
+\node[font=\bfseries] at (16.75,4.25) {VSpace};
 \draw[black, dashed] (11.25,-6) rectangle (13.5,-4.5);
-\node[thick] at (12,-6.5) {CSpace};
+\node[font=\bfseries] at (12,-6.5) {CSpace};
 \draw[black, dashed] (23,-3.25) rectangle (25.25,-1.75);
-\node[thick] at (23.75,-3.75) {CSpace};
+\node[font=\bfseries] at (23.75,-3.75) {CSpace};
 \end{tikzpicture}
 \end{document}

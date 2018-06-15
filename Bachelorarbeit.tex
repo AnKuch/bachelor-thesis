@@ -84,8 +84,9 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	
 	\section{Requirements}
 	\subsection{The seL4 Microkernel}
-	The seL4 \cite{sel4} ist a small operation system kernel. It's based on the in the 1990s developed L4 microkerel and provieds a minimal number of services to applications, such as abstraction for virutal address spaces, threads, inter process comunication (IPC). 
-	
+	The seL4 \cite{Manual} ist a small operation system kernel. It's based on the in the 1990s developed L4 microkernel and provieds a minimal number of services to applications, such as abstractions for virutal address spaces, threads, inter process comunication (IPC). \\
+	Each abstraction ist implemented by an kernel objected with methodes dependent on the abstraction it supplies. The objects can be named and accessed by capablities which are also stored in kernel objects. \\
+	Each capability contains an target object and potentially several access rights. By invoking a capability theat points to the kernel object  with an corresponding method name, applications can invoke system calls.
 	\subsubsection{System Calls}
 	The kernel provied severel system calls: \\
 	\begin{itemize}
@@ -99,6 +100,7 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	\end{itemize}
 	\newpage
 	\subsubsection{Kernel Objects}
+	
 	The kernel objects can be invoked by applications. The following showes a brief overview of the kernel implemented objects. 
 	\begin{itemize}
 	\item \textbf{CNodes} \\
@@ -479,6 +481,11 @@ $\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$
 		A Principled Approach To Kernel Memory Management}. \\
    	PhD Thesis, UNSW CSE, Sydney, Australia, March, 2010
 
+	\bibitem{Manual}
+	M.\ Grosvenor and A.\ Walker:	\\ 
+	\href{http://sel4.systems/Info/Docs/seL4-manual-latest.pdf}{%
+		seL4 Reference Manual}. \\
+   	Version 10.0.0
 \end{thebibliography}
 	
 \end{document}
