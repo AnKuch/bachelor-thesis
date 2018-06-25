@@ -85,10 +85,10 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	\section{Requirements}
 	\subsection{The seL4 Microkernel}
 	The seL4 \cite{Manual} ist a small operation system kernel. It's based on the in the 1990s developed L4 microkernel and provieds a minimal number of services to applications, such as abstractions for virutal address spaces, threads, inter process comunication (IPC). \\
-	Each abstraction ist implemented by an kernel objected with methodes dependent on the abstraction it supplies. The objects can be named and accessed by capablities which are also stored in kernel objects. \\
-	Each capability contains an target object and potentially several access rights. By invoking a capability theat points to the kernel object  with an corresponding method name, applications can invoke system calls.
+	Each abstraction ist implemented by an kernel object with methodes dependent on the abstraction it supplies. The objects can be named and accessed by capablities which are also stored in kernel objects called \textit{CNodes}. \\
+	Each capability contains an target object and potentially several access rights. The access rights can be \texttt{Read, Write, Grant} and \texttt{Create}. By invoking a capability that points to the kernel object  with an corresponding method name, applications can invoke system calls. As arguments these system calls can have data or other capabilities. 
 	\subsubsection{System Calls}
-	The kernel provied severel system calls: \\
+	Kernel provided system calls: \\
 	\begin{itemize}
 	\item \texttt{send()}: The system call argument ist delivered to the target object and the application is allowed to continue. If the target is not able to receive and/or process the arguments immediately, the sending application will be blocked until the arguments can be delivered.
 	\item \texttt{NBSend()}: Like \texttt{send()}. Exception: If the message is not deliverable it's silently droped.
@@ -100,14 +100,35 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	\end{itemize}
 	\newpage
 	\subsubsection{Kernel Objects}
-	
-	The kernel objects can be invoked by applications. The following showes a brief overview of the kernel implemented objects. 
+	The kernel implements several obejects to allocate the system operations \cite{Manual}.
 	\begin{itemize}
 	\item \textbf{CNodes} \\
-	Capabilities in seL4 are stored in kernel objects called \textbf{CNodes} with a fixed number of slots that can be empty or contain a capability. They have the following operations:
-	\texttt{Mint()}, \texttt{Copy()}, \texttt{Move()}, \texttt{Mutate()}, \texttt{Rotate()}, \texttt{Delete()}, \texttt{Revoke()}, \texttt{SaveCaller()}, \texttt{Recycle()}
+	The capabilities to invoke system calls are stored in \textbf{\textit{CNodes}}. When created they get a fixed numer of slots that can be empty or contain a capability. 
+	The kernel conducts a \textbf{Capability Derivation Tree} (CDT) to keep records about the created capabilities and their associations. This is required for the revoke operation. \\ 
+	They have the following operations:
+\begin{itemize}
+\item \texttt{Mint()} \\
+creates a copy of an existing capability. The new capability is placed in a cpecified CNode slot and may have less rights than the parent capability. In the CDT the capability is placed as child of the original one. 
+\item \texttt{Copy()} \\
+is similar to the Mint operation. But the new capability has the same rights as the original one and in the CDT it's represented as a sibling of it. 
+\item \texttt{Move()} \\
+can maneuver a capability between two specified slots. 
+\item \texttt{Mutate()} \\
+moves the capability similar to \texttt{Move()} and is able to reduce it's rights like it's done in \texttt{Mint()} without an orignal copy remaining.
+\item \texttt{Rotate()} \\
+moves two capabilities between three slots. Like two \texttt{Move()} operations. 
+\item \texttt{Delete()} \\
+can remove a capability from a specified slot.
+\item \texttt{Revoke()} \\
+is used to remove a complete part of the CDT. From a defined capability on al children from the capability in the CDT are removed with \texttt{Delete()}. 
+%TODO
+\item \texttt{SaveCaller()}, 
+\item \texttt{Recycle()}
+\end{itemize}
 	\item \textbf{IPC Endpoints} \\
-	For the \textit{interprocess communication} between threads the kernel supports synchronous (EP) and asynchronous (AsyncEP) endpoints. The capabilities to that endpoints can be limited as send-only or receive-only or be specified to pass capabilities through the endpoint.  
+	Endpoints are used for the \textit{interprocess communication} between threads. They can be devided into \textbf{synchronous (EP)} and \textbf{asynchronous (AEP)} endpoints. 
+	The sceduling in seL4 works as an domain %TODO ...
+	Interprocess communication between different domains is only realised by AEPs. And generally capabilities to endpoint can be restricted to be read - or write - only. 
 	\item \textbf{TCP} \\
 	The \textit{thread control block} object represents a thread of execution in seL4. It needs a CSpace (provides the capabilities required to manipulate the kernel objects) and a VSpace (provides the virtual memory environment required to contain the code and data application). The connections are illustrated in Figure \ref{fig:intapp}. \\
 	The TCB object has the following methods: \\
@@ -384,12 +405,16 @@ $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
 \subsection{Redesign of the take-grant-model}
-This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability an with that also an object in another domain:
+This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability and with that also an object in another domain:
 \begin{figure}[H]
 \pgfuseimage{RemoveGraphic1}
 \caption{No confidentiality for Remove}
 \end{figure}
-To research into this problem I desided to classify the entities by their types,corresponding to the kernel specification er. 
+To research into this problem I desided to classify the entities by their types,corresponding to the kernel specification \\ %TODO : Fußnote zu Typen in Tabelle S. 68 PhDseL4. 
+The following table showes the different object types with their methods and the corresponding take-grant system calls. 
+\begin{tabular}{l}
+
+\end{tabular}
 \subsubsection{Write 3}\label{sec:Write 3}
 \begin{figure}[H]
 	\includegraphics[width=1.1\textwidth]{./Pictures/write3Confidentality.png}
