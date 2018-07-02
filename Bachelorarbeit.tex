@@ -11,6 +11,7 @@
 \usepackage{relsize}
 \usepackage{stmaryrd}
 \usepackage{latexsym}
+\usepackage[justification=centering]{caption}
 
 \setlength{\parindent}{0em} %Einrücken verhindern
 
@@ -34,9 +35,18 @@
 \global\ort{Munich}
 \global\fach{Computer Science}
 
-\pgfdeclareimage [ width =15 cm ]{RemoveGraphic1}{RemoveGraphic1}
-\pgfdeclareimage [ width =15 cm ]{WriteGraphic1}{WriteGraphic1}
-\pgfdeclareimage [ width =15 cm ]{WriteGraphic2}{WriteGraphic2}
+\geometry{
+  left=2.5cm,
+  right=3.5cm,
+  top=2cm,
+  bottom=2cm,
+}
+
+\pgfdeclareimage [ width =17 cm ]{RemoveGraphic1}{Pictures/RemoveGraphicOld/RemoveGraphic1}
+\pgfdeclareimage [ width =17 cm ]{WriteGraphic1}{Pictures/WriteGraphicOld/WriteGraphic1}
+\pgfdeclareimage [ width =17 cm ]{WriteGraphic2}{Pictures/WriteGraphicOld/WriteGraphic2}
+\pgfdeclareimage [ width =17 cm ]{CreateUMO}{Pictures/CreateUMO/CreateUMO}
+\pgfdeclareimage [ width =17 cm ]{OverviewObjects}{Pictures/OverviewObjects/OverviewObjectDomains}
 
 \begin{document}
 	
@@ -99,7 +109,7 @@ All proofs and specifications in this thesis are developed in the theorem proof 
 	\item \texttt{ReplyWait()}: As a combination of \texttt{Reply()} and \texttt{Wait()} it's efficent for the common case that replying to a request and waiting for the next can be performed in a single system call. 
 	\end{itemize}
 	\newpage
-	\subsubsection{Kernel Objects}
+	\subsubsection{Kernel Objects}\label{sec:KernelObjects}
 	The kernel implements several obejects to allocate the system operations \cite{Manual}.
 	\begin{itemize}
 	\item \textbf{CNodes} \\
@@ -356,6 +366,7 @@ is used to remove a complete part of the CDT. From a defined capability on al ch
   s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$), eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"\\ \\ \\
    removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}} \\ \\ \\ 
+\newpage
 \section{Validation of Confidentiality}
 First I tried to validate confidentiality for the different system operations as they are defined in the take-grant-model. With this model it's impossible to decide whether a change of value has been recognized by another domain. \\
 In the paper an entity only include a set of capabilites. For my purpose I need the option to access the content of the entities. This ist because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
@@ -382,8 +393,8 @@ I took one Low-level-Subsystem and one High-level-Subsystem with entities in the
 * s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
 ** writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H not e $\in$ L \\
 *** writeOperation e$_2$ c$_1$ s = s' $\overset{\text{****}}{=}$ s \\
-**** legal(SysRead e$_2$ c$_1$) s = false \\ \\
-$\forall$ e$\in$L. \\
+**** legal(SysRead e$_2$ c$_1$) s = false \\ \\ \\ \\
+$\forall$ e$\in$L. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{***}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{**}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{***}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
@@ -403,76 +414,85 @@ $\forall$ e$\in$L. \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t'
 \subsection{Redesign of the take-grant-model}
-This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability and with that also an object in another domain:
+This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability and with that also an object in another domain without any restrictions:
 \begin{figure}[H]
 \pgfuseimage{RemoveGraphic1}
 \caption{No confidentiality for Remove}
 \end{figure}
-To research into this problem I desided to classify the entities by their types,corresponding to the kernel specification \\ %TODO : Fußnote zu Typen in Tabelle S. 68 PhDseL4. 
-The following table showes the different object types with their methods and the corresponding take-grant system calls. 
-\begin{tabular}{l}
-
+To research into this problem I desided to classify the entities by their types,corresponding to the kernel specification \cite{Manual} \\ 
+The following table showes the different object types with the different operations executable on them and the corresponding take-grant system calls. \\ 
+\begin{table}[H]
+\begin{tabular}[h]{|l|c|c|}
+\hline
+Capability Type & Concrete Kernel & protection model \\
+\hline
+\hline
+Untyped & Retype & sequence of \textit{SysCreate} \\
+& Revoke & \textit{SysRevoke} \\
+\hline
+TCB & TreadControl & \textit{SysNoOP, SysGrant} \\
+& Exchange Registers & \textit{SystWrite} or \textit{SysRead} \\
+& Yield & \textit{SysNoOP} \\
+\hline
+Synchronous IPC & Send IPC & \textit{SysWrite} or \textit{SysNoOP} \\
+(Endpoint) & Wait IPC & \textit{SysRead} \\
+& Grant IPC & \textit{SysWrite, SysGrant} or \textit{SysNoOP} \\
+\hline
+Asynchronous IPC & Send Event & \textit{SysWrite} \\
+(AsyncEndpoint) & Wait Event & \textit{SysRead} \\
+\hline
+CNode & imitate & \textit{SysGrant} \\
+& mint & \textit{SysGrant} \\
+& Remove & \textit{SysRemove} \\
+& Revoke & \textit{SysRevoke} \\
+& Move & \textit{SysGrant, SysRemove} \\
+& Recycle & \textit{SysRevoke}, sequence of \textit{SysRemove} \\
+\hline
+VSpace & Install Mapping & \textit{SysGrant} \\
+& Remove Mapping & \textit{SysRemove} \\
+& Remap & \textit{SysRemove, SysGrant} \\
+& initialise & \textit{SysNoOP} \\
+\hline
+Frame & - & - \\
+\hline
+InterruptController & Register interrupt & \textit{SysGrant} \\
+& Unregister interrupt & \textit{SysRemove} \\
+\hline
+InterruptHandler & Acknowledge intrrupt & \textit{SysWrite} \\
+\hline
+seL4 ASID Table & Associate VSpace & \textit{SysNoOP} \\
+& Disassociate VSpace & \textit{SysNoOP} \\
+\hline
 \end{tabular}
-\subsubsection{Write 3}\label{sec:Write 3}
+\caption{Relationship: operation of concrete kernel $\longleftrightarrow$ of protection model \cite{PhDseL4}}
+\end{table}
+For the validation I took a subsystem (SS1) of one Domain (D1) an another subsystem (SS2) of second Domain (D2). \\
+As mentioned in chapter \ref{sec:KernelObjects} (Kernel Objects), the only communication between Domains goes through \textit{Shared Pages} or \textit{Asynchronous Endpoints}. \\
+The following picture shows an example of how the objects and methods can be placed in the domains and how the connection to \textit{Shared Pages} and \textit{Asynchronous Endpoints} is implemented if the information is allowed to flow from Domain 1 to Domain 2.
 \begin{figure}[H]
-	\includegraphics[width=1.1\textwidth]{./Pictures/write3Confidentality.png}
-		\caption[Confidentiality of Write 3]{Confidentiality of Write 3}
-	\label{fig:write3}
+\pgfuseimage{OverviewObjects}
+\caption{Objects and Methods in the kernel}
 \end{figure}
-Precondition of confidentiality: 	s $\overset{\text{L}}{\sim}$ t $\wedge$ ... $\wedge$ (H  $\leadsto$ L $\rightarrow$ s $\overset{\text{H}}{\sim}$ t) \\
-In this case: H  $\leadsto$ L but not s $\overset{\text{H}}{\sim}$ t because write $\notin$ c$_1$ $\in$ s but write $\in$ c$_2$ $\in$ t \\
-$\Rightarrow$ false $\rightarrow$ true = true
-\subsubsection{Write 4}\label{sec:Write 4}
+\subsubsection{Create}\label{sec:Create}
+Create corresponds to the \textit{Retype} operation on untyped memory. Each Domain has a own and fixed section of memory. So so UMO for \textit{Retype} is located in the same Domain as the implementing entity. Also the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
+\begin{flushleft}
 \begin{figure}[H]
-		\includegraphics[width=1.1\textwidth]{./Pictures/write4Confidentality.png}
-		\caption[Confidentiality of Write 4]{Confidentiality of Write 4}
-	\label{fig:write4}
+\pgfuseimage{CreateUMO}
+\caption{Confidentiality for Create}
 \end{figure}
-* writeOperation e$_1$ c$_1$ s $\overset{\text{**}}{=}$ writeOperation e$_1$ c$_2$ t \\
-** c$_1$ = c$_2$ $\wedge$ value$\_$of e$_1$ s = value$\_$of e$_1$ t \\ \\
-$\forall$ e$\in$L. \\
+\end{flushleft}
+* s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+** createOperation e$_2$ c$_1$ c$_2$ t creates e$_3$ $\in$ D2 and does not change or create any e $\in$ D1 \\ \\
+$\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{*}}{=}$  value$\_$of t' e \\
-$\wedge$ & caps$\_$of s' e $\overset{\text{*}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{*}}{=}$ subSys t' e
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{**}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
-\subsection{readOperation}
-\subsubsection{Read 1}\label{sec:Read 1}
-\begin{figure}[H]
-		\includegraphics[width=1.1\textwidth]{./Pictures/read1Confidentality.png}
-		\caption[Confidentiality of Read 1]{Confidentiality of Read 1}
-	\label{fig:read1}
-\end{figure}	
-* s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
-** readOperation e$_1$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\
-*** readOperation e$_1$ c$_1$ s = s' $\overset{\text{****}}{=}$ s \\
-**** legal(SysRead e$_1$ c$_1$) s = false \\ \\
-$\forall$ e$\in$L. \\
-\begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{***}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{**}}{=}$ value$\_$of t' e \\
-$\wedge$ & caps$\_$of s' e $\overset{\text{***}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{***}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
-\end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
-\subsubsection{Read 2}\label{sec:Read 2}
-\begin{figure}[H]
-		\includegraphics[width=1.1\textwidth]{./Pictures/read2Confidentality.png}
-		\caption[Confidentiality of Read 2]{Confidentiality of Read 2}
-	\label{fig:read2}
-\end{figure}	
-* s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
-** readOperation e$_1$ c$_1$ s changes e$\_1$ $\in$ H no e $\in$ L \\ 
-*** readOperation e$_1$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\ \\
-$\forall$ e$\in$L. \\
-\begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
-$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
-\end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' 
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+
 	\cleardoublepage
 	\begin{thebibliography}{99}
 
