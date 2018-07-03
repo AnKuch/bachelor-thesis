@@ -422,7 +422,7 @@ This procedure worked until I came to the remove-operation. There I got the prob
 \caption{No confidentiality for Remove}
 \end{figure}
 To research into this problem I desided to classify the entities by their types,corresponding to the kernel specification \cite{Manual} \\ 
-The following table showes the different object types with the different operations executable on them and the corresponding take-grant system calls. \\ 
+The following table showes the different object types with their different executable operations and the corresponding take-grant system calls. \\ 
 \begin{table}[H]
 \begin{tabular}[h]{|l|c|c|}
 \hline
@@ -476,7 +476,8 @@ The following picture shows an example of how the objects and methods can be pla
 \caption{Objects and Methods in the kernel}
 \end{figure}
 \subsubsection{Create}\label{sec:Create}
-Create corresponds to the \textit{Retype} operation on untyped memory. Each Domain has a own and fixed section of memory. So so UMO for \textit{Retype} is located in the same Domain as the implementing entity. Also the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
+Create corresponds to the \textit{Retype} operation on untyped memory. Each Domain has a own and fixed section of memory. So so UMO for \textit{Retype} is located in the same Domain as the implementing entity. Also the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  \\
+The following picture shows 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{CreateUMO}
@@ -492,6 +493,7 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+
 
 	\cleardoublepage
 	\begin{thebibliography}{99}
