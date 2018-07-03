@@ -17,5 +17,7 @@
 \contentsline {subsection}{\numberline {3.2}System Operations}{9}{subsection.3.2}
 \contentsline {section}{\numberline {4}Validation of Confidentiality}{11}{section.4}
 \contentsline {subsection}{\numberline {4.1}Redesign of the take-grant-model}{12}{subsection.4.1}
-\contentsline {subsubsection}{\numberline {4.1.1}Create}{14}{subsubsection.4.1.1}
-\contentsline {section}{References}{16}{section*.16}
+\contentsline {subsection}{\numberline {4.2}Validation with the new model}{14}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Create}{14}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2}Grant}{15}{subsubsection.4.2.2}
+\contentsline {section}{References}{17}{section*.17}

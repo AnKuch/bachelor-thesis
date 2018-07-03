@@ -47,6 +47,8 @@
 \pgfdeclareimage [ width =17 cm ]{WriteGraphic2}{Pictures/WriteGraphicOld/WriteGraphic2}
 \pgfdeclareimage [ width =17 cm ]{CreateUMO}{Pictures/CreateUMO/CreateUMO}
 \pgfdeclareimage [ width =17 cm ]{OverviewObjects}{Pictures/OverviewObjects/OverviewObjectDomains}
+\pgfdeclareimage [ width =17 cm ]{GrantTCB}{Pictures/GrantTCB/GrantTCB}
+
 
 \begin{document}
 	
@@ -475,9 +477,16 @@ The following picture shows an example of how the objects and methods can be pla
 \pgfuseimage{OverviewObjects}
 \caption{Objects and Methods in the kernel}
 \end{figure}
+\subsection{Validation with the new model}\label{sec:ValNew}
+For the Validation I examine each operation of the protection model and distinguish therefor between the different object types that are able to execute the named operation. \\
+I assume that information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. \\ \\
+$\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1 \\ \\
+Further I assume that state s is equivalent to state t for Domain 1. \\ \\
+$\Rightarrow$ s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ \\
+In this chapter I show that the criteria for the equvalence relation still holds in Domain 1, between s' and t', after every type of operation. 
 \subsubsection{Create}\label{sec:Create}
 Create corresponds to the \textit{Retype} operation on untyped memory. Each Domain has a own and fixed section of memory. So so UMO for \textit{Retype} is located in the same Domain as the implementing entity. Also the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  \\
-The following picture shows 
+The following picture shows how a create operation in one Domain changes or not changes the equivalence criteria in the other domain that is not allowed to get infomation from the primer one. 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{CreateUMO}
@@ -485,16 +494,34 @@ The following picture shows
 \end{figure}
 \end{flushleft}
 * s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
-** createOperation e$_2$ c$_1$ c$_2$ t creates e$_3$ $\in$ D2 and does not change or create any e $\in$ D1 \\ \\
+** createOperation e$_2$ c$_1$ c$_2$ s creates e$_3$ $\in$ D2 and does not change or create any e $\in$ D1 \\
+*** createOperation e$_2$ c$_1$ c$_2$ t does not change or create any entity because create $\notin$ c$_1$ $\vee$ grant $\notin$ c$_2$    $\Rightarrow$    t=t' \\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{**}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{**}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{**}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
 
-
+\subsubsection{Grant}\label{sec:Grant}
+Grant operation can only be done inside a domain from a TCB, Synchronous IPC, CNode, VSpace or Interrupt Controller object. The only object types that are able to have contact to different domains are Async IPC and Shared Page objects. So I  show that any grant operation inside a Domain does not affect the values, capabilities or entities of another domain. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{GrantTCB}
+\caption{Confidentiality for Grant}
+\end{figure}
+\end{flushleft}
+* s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+** grantOperation e$_2$ c$_1$ c$_2$ R s creates c$_3$ $\in$ D2 and does not change or create any capability $\in$ D1 \\ 
+*** grantOperation e$_2$ c$_1$ c$_2$ R t does not change or create any capability because grant $\notin$ c$_1$ $\Rightarrow$ t=t' \\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
 	\cleardoublepage
 	\begin{thebibliography}{99}
 
