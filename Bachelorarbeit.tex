@@ -30,8 +30,8 @@
 \global\arbeit{Bachelor-Thesis}
 \global\titel{Noninterference in the take-grant model for the seL4 microkernel}
 \global\bearbeiter{Andrea Kuchar}
-\global\betreuer{Dr Martin Hofmann, Ulrich Sch\"opp}
-\global\abgabetermin{03-30-2018}
+\global\betreuer{Dr Martin Hofmann, PD Dr Ulrich Sch\"opp}
+\global\abgabetermin{07-27-2018}
 \global\ort{Munich}
 \global\fach{Computer Science}
 
@@ -98,16 +98,26 @@ As the specifications and proofs of the take-grant model is developed in the the
 	% Hier beginnt der eigentliche Text
 	\section{Introduction}
 	\pagenumbering{arabic}
-	SeL4 is a high-assurance, high-performance microkernel, primarily developed, maintained and formally verified by NICTA (now Trustworthy Systems Group at Data61) for secure embedded systems.
-In this thesis, the access control specification in terms of a classical take-grant model is proven to be sound enough to deduce from it the Noninterference property.
-The classical security property of noninterference assures that there is no unwanted information flow within a system.
-For the proof of information flow security  \cite{NonOp} a variant of intransitive noninterference was applied.
-D. Elkaduwe, G. Klein and K. Elphinstone present in their paper \cite{TakeG} an abstract specification of the seL4 access control system in the context of a classical take-grant model and a formal proof of its decidability. With this, they showed how confined subsystems can be enforced.
-The presented security proofs are not yet connected with the actual kernel implementation.
-For the named noninterference property the authors \cite{NonOp} showed that it is preserved by refinement. So the goal of this thesis is the implication of the noninterference property from the take-grant specification. With this implication it is possible to create a connection with the actual kernel implementation.
-All proofs and specifications in this thesis are developed in the theorem proof assistant Isabelle/HOL
-
-	
+	\subsection{Motivation}
+Nowadays our society becomes increasingly depended on computer systems. In more and more areas small computers take over the control. If it's our SmartTV, car or the control of the lights in our home. We are forced to confront our self with the topic how secure and reliable these systems are. \\
+Especially if we entrust a computer our live this gets an essential meaning. We want to expect from board-computers in planes or cars that they are free from defects and not so easily hackable. This is not the reality. We know about cars whose board-computers simple can be taken over with a smartphone in the car next to it. \\
+A key component in developing secure systems is the operating-system (OS) kernel of the system. The kernel has full access to hardware resources. One defect in the kernel can have the consequence that the security and reliability of the entire system can be lost. \\
+The weakness of most previous kernels were their huge amount of code and mostly their monolithic design. This makes it impossible to review or verify the code. The weak point of the monolithic design is that not only fundamental functions as Interprocesscommunication, scheduling or memory management are implemented in the kernel mode but also functions like driver for hardware or virtual filesystems are integrated in it. This makes the system more vulnerable for bugs. One crashed modul can lead to a crash of the entire system. \\
+The motivation behind microkernels is to reduce the  possibility of bugs in the kernel code through reducing the kernelcode to an amount as minimal as possible and excluding functions from the kernel mode. With less code it becomes more feasible to guarantee the absence of defects within the kernel through formal verification.\\
+Due to the fact that we feed our smartphones, tablets, board-computers, ... with growing amounts of sensitive informations like bank data, passwords, e-mails, chats, the significance of Security in the area of embedded systems increases. \\
+Through isolation of small subsystems, like it is done in microkernels, the security already can be raised to a higher level. With testing one can depict an huge amount of bugs. But as Dijkstra said "Testing can only show the presence, not the absence, of bugs." \cite{EngTec} \\
+Like I already mentioned less lines of codes make it more feasible to verify it relating to its specification. 
+The seL4 microkernel is the first microkernel whose correctness is formally verified. It's a high-assurance, high-performance microkernel, primarily developed, maintained and formally verified by NICTA (now Trustworthy Systems Group at Data61) for secure embedded systems. It's security model is based on the take-grant model, which was extended for being able to reason about kernel memory consumption of components. 
+	\subsection{Aim of the thesis}
+	With this thesis I want to show or disprove that the extended take-grant model is strong enough to show the noninterference property on it. \\
+	The security property of noninterference ensures that there is no unwanted information flow within a system. The take-grant model is an access control model. Therefore its duty is to "control" the access or the transfer of access on objects of a system. The noninterference property assured that there is no way information can flow to undesirable parties. Also with information about third parties that have access. \\
+The thesis should investigate the different systemoperations of the model regarding the thereby occurring information flow. \\
+With the collected information I want to decide two questions. First if the noninterference property can be verified with the existing model and second if the noninterference property is fulfilled. 
+\subsection{Structure of the thesis}
+First I want to give an overview of the seL4 kernel, his set-up, the implementation of services and the memory management. For a better comprehension I then give a brief overview of the take-grant and the noninterference model. 
+In chapter 3 the formalisation of the take-grant model takes place and in chapter 4 it's the formalisation of the noninterference model. \\
+From chapter 5 on I dedicate myself to the validation of the noninterference property. In chapter 7 the validation is subdivided into the different systemoperations. To show the property for the model I have to extend the model in chapter 6. \\
+Finally I'll take a short resume and give a prospect on the current status of the seL4 project and the possibilities to enhance this topic. 
 	\clearpage
 	
 	\section{Requirements}
@@ -149,16 +159,14 @@ moves two capabilities between three slots. Like two \texttt{Move()} operations.
 can remove a capability from a specified slot.
 \item \texttt{Revoke()} \\
 is used to remove a complete part of the CDT. From a defined capability on al children from the capability in the CDT are removed with \texttt{Delete()}. 
-%TODO
-\item \texttt{SaveCaller()}, 
-\item \texttt{Recycle()}
+\item \texttt{Recycle()} \\
+revokes all outstanding capabilities and reconfigures teh object to its initial state. So the object can be reused in for another purpose.
 \end{itemize}
 	\item \textbf{IPC Endpoints} \\
 	Endpoints are used for the \textit{interprocess communication} between threads. They can be devided into \textbf{synchronous (EP)} and \textbf{asynchronous (AEP)} endpoints. 
-	The sceduling in seL4 works as an domain %TODO ...
-	Interprocess communication between different domains is only realised by AEPs. And generally capabilities to endpoint can be restricted to be read - or write - only. 
+	Threads in the seL4 kernel are grouped into security domains. Interprocess communication between different domains is only realised via AEPs. Generally capabilities to endpoints can be restricted to be read - or write - only. 
 	\item \textbf{TCP} \\
-	The \textit{thread control block} object represents a thread of execution in seL4. It needs a CSpace (provides the capabilities required to manipulate the kernel objects) and a VSpace (provides the virtual memory environment required to contain the code and data application). The connections are illustrated in Figure \ref{fig:intapp}. \\
+	A thread of execution in seL4 is represented by a \textit{thread control block}. It's allways associated with a CSpace (provides the capabilities required to manipulate the kernel objects) and a VSpace (provides the virtual memory environment required to contain the code and data application). \\
 	The TCB object has the following methods: \\
 	\texttt{CopyRegisters(), ReadRegisters(), WriteRegisters(), SetPriority(), SetIPCBuffer(), SetSpace(), Configure(), Suspend(), Resume()}
 	
@@ -170,15 +178,16 @@ is used to remove a complete part of the CDT. From a defined capability on al ch
 	\end{figure}
 	
 	\item \textbf{Virtual Memory}\\
-	A \textit{virtual address space} (VSpace) contains objects for managing virtual memory which largely directly correspond to those of the hardware: \\
-	Page Directory, Page Table, Page, ASID Control, ASID Pool
+	Objects in the \textit{virtual address space} (VSpace) implement services for the management of virtual memory which largely directly correspond to those of the hardware: \\
+	Page Directory, Page Table, Page, ASID Control, ASID Pool \\
+	Figure \ref{fig:intapp} showes how they are connected.
 	\item \textbf{Interrupt Objects} \\
-	For device driver applications to be able to receive and acknowledge interrupts from hardware devices.
+	Device driver applications require \texttt{Interrupt Ojects} to be capable of receiving and acknowledging interrupts from hardware devices.
 	\item \textbf{Untyped Memory} \\
-	Untyped memory objects can be devieded into a group of smaller untyped memory objects. \texttt{Retype()} ist the only method untyped memory capabilities have. It creates a number of new kernel objects and returns capabilities to the new objects if it succeeds. 
+	\texttt{Untyped memory objects (UMO)} seclude a fixed-sized, size-aligned,continuous region of the physical memory. Each object can be devided into a group of smaller untyped memory objects. With \texttt{Retype()} a number of new kernel objects created. It also returns capabilities to the new objects if it succeeds. 
 	\end{itemize}
 
-	\subsubsection{Memory Allocation Model}
+	\subsubsection{Memory Allocation Model} %TODO
 	Important for the seL4 is that all kernel objects must be fully contributed for by capabilities. \\
 	At boot time the kernel pre-allocates all the memory required for the kernel to run. This includes the space for kernel code, data and kernel stack. The ressource manager has full authority over the untyped memory (UM) objects, generated by deviding the remain memory into these objects. \\
 	A capability to untyped memory can be refined into child capabilities, smaller sized untyped memory blocks or other kernel objects with the retype operation on UM objects. \\
@@ -187,7 +196,7 @@ is used to remove a complete part of the CDT. From a defined capability on al ch
 	
 	\begin{figure}[ht]
 	\centering
-		\includegraphics[width=0.7\textwidth]{./Pictures/MemoryAllocation.png}
+		\includegraphics[width=0.6\textwidth]{./Pictures/MemoryAllocation.png}
 	\caption[Sample system architecture]{Sample System Configuration \cite{TakeG}}
 	\label{fig:systarch}
 	\end{figure}	
@@ -390,6 +399,7 @@ This means if in a program two states ar equivalent on a low level domain
    removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}} \\ \\ \\ 
 \newpage
+\section{Formalisation of the Noninterference Model}
 \section{Validation of Noninterference}\label{ValNon}
 Confidentiality is one of the Noninterference Properties. \\ \\
 \texttt{
@@ -545,8 +555,8 @@ New dataype for the object types:\\
 	\end{tabular}}} \\ \\ \\
 	As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves if a system operation is "legal" in state s. If it is the system operation is performed otherwise the new state s' is defined as s' = s. This means that if a system operation is not legal nothing happens. 
 For the validation I took a subsystem (SS1) of one Domain (D1) and another subsystem (SS2) of a second Domain (D2). \\
-In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between Domains goes through \textit{Shared Pages} or \textit{Asynchronous Endpoints}. \\
-The following picture shows an example of how the objects and methods can be placed in the domains and how the connection to \textit{Shared Pages} and \textit{Asynchronous Endpoints} is implemented if the information is allowed to flow from Domain 1 to Domain 2.
+In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between Domains goes through \textit{Asynchronous Endpoints}. \\
+The following picture shows an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} is implemented if the information is allowed to flow from Domain 1 to Domain 2.
 \begin{figure}[H]
 \pgfuseimage{OverviewObjects}
 \caption{Objects and Methods in the kernel}
@@ -611,12 +621,12 @@ $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for Create on other object types in a domain is fulfilled.} 
-\subsubsection{Create on Asynchronous IPC Endpoint or Shared Page objects}
-The next figure showes create on the AEP or SPage endpoints.
+\subsubsection{Create on Asynchronous IPC Endpoint objects}
+The next figure showes create on the AEP endpoints.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{CreateOutside}
-\caption{Noninterference for Create on object types = AEP $\vee$ SPage}
+\caption{Noninterference for Create on object types = AEP}
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
@@ -625,7 +635,7 @@ The next figure showes create on the AEP or SPage endpoints.
 ** & legal (SysCreate e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
 \end{tabular}\\ \\ \\
-\textbf{Proof of the noninterference property for create on Asynchronous IPC Endpoint or Shared Page objects}\\ 
+\textbf{Proof of the noninterference property for create on Asynchronous IPC Endpoint objects}\\ 
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
@@ -633,9 +643,9 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
-\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for Create on Asynchronous IPC Endpoint or Shared Page objects is fulfilled.} 
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for Create on Asynchronous IPC Endpoint objects is fulfilled.} 
 \subsection{Grant}\label{sec:Grant}
-Grant operation can only be done inside a domain from a TCB, Synchronous IPC, CNode, VSpace or Interrupt Controller object. The only object types that are able to have contact to different domains are Async IPC and Shared Page objects.
+Grant operation can only be done inside a domain from a TCB, Synchronous IPC, CNode, VSpace or Interrupt Controller object. The only object types that are able to have contact to different domains are Async IPC objects.
 \subsubsection{Grant on TCB, SEP, CNode, VSpace or IContr objects} 
 I show that any grant operation inside a Domain on one of the named objects does not affect the values, capabilities or entities of another domain. \\
 Because it's the same for every of the given objects, in this model, I generalized e$_4$ = TCB $\vee$ SIPC $\vee$ CNode $\vee$ VSpace $\vee$ IContr.
@@ -659,11 +669,11 @@ $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
 \subsubsection{Grant on other objects inside a domain} 
-In this paragraph I show that an execution of the grant operation on an object other than TCB, SIPC, CNode, VSpace, Interrupt Controller or the two object types that establish a communication interface between domains: AIPC and Shared Pages.
+In this paragraph I show that an execution of the grant operation on an object other than TCB, SEP, CNode, VSpace, Interrupt Controller or the object type that establish a communication interface between domains: AEP.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantOthers}
-\caption{Noninterference for Grant on an object $\neq$ TCB, Synchronous IPC Endpoint, CNode, VSpace, Interrupt Controller object, AEP or SPage}
+\caption{Noninterference for Grant on an object $\neq$ TCB, Synchronous IPC Endpoint, CNode, VSpace, Interrupt Controller object or AEP}
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
@@ -678,12 +688,12 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
-\subsubsection{Grant on Asynchronous IPC Endpoints or Shared Pages}
+\subsubsection{Grant on Asynchronous IPC Endpoint objects}
 The next picture illustrates grant on the two object types connecting different domains. In both cases the operation is not legal. 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantOutside}
-\caption{Noninterference for Grant on an Asychronous IPC Endpoint or Shared Page object}
+\caption{Noninterference for Grant on an Asychronous IPC Endpoint object}
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
@@ -720,7 +730,7 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
-\subsubsection{Write on other objects $\neq$ TCB, SEP, IHandl, SPage and AEP}\label{WriteOthers}
+\subsubsection{Write on other objects $\neq$ TCB, SEP, IHandl and AEP}\label{WriteOthers}
 Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executeable with the write operation. Those are CNodes, VSpaces, UMOs and Interrupt Controller. 
 \begin{flushleft}
 \begin{figure}[H]
@@ -740,13 +750,13 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
-\subsubsection{Write on an AEP or SPage object from Domain 2}\label{WriteOut}
-In Chapter \ref{sec:ValNew} I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Shared Pages and Asychronous Endpoints are restricted to \texttt{read}. 
+\subsubsection{Write on an AEP object from Domain 2}\label{WriteOut}
+In Chapter \ref{sec:ValNew} I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Asychronous Endpoints are restricted to \texttt{read}. 
 If the read operation is called from Domain 2 it looks like it is illustrated in Figure \ref{fig:WriteOut1}. The policy prescribes that information is only allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. This has the consequence that \texttt{write} can not be part of c$_1$. 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteOutside}
-\caption{Noninterference for Write on an object = AEP $\vee$ SPage executed from an entity $\in$ Domain 2}
+\caption{Noninterference for Write on an object = AEP executed from an entity $\in$ Domain 2}
 \label{fig:WriteOut1}
 \end{figure}
 \end{flushleft}
@@ -761,12 +771,12 @@ $\forall$ e $\in$ D1. \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \subsubsection{Write on an AEP or SPage object from Domain 1}\label{WriteOut2}
-Write on AEP or SPage objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} showes that this has no influence on the noninterference property.
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \subsubsection{Write on an AEP object from Domain 1}\label{WriteOut2}
+Write on AEP objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} showes that this has no influence on the noninterference property.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteOutside2}
-\caption{Noninterference for Write on an object = AEP $\vee$ SPage executed from an entity $\in$ D1}
+\caption{Noninterference for Write on an object = AEP executed from an entity $\in$ D1}
 \label{fig:WriteOut2}
 \end{figure}
 \end{flushleft}
@@ -829,13 +839,13 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
-\subsubsection{Read on an AEP or SPage object from Domain 1}
+\subsubsection{Read on an AEP object from Domain 1}
 Similar to chapter \ref{WriteOut} \texttt{read} can only be executed from on type of Domain. Thats the one to which information is allowed to flow. In my case it's Domain 2. No infomation is allowed to flow to Domain 1. So \texttt{read} is not legal if it is executed from Domain 1.\\
 Figure \ref{fig:ReadOut} shows that this does not affect Domain 1. 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{ReadOutside2}
-\caption{Noninterference for Read on object types = Asynchronous IPC Endpoint or Shared Page executed from Domain 1}
+\caption{Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 1}
 \label{fig:ReadOut}
 \end{figure}
 \end{flushleft} 
@@ -851,12 +861,12 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
-\subsubsection{Read on an AEP or SPage object from Domain 2}
+\subsubsection{Read on an AEP object from Domain 2}
 Read can be executed from Domain 2. In Figure \ref{fig:ReadOut2} I show the impact of this execution. 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{ReadOutside}
-\caption{Noninterference for Read on object types = Asynchronous IPC Endpoint or Shared Page executed from Domain 2}
+\caption{Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 2}
 \label{fig:ReadOut2}
 \end{figure}
 \end{flushleft}
@@ -877,7 +887,7 @@ $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim
 \texttt{Remove} can be executed on CNode, VSpace or Interrupt Controller object types. \\
 Like in the chapters bevore I distinguish between executing the operation inside and outside a domain. All legal object types are inside a domain. So I only have to differ between legal and not legal for the execution inside da domain. 
 \subsubsection{Remove on CNode, VSpace or Interrupt Controller objects} 
-Remove deletes a capability in an entity. This capability can point on an entity in the same domain or on a AEP or SPage object. 
+Remove deletes a capability in an entity. This capability can point on an entity in the same domain or on an AEP object. 
 \begin{itemize}
 \item Target object is in the same domain
 If the removed capability points to an entity in the same domain and  \texttt{remove} is legal for the executed entity, the operation looks like it is pictured in Figure \ref{fig:RemoveCNode}.
@@ -947,6 +957,12 @@ $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim
 	\href{http://users.cis.fiu.edu/~smithg/papers/sif06.pdf}{%
 		Principles of Secure Information Flow Analysis}. \\
    	Chapter 13 (pp. 291-307) of Malware Detection,  Springer-Verlag, 2007
+   	
+   	\bibitem{EngTec}
+   	J.N.\ Buxton and B.\ Randell:\\
+   	\href{http://homepages.cs.ncl.ac.uk/brian.randell/NATO/nato1969.PDF}{%
+   		Software engeneering techniques}. \\
+   		Report on a conference sponsored by the NATO science committee, Rome, Italy, 27th to 31st October 1969
 \end{thebibliography}
 	
 \end{document}
