@@ -36,14 +36,15 @@
 %%
 
 % Seitenraender
-\geometry{body={140mm,210mm},footskip=12mm}
+%\geometry{body={140mm,210mm},footskip=12mm}
 
 % Gestaltung der Kopf- und Fusszeilen
-\pagestyle{fancy}
-\headheight 14pt
-\fancyhf{}
-\fancyhead[L]{\small\slshape\leftmark}
-\fancyfoot[C]{\thepage}
+\pagestyle{fancyplain}
+\lhead[\fancyplain{}{}]{\fancyplain{}{\sl\rightmark}}
+\chead{}
+\rhead[\fancyplain{}{\sl\leftmark}]{\fancyplain{}{}}
+\lfoot[\fancyplain{\sl\thepage}{}]{}
+\rfoot[]{\fancyplain{\sl\thepage}{}}
 
 % subsubsections numerieren und ins Inhaltsverzeichnis aufnehmen
 \setcounter{secnumdepth}{3}
