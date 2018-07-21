@@ -5,15 +5,15 @@
 \usetikzlibrary{shapes}
 \usepackage{graphicx}
 \begin{document}
-\begin{tikzpicture}[node distance=3cm]
+\begin{tikzpicture}[node distance=2.25cm]
 \node[draw, rectangle, rounded corners] (T1) {Thread (TCB)};
 \node[draw, rectangle, rounded corners] (UMO1)[below=of T1] {UMO};
 \draw[->] (T1.south) -- (UMO1.north) node[ midway , right ] {Retype};
 \node[draw, rectangle, rounded corners] (PD1) [right=of T1] {PD};
 \draw[->] (T1.east) -- (PD1.west)node [above, midway, rectangle split,rectangle split parts=2]{%
-  Install- , Remove Mapping, 
+  Mapping
   \nodepart{second}
-  Remap, initalise%
+  operations%
   };
 \node[draw, rectangle, rounded corners,fill=white, drop shadow={color=black}] (PT1) [right=of PD1] {PTs};
 \draw[->] (PD1.east) -- (PT1.west);
@@ -23,22 +23,23 @@
 \draw[->] (PT1.north) -- (P.south);
 \draw[->] (PT1.north) -- (P2.south);
 \draw[->] (PT1.north) -- (P3.south);
-\node[draw, rectangle, fill={rgb:black,1;white,2}] (SP) [right=of PT1] {SPage};
-\draw[->] (PT1.east) -- (SP.west) node[ midway , above ] {Read, Write} ;
 \node[draw, rectangle, rounded corners] (T2) [below right=of PD1] {Thread (TCB)};
+\node[draw, rectangle, rounded corners, fill=white, drop shadow={color=black}] (CNode1) [below right=of T2] {CNodes};
+\node[draw, rectangle, fill=lightgray] (AEP) [right=of CNode1] {AEP};
+\node[draw, rectangle, fill=lightgray] (SP) [below right=of P3] {SPage};
+\draw[->] (PT1.east) -- (SP.west) node[midway, above] {Read, Write};
 \draw[->] (T2.north) -- (PD1.south);
 \node[draw, rectangle, rounded corners] (SEP) [right =of UMO1] {SEP};
-\draw[<->] (T2.west) -- (SEP.north east)node [below, midway, rectangle split,rectangle split parts=2]{%
+\draw[<->] (T2.west) -- (SEP.north east)node [below, midway, rectangle split,rectangle split parts=3]{%
+\nodepart{second}
   Send, Wait,
-  \nodepart{second}
+  \nodepart{third}
   Grant IPC%
   };
 \draw[<->] (T1.south east) -- (SEP.north west);
-\node[draw, rectangle, rounded corners, fill=white, drop shadow={color=black}] (CNode1) [below right=of T2] {CNodes};
 \draw[->] (T2.south east) -- (CNode1.north west);
 \draw[->] (T1.south) -- (CNode1.west);
 \draw[->] (CNode1.north) -- (SP.south) node[ midway , right ] {RW};
-\node[draw, rectangle, fill={rgb:black,1;white,2}] (AEP) [right=of CNode1] {AEP};
 \draw[->] (CNode1.east) -- (AEP.west) node[ midway , above ] {Send Event};
 \node[draw, rectangle, rounded corners, fill=white, drop shadow={color=black}] (PT2) [right=of SP] {PTs};
 \draw[->] (PT2.west) -- (SP.east) node[ midway , above ] {Read};
@@ -57,22 +58,22 @@
   Revoke, Move, Recycle%
   };
 \draw[->] (CNode2.west) -- (AEP.east) node[ midway , above, left ] {Wait Event};
-\draw[black, dotted, rounded corners] (-2,-7) rectangle (13.75,5);
-\node[font=\bfseries] at (-1,-7.5) {Domain 1};
-\draw[black, dotted, rounded corners] (15.5,-7) rectangle (27,5);
-\node[font=\bfseries] at (16.5,-7.5) {Domain 2};
-\draw[dashed] (3,-1.5) -- (11,-1.5);
-\draw[dashed] (11,-1.5) -- (11,1);
-\draw[dashed] (11,1) -- (13,2);
-\draw[dashed] (13,2) -- (13,4);
-\draw[dashed] (13,4) -- (3,4);
-\draw[dashed] (3,4) -- (3,-1.5);
-\node[font=\bfseries] at (4,4.25) {VSpace};
-\draw[dashed] (15.75,-1.5) -- (22,-1.5) -- (22,1) -- (20.5,3) -- (19.5,3) -- (19.5,4) -- (15.75,4) -- (15.75,-1.5);
-\node[font=\bfseries] at (16.75,4.25) {VSpace};
-\draw[black, dashed] (11.25,-6) rectangle (13.5,-4.5);
-\node[font=\bfseries] at (12,-6.5) {CSpace};
-\draw[black, dashed] (23,-3.25) rectangle (25.25,-1.75);
-\node[font=\bfseries] at (23.75,-3.75) {CSpace};
+\draw[black, dotted, rounded corners] (-1.5,-5.5) rectangle (11.65,4.2);
+\node[font=\bfseries] at (-0.5,-5.75) {L Domain};
+\draw[black, dotted, rounded corners] (15,-5.5) rectangle (25,4.2);
+\node[font=\bfseries] at (16,-5.75) {H Domain};
+\draw[dashed] (3.25,-1) -- (7.75,-1);
+\draw[dashed] (7.75,-1) -- (7.75,0.5);
+\draw[dashed] (7.75,0.5) -- (11.25,1.5);
+\draw[dashed] (11.25,1.5) -- (11.25,3.25);
+\draw[dashed] (11.25,3.25) -- (3.25,3.25);
+\draw[dashed] (3.25,3.25) -- (3.25,-1);
+\node[font=\bfseries] at (3.95,3.5) {VSpace};
+\draw[dashed] (15.25,-1) -- (20.25,-1) -- (20.25,0.75) -- (19.25,2.35) -- (18,2.35) -- (18,3.25) -- (15.25,3.25) -- (15.25,-1);
+\node[font=\bfseries] at (16,3.5) {VSpace};
+\draw[black, dashed] (9.75,-5) rectangle (11.55,-3.65);
+\node[font=\bfseries] at (10.5,-5.25) {CSpace};
+\draw[black, dashed] (21,-3) rectangle (23.25,-1.5);
+\node[font=\bfseries] at (21.75,-3.25) {CSpace};
 \end{tikzpicture}
 \end{document}
