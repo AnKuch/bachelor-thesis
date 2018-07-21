@@ -1,4 +1,4 @@
-\documentclass[pdftex,11pt,a4paper,twoside]{article}
+\documentclass[11pt,a4paper,twoside]{article}
 \usepackage{bachelorarbeit}
 \usepackage{subfigure}
 \usepackage{xspace}
@@ -13,6 +13,7 @@
 \usepackage{latexsym}
 \usepackage[justification=centering]{caption}
 
+\setlength{\headheight}{52pt}
 \setlength{\parindent}{0em} %Einrücken verhindern
 \setcounter{tocdepth}{5}
 
@@ -44,8 +45,7 @@
 \setcounter{secnumdepth}{5}
 
 \pgfdeclareimage [ width =15 cm ]{RemoveGraphic1}{Pictures/RemoveGraphicOld/RemoveGraphic1}
-\pgfdeclareimage [ width =15 cm ]{WriteGraphic1}{Pictures/WriteGraphicOld/WriteGraphic1}
-\pgfdeclareimage [ width =15 cm ]{WriteGraphic2}{Pictures/WriteGraphicOld/WriteGraphic2}
+\pgfdeclareimage [ width =14 cm ]{WriteGraphic1}{Pictures/WriteGraphicOld/WriteGraphic1}
 \pgfdeclareimage [ width =16 cm ]{CreateUMO}{Pictures/CreateUMO/CreateUMO}
 \pgfdeclareimage [ width =16 cm ]{CreateOther}{Pictures/CreateUMO/CreateOther}
 \pgfdeclareimage [ width =16 cm ]{CreateOutside}{Pictures/CreateUMO/CreateOutside}
@@ -81,9 +81,9 @@
 	\section*{Abstract}
 	\addcontentsline{toc}{section}{Abstract}
 	
-	 The thesis investigates the question if the specification of the seL4 access control system is strong enough to imply the Noninterference property. 
-Using the verification of the Take-Grant-Protection Model \cite{TakeG} I deduce from it the Unwinding Theorem conditions of the nondeterministic intransitive Noninterference Model \cite{NonOp}. 
-As the specifications and proofs of the take-grant model is developed in the theorem proof assistant Isabelle/HOL I use the same to verify the implication. 
+	 The thesis investigates the question if the specification of the seL4 access control system is strong enough to verify the Noninterference property on it. 
+Using the specification of the extended Take-Grant-Protection Model \cite{TakeG} I show the Noninterference property \cite{InfFlow} on each of it's system operations. 
+As the specifications and proofs of the take-grant model are developed in the theorem proof assistant Isabelle/HOL I use the same to formalise my datatypes and functions. 
 	
 
 	\newpage
@@ -117,7 +117,7 @@ With the collected information I want to answer two questions. First if the noni
 At the beginning I want to give an survey of the seL4 kernel, its set-up, the implementation of services and the memory management. For a better comprehension I then give a brief overview of the take-grant and the noninterference model. 
 Chapter 3 focuses on the formalisation of the take-grant model an chapter 4 on the formalisation of the noninterference model. \\
 From chapter 5 on I turn to the validation of the noninterference property. In chapter 7 the validation is subdivided into the different systemoperations. To show the property for the model I am going to extend the model in chapter 6. \\
-Finally I'll take a short resume and give a prospect on the current status of the seL4 project and the possibilities to enhance this topic. 
+Finally I'll take a short resume and give a prospect on the possibilities to enhance this topic. 
 \newpage
 	\section{Requirements}
 	\subsection{The seL4 Microkernel}\label{sec:seL4}
@@ -438,50 +438,39 @@ The function \texttt{caps$\_$of e$_i$} was defined in chapter \ref{sec:Formalisa
 \newpage
 \section{Validation of Noninterference}\label{ValNon}
 After the formalisations in chapter \ref{sec:Formalisation} and \ref{FormNon} I tryed to decide noniterference for the different system operations in the following way.\\ \\
-I took one Low-level-Subsystem and one High-level-Subsystem with entities in them and tested for different right-sets and different operations if the noninterference-property holds. The following shows an example of this approach: \\ \\
-\textbf{Preconditions:}
+I took one Low-level-Subsystem and one High-level-Subsystem with entities in them and tested for different right-sets and different operations if the noninterference-property holds. The following first displays what I assume and then shows an example of this approach: \\ 
 \begin{itemize}
 \item H equates a High level domain that implements the subsystem 'H'
 \item L equates a Low level domain that implements the subsystem 'L'
-\item e$_1$ is an entity in H, \\
-e$_2$ is an entity in L
+\item e$_1$ is an entity in H and e$_2$ is an entity in L
 \end{itemize}
 \begin{figure}[H]
 \pgfuseimage{WriteGraphic1}
 \caption{Noninterfernce of Write 1}
 \end{figure}
-To show noninterference I checked if the criterias for \texttt{aquiv$\_$nonin s' t' L} are fulfilled after the execution of the \texttt{write operation} and the following prconditions. \\ \\
-\textbf{Preconditions:} \\ \\
+To show noninterference I checked if the criterias for \texttt{aquiv$\_$nonin s' t' L} are fulfilled after the execution of the \texttt{write operation} and the following prconditions. \\ The \texttt{write operation} in the extended model satisfies the noninterference property: 
+\begin{itemize}
+\item \texttt{value$\_$of s' e = value$\_$of s e $\wedge$ caps$\_$of s' e = caps$\_$of s e} and \texttt{subSys s' e = subSys s e} as the \texttt{write operation} on the entity, \texttt{c$_1 \in e_2$} is pointing on, changes an entity e$_1 \in$ H and does not affect an entity $\in$ L.
+\item \texttt{value$\_$of s e = value$\_$of t e $\wedge$ caps$\_$of s e = caps$\_$of t e} and \texttt{subSys s e = subSys t e} as one of the preconditions was s $\overset{\text{L}}{\sim}$ t. I defined the equivalence relation with the function aquiv$\_$nonin s t L, which is equal to the requirement. 
+\item The \texttt{step} function first checks whether the execution of the system operation is leagl, if not the new state t' equals the old state t. \\
+\texttt{value$\_$of t e = value$\_$of t' e $\wedge$ caps$\_$of t e = caps$\_$of t' e} and \texttt{subSys t e = subSys t' e} as \texttt{write} is not part of c$_1$. So legal(SysWrite e$_2$ c$_1$) s = false what leads to t=t'. \\
+\end{itemize} 
+\textbf{In the following cases the proof looks allways the same. So I shortend it:} \\ \\
+\textbf{Preconditions:} \\ 
 \begin{tabular}{ll}
 * & s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
-** & writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H not e $\in$ L \\
-*** & legal(SysWrite e$_2$ c$_1$) s = false $\Rightarrow$ s=s'
-\end{tabular} \\ \\ \\
-\textbf{Proof of the noninterference property for Write 1:} \\ \\
-$\forall$ e$\in$L.$\{$ \\
-\begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
-$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e$\}$
-\end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' \\ \\
-\begin{figure}[H]
-\pgfuseimage{WriteGraphic2}
-\caption{Confidentiality of Write 2}
-\end{figure}
-\textbf{Preconditions:} \\ \\
-\begin{tabular}{ll}
-* & s $\overset{\text{L}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t L	\\ 
-** & writeOperation e$_2$ c$_1$ s changes e$\_1$ $\in$ H no e $\in$ L \\ 
-*** & writeOperation e$_2$ c$_2$ t changes e$\_1$ $\in$ H no e $\in$ L \\ \\ \\
-\textbf{Proof of the noninterference property for Write:}
+** & writeOperation e$_2$ c$_1$  changes e$_1$ $\in$ H no e $\in$ L \\
+*** & legal(SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t=t'
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for Write 1:} \\ 
 $\forall$ e$\in$L. \\
 \begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t'
+$\Rightarrow$ aquiv$\_$nonin s' t' L $\Rightarrow$ s' $\overset{\text{L}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{L}}{\sim}$ t' the noninterference property for \texttt{write} is fulfilled.} 
 \newpage
 \section{Redesign of the take-grant-model}
 This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability and with that also an object in another domain without any restrictions:
@@ -489,6 +478,7 @@ This procedure worked until I came to the remove-operation. There I got the prob
 \pgfuseimage{RemoveGraphic1}
 \caption{No confidentiality for Remove}
 \end{figure}
+In this example the L domain knows that the \texttt{removeOperation} was performed in the H domain as the capability c$_2$ was deleted. As a consequence the noninterference property is not achieved. \\
 To research into this problem I decided to classify the entities by their types,corresponding to the kernel specification \cite{Manual}:
 \begin{itemize}
 \item Untyped 
@@ -499,9 +489,10 @@ To research into this problem I decided to classify the entities by their types,
 \item VSpace
 \item Interrupt Controller 
 \item Interrupt Handler
+\item Shared Pages (Pages (Frames) can be shared between domains. The corresponding capability has to be copied and then mapped in the VSpace of the other domain.)
 \end{itemize}
 The following table showes the different object types with the different operation executable on them and the corresponding take- grant system calls: 
-\begin{table}[H]\relsize{-0.5}
+\begin{table}[H]
 \begin{tabular}{|l|c|c|}
 \hline
 Capability Type & Concrete Kernel & protection model \\
@@ -541,8 +532,8 @@ Interrupt Handler & Acknowledge interrupt & \textit{SysWrite}\\
 \end{tabular}
 \caption{Relationship: operation of concrete kernel $\longleftrightarrow$ of protection model \cite{PhDseL4}} \end{table}
 To discem the different object types I need to revise the entity record and the preconditions for the different system operations. \\ \\ 
-\begin{tabular}{llr}
-New dataype for the object types: & & The final version of the \texttt{entity} record:\\
+\begin{tabular}{cccc}
+New dataype for the object types: & & & The final version of the \texttt{entity} record:\\
 {\relsize{-1}
 	\textbf{datatype} 
 	\texttt{
@@ -557,7 +548,7 @@ New dataype for the object types: & & The final version of the \texttt{entity} r
 			 & | & IContr \\
 			 & | & IHandl							
 	\end{tabular}}} 
-	& &
+	& & &
 	{\relsize{-1}
 	\textbf{record} 
 	\texttt{
@@ -574,32 +565,33 @@ New dataype for the object types: & & The final version of the \texttt{entity} r
 	\begin{tabular}{lllll}
 	  	&	"legal	&	(SysNoOp e) s	&	=	&	isEntityOf s e" \\
 	|	& 	"legal	&	(SysCreate e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ {c$_1$, c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ \\ & & & & Grant $\in$ rights c$_2$ $\wedge$ Create $\in$ rights c$_2$) $\wedge$ \\ & & & & eType (entity c$_1$ = Untyped" \\
-	| 	& "legal 	& 	(SysRead e c) s	&	=	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Read \\ & & & & $\in$ rights c) $\wedge$ eType (entity c) = TCB $\vee$ SEP $\vee$ AEP" \\
-	|	&	"legal 	&	(SysWrite e c) s&	= 	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Write \\ & & & & $\in$ rights c) $\wedge$ eType  (entity c) = TCB $\vee$ SEP $\vee$ AEP \\ & & & & $\vee$ IHandl" \\
+	| 	& "legal 	& 	(SysRead e c) s	&	=	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Read \\ & & & & $\in$ rights c) $\wedge$ eType (entity c) = TCB $\vee$ SEP $\vee$ AEP $\vee$ SPage" \\
+	|	&	"legal 	&	(SysWrite e c) s&	= 	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Write \\ & & & & $\in$ rights c) $\wedge$ eType  (entity c) = TCB $\vee$ SEP $\vee$ AEP \\ & & & & $\vee$ IHandl $\vee$ SPage" \\
 	| 	&	"legal 	&	(SysGrant e c$_1$ c$_2$ r) s & = & (isEntityOf s e $\wedge$  isEntityOf s (entity c$_1$) \\ & & & & $\wedge$ {c$_1$,c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ Grant $\in$ rights c$_1$) $\wedge$ \\ & & & & eType (entity c$_1$)  = TCB $\vee$ SEP $\vee$ CNode $\vee$ VSpace $\vee$ \\ & & & & IContr" \\
 	| 	&	"legal 	&	(SysRemove e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ c$_1$ $\in$ caps$\_$of s e)  $\wedge$ \\ & & & & eType (entity c$_1$) = CNode $\vee$ VSpace $\vee$ IContr" \\
 	|	&	"legal	&	(SysRevoke e c) s	&	=	&	isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e  $\wedge$ \\ & & & & eType (entity c) = Untyped $\vee$ CNode"
 	\end{tabular}}} \\ \\ \\
-	As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves if a system operation is "legal" in state s. If it is, the system operation is performed otherwise the new state s' is defined as s' = s. This means that if a system operation is not legal nothing happens. 
+	As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves if a system operation is "legal" in state s. If it is, the system operation is performed. Otherwise the new state \texttt{s'} is defined as \texttt{s' = s}. This means that if a system operation is not legal nothing happens. 
 For the validation I took a subsystem (SS1) of one Domain (D1) and another subsystem (SS2) of a second Domain (D2). \\
-In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between Domains goes through \textit{Asynchronous Endpoints}. \\
-The following figure shows an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} is implemented if the information is allowed to flow from Domain 1 to Domain 2.
+In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between Domains goes through \textit{Asynchronous Endpoints} and \textit{Shared Pages}. \\
+Figure \ref{overview} pictures an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} and \textit{Shared Pages} is implemented if the information is allowed to flow from Domain 1 to Domain 2: D1$\leadsto$D2 but D2$\not\leadsto$D1
 \begin{figure}[H]
 \pgfuseimage{OverviewObjects}
 \caption{Objects and Methods in the kernel}
+\label{overview}
 \end{figure}
 \newpage
 \section{Validation with the new model}\label{sec:ValNew}
 I examine each operation of the protection model and distinguish therefore between the different object types. \\
-For this I assume that information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. \\ \\
-$\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1 \\ \\
-Further I assume that state s is equivalent to state t for Domain 1. \\ \\
-$\Rightarrow$ s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ \\
+For this I assume that Domain 1 equates a low level domain and Domain 2 a high level domain. So  information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. \\ \\
+\textbf{D1$\leadsto$D2 but D2$\not\leadsto$D1} \\ \\
+Further I assume that state s is equivalent to state t for Domain 1. What is representet by the function  \texttt{aquiv$\_$nonin} \\ \\
+\textbf{s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1}	\\ \\
 In this chapter I show that the criteria for the equivalence relation still holds in Domain 1, between s' and t', after every type of operation. 
 \subsection{Create}\label{sec:Create}
-Create corresponds to the \textit{Retype} operation on untyped memory. Each Domain has a own and fixed section of memory. So the UMO for \textit{Retype} is located in the same Domain as the implementing entity. Furthermore the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
+Create corresponds to the \textit{Retype} operation on untyped memory objects (UMOs). Each Domain has a own and fixed section of memory. So the UMO for the \texttt{retype} is located in the same Domain as the implementing entity. Furthermore the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
 \subsubsection{Create on UMO}
-The following picture shows how a create operation in one Domain changes or not changes the equivalence criteria in the other domain that is not allowed to get infomation from the primer one.
+The following picture shows how a create operation in a H domain changes or not changes the equivalence criteria in the L domain that is not allowed to get infomation from the primer one.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{CreateUMO}
@@ -608,14 +600,14 @@ The following picture shows how a create operation in one Domain changes or not 
 \end{flushleft}
 I have to show that if s $\overset{\text{D1}}{\sim}$ t and (s,s') $\in$ Step a and (t,t') $\in$ Step a then s' $\overset{\text{D1}}{\sim}$ t'. 
 s $\overset{\text{D1}}{\sim}$ t was defined in Chapter \ref{ValNon} as the boolean fuction aquiv$\_$nonin s t D1. The function is true if all entities e $\in$ D1 have the same value in s and t (value$\_$of s e = value$\_$of t e), if they also have the same capabilities in s and t (caps$\_$of s e = caps$\_$of t e) and if D1 has the same entities in s and t (subSys s e = subSys t e).\\
-In the following section I show that value$\_$of s' e = value$\_$of t' e, caps$\_$of s' e = caps$\_$of t’ e and subSys s' e = subSys t' e for all e $\in$ D1 after the execution of 
-createOperation e$_2$ c$_1$ c$_2$ s respectively createOperation e$_2$ c$_1$ c$_2$ t. And with that I show that aquiv$\_$nonin s' t' D1. Then I can say from my definition that s' $\overset{\text{D1}}{\sim}$ t'. \\ \\
+In the following section I check if value$\_$of s' e = value$\_$of t' e, caps$\_$of s' e = caps$\_$of t’ e and subSys s' e = subSys t' e for all e $\in$ D1 after the execution of 
+createOperation e$_2$ c$_1$ c$_2$ s respectively createOperation e$_2$ c$_1$ c$_2$ t. If that's the case I can say that aquiv$\_$nonin s' t' D1 = true. From my definition of \texttt{aquiv$\_$nonin} this leads to s' $\overset{\text{D1}}{\sim}$ t'. \\ \\
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
 ** & createOperation e$_2$ c$_1$ c$_2$ s creates e$_3$ $\in$ D2 and doesn't change or create any e $\in$ D1 \\
 *** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
 \textbf{Proof of the noninterference property for create on UMO:}
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
@@ -624,9 +616,9 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
-\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for Create on an untyped memory object is fulfilled.} 
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on an untyped memory object is fulfilled.} 
 \subsubsection{Create on all other object types inside a domain}
-If \texttt{create} is performed on another object type than an untyped memory object, the  function step' (SysCreate e c$_1$ c$_2$)s does nothing. \\
+If \texttt{create} is performed on another object type than an untyped memory object, the  function step' (SysCreate e c$_1$ c$_2$)s does nothing. So the new state \texttt{s'} equates the old state \texttt{s}. \\
 The following figure shows the createOperation for every other object type inside a domain.
 \begin{flushleft}
 \begin{figure}[H]
@@ -639,8 +631,8 @@ The following figure shows the createOperation for every other object type insid
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
 ** & legal (SysCreate e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
-\textbf{Proof of the noninterference property for create on other object types in a domain:}
+\end{tabular}\\ \\ 
+\textbf{Proof of the noninterference property for create on other object types in a domain:} \\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
@@ -648,34 +640,35 @@ $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\te
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
-\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for Create on other object types in a domain is fulfilled.} 
-\subsubsection{Create on Asynchronous IPC Endpoint objects}
-The next figure shows create on the AEP endpoints.
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on other object types in a domain is fulfilled.} 
+\subsubsection{Create on Asynchronous IPC Endpoint or Shared Page objects}
+Next I whant to be sure that create has no impact on the entities in the L domain if it's executed on AEP or SPage objects.\\
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{CreateOutside}
-\caption{Noninterference for Create on object types = AEP}
+\caption{Noninterference for Create on object types = AEP $\vee$ SPage}
 \end{figure}
-\end{flushleft}
+\end{flushleft} 
+In this case the check if the execution is legal = false in both states. So in both states the step' function leads to the definition of the old state. \\ \\
 \begin{tabular}{ll}
 \textbf{Preconditions:} \\ \\
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
 ** & legal (SysCreate e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
-\textbf{Proof of the noninterference property for create on Asynchronous IPC Endpoint objects}\\ 
+\end{tabular}\\ \\ 
+\textbf{Proof of the noninterference property for \texttt{create} on Asynchronous IPC Endpoint or Shared Page objects:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
 $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
-\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for Create on Asynchronous IPC Endpoint objects is fulfilled.} 
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on Asynchronous IPC Endpoint or Shared Page objects is fulfilled.} 
 \subsection{Grant}\label{sec:Grant}
-Grant operation can only be done inside a domain from a TCB, Synchronous IPC, CNode, VSpace or Interrupt Controller object. The only object types that are able to have contact to different domains are Async IPC objects.
+The \texttt{grant} operation can only be performed inside a domain on a TCB, Synchronous IPC, CNode, VSpace or Interrupt Controller object. 
 \subsubsection{Grant on TCB, SEP, CNode, VSpace or IContr objects} 
-Now I show that any grant operation inside a Domain on one of the named objects does not affect the values, capabilities or entities of another domain. \\
+Now I show that any grant operation inside a H domain on one of the named objects does not affect the values, capabilities or entities of an L domain. \\
 Because every given object behaves the same way, I generalized e$_4$ = TCB $\vee$ SIPC $\vee$ CNode $\vee$ VSpace $\vee$ IContr.
 \begin{flushleft}
 \begin{figure}[H]
@@ -683,41 +676,50 @@ Because every given object behaves the same way, I generalized e$_4$ = TCB $\vee
 \caption{Noninterference for Grant on an TCB, Synchronous IPC Endpoint, CNode, VSpace or Interrupt Controller object}
 \end{figure}
 \end{flushleft}
+As it adds a capability to an entity inside the same domain as the target entity is, the \texttt{grant} operation has no impact on the entities of the other domain. \\ \\
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & grantOperation e$_2$ c$_1$ c$_2$ R s creates c$_3$ $\in$ D2 and does not change or create any \\
 & capability $\in$ D1 \\ 
 *** & legal (SysGrant e$_2$ c$_1$ c$_2$ R) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
+\textbf{Proof of the noninterference property for \texttt{grant} on TCB, Synchronous IPC Endpoint, CNode, VSpace and Interrupt Controller objects:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{grant} on TCB, Synchronous IPC Endpoint, CNode, VSpace and Interrupt Controller objects is fulfilled.} 
+\clearpage
 \subsubsection{Grant on other objects inside a domain} 
-In this paragraph I show that an execution of the grant operation on another object than TCB, SEP, CNode, VSpace, Interrupt Controller or the object type that establish a communication interface between domains: AEP.
+In this paragraph I check if an execution of the grant operation on another object than TCB, SEP, CNode, VSpace, Interrupt Controller or the object types that establish a communication interface between domains: AEP and SPage, alters the configuration of the other domain. \\ \\
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantOthers}
-\caption{Noninterference for Grant on an object $\neq$ TCB, Synchronous IPC Endpoint, CNode, VSpace, Interrupt Controller object or AEP}
+\caption{Noninterference for Grant on an object $\neq$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP object}
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysGrant e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysGrant e$_2$ c$_1$ c$_2$ R) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
+\textbf{Proof of the noninterference property for \texttt{grant} on an object $\neq$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
-\subsubsection{Grant on Asynchronous IPC Endpoint objects}
-The next figure illustrates grant on the two object types connecting different domains. In both cases the operation is not legal. 
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{grant} on an object $\neq$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP is fulfilled.} 
+\clearpage
+\subsubsection{Grant on Asynchronous IPC Endpoint or Shared Page objects}
+The next figure illustrates grant on the two object types connecting different domains. In both cases the operation is not legal. So the new state equates the old one.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantOutside}
@@ -725,21 +727,25 @@ The next figure illustrates grant on the two object types connecting different d
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysGrant e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysGrant e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
+\textbf{Proof of the noninterference property for \texttt{grant} on an object = SPage or AEP:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{grant} on an object = SPage or AEP is fulfilled.} 
+\clearpage
 \subsection{Write}\label{Write}
-Write can be executed on TCB, SEP, AEP and Interrupt Handler objects.
-\subsubsection{Write on TCB, SEP or Interrupt Handler object}
-I start with the create operation on all executable objects inside a domain. So in the next figure e$_3$ = TCB $\vee$ SEP $\vee$ IHandl.
+\texttt{Write} can be executed on TCB, SEP, AEP, SPage and Interrupt Handler objects.
+\subsubsection{Write on TCB, SEP or IHandl objects}
+I start with the \texttt{write} operation on all executable objects inside a domain. So in the next figure e$_3$ = TCB $\vee$ SEP $\vee$ IHandl.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteTCB}
@@ -747,40 +753,49 @@ I start with the create operation on all executable objects inside a domain. So 
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & writeOperation e$_2$ c$_1$ s only changes the value of an entity $\in$ D2 nothing in D1 \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{write} on TCB, SEP or IHandl objects:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
-\subsubsection{Write on other objects $\neq$ TCB, SEP, IHandl and AEP}\label{WriteOthers}
-Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executeable with the write operation. Those are CNodes, VSpaces, UMOs and Interrupt Controller. 
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on TCB, SEP or IHandl objects is fulfilled.} 
+\clearpage
+\subsubsection{Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}\label{WriteOthers}
+Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executeable with the \texttt{write} operation. Those are CNodes, VSpaces, UMOs and Interrupt Controllers. \\
+\texttt{Write} operation on these objects: \\
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteOthers}
-\caption{Noninterference for Write on other objects $\neq$ TCB, SEP, IHandl and AEP}
+\caption{Noninterference for Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysWrite e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{write} on objects $\neq$ TCB, SEP, IHandl, SPage and AEP:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' 
-\subsubsection{Write on an AEP object from Domain 2}\label{WriteOut}
-In Chapter \ref{sec:ValNew} I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Asychronous Endpoints are restricted to \texttt{read}. 
-If the read operation is called from Domain 2 it looks like it is illustrated in Figure \ref{fig:WriteOut1}. The policy prescribes that information is only allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. As a consequence \texttt{write} can not be part of c$_1$. 
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on objects $\neq$ TCB, SEP, IHandl, SPage and AEP is fulfilled.} 
+\clearpage
+\subsubsection{Write on AEP or SPage objects from Domain 2}\label{WriteOut}
+In Chapter \ref{sec:ValNew} I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Asychronous Endpoints and Shared Pages are restricted to \texttt{read}. 
+If the write operation is called from Domain 2 it looks like it is illustrated in Figure \ref{fig:WriteOut1}. The policy prescribes that information is only allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. As a consequence \texttt{write} can not be part of c$_1$. 
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteOutside}
@@ -789,17 +804,22 @@ If the read operation is called from Domain 2 it looks like it is illustrated in
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysWrite e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{write} on AEP or SPage objects from Domain 2:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \subsubsection{Write on an AEP object from Domain 1}\label{WriteOut2}
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 2 is fulfilled.}  
+\clearpage
+\subsubsection{Write on an AEP or SPage object from Domain 1}\label{WriteOut2}
 Write on AEP objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} shows that this has no influence on the noninterference property.
 \begin{flushleft}
 \begin{figure}[H]
@@ -809,24 +829,28 @@ Write on AEP objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} s
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & writeOperation e$_1$ c$_1$ s changes the value $\in$ e$_3$ $\notin$ D1. \\
 & That means it has no impact on any entity $\in$ D1 \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1:}\\ \\
 $\forall$ e $\in$ D1. \\
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'\\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.}  
+\clearpage
 \subsection{Read}\label{sec:Read}
-Read is legal on TCB, Sychronous IPC Endpoint and Asynchronous IPC Endpoint objects. \\
+Read is legal on TCB, Sychronous IPC Endpoint, Asynchronous IPC Endpoint and Shared Page objects. \\
 Like in chapter \ref{Write} I distinguish between objects with legal execution of \texttt{read} on objects inside a domain, illegal execution of \texttt{read} on objects inside a domain and both on objects outside a domain.
 \subsubsection{Read on TCB or Sychronous IPC Endpoint objects}
 TCB and SEP objects are the two object types that are executable with \texttt{read} from an endpoint in the same domain. \\
-Figure \ref{fig:ReadTCB} illustrates how the operation influences the other domain.
+Figure \ref{fig:ReadTCB} illustrates if the operation influences the L domain.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{ReadTCB}
@@ -835,40 +859,48 @@ Figure \ref{fig:ReadTCB} illustrates how the operation influences the other doma
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & readOperation e$_2$ c$_1$ s only changes the value of an entity $\in$ D2 nothing in D1 \\ 
 *** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{read} on TCB or SEP objects:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{read} on TCB or SEP objects is fulfilled.}  
+\clearpage
 \subsubsection{Read on other object types inside a domain} 
 Figure \ref{fig:ReadOthers} depicts the read operation on objects in the same domain on which \texttt{read} is not executable. It's similar to \texttt{write} in chapter \ref{WriteOthers}.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{ReadOthers}
-\caption{Noninterference for Read on object types $\neq$ TCB, Asynchronous IPC Endpoint or Sychronous IPC Endpoint object}
+\caption{Noninterference for Read on objects $\neq$ TCB, Asynchronous IPC Endpoint, Sychronous IPC Endpoint or Shared Page}
 \label{fig:ReadOthers}
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysRead e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{read} on objects $\neq$ TCB, SEP, SPage and AEP:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
-\subsubsection{Read on an AEP object from Domain 1}
-Similar to chapter \ref{WriteOut} \texttt{read} can only be executed from on type of Domain. Thats the one to which information is allowed to flow. In my case it's Domain 2. No infomation is allowed to flow to Domain 1. So \texttt{read} is not legal if it is executed from Domain 1.\\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{read} on objects $\neq$ TCB, SEP, SPage and AEP is fulfilled.}  
+\clearpage
+\subsubsection{Read on AEP or SPage objects from Domain 1}
+Similar to chapter \ref{WriteOut} \texttt{read} can only be executed from a H domain. Thats the one to which information is allowed to flow. In my case it's Domain 2. No infomation is allowed to flow to Domain 1. So \texttt{read} is not legal if it is executed from Domain 1.\\
 Figure \ref{fig:ReadOut} shows that this does not affect Domain 1. 
 \begin{flushleft}
 \begin{figure}[H]
@@ -878,18 +910,22 @@ Figure \ref{fig:ReadOut} shows that this does not affect Domain 1.
 \end{figure}
 \end{flushleft} 
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysRead e$_1$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysRead e$_1$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{read} on AEP or SPage objects from Domain 1:}\\ \\
 $\forall$ e $\in$ D1. \\ 
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
-\subsubsection{Read on an AEP object from Domain 2}
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.}  
+\clearpage
+\subsubsection{Read on AEP or SPage objects from Domain 2}
 Read can be executed from Domain 2. In Figure \ref{fig:ReadOut2} I show the impact of this execution. 
 \begin{flushleft}
 \begin{figure}[H]
@@ -899,23 +935,27 @@ Read can be executed from Domain 2. In Figure \ref{fig:ReadOut2} I show the impa
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & readOperation e$_2$ c$_1$ s changes the value $\in$ e$_3$ $\notin$ D1. \\
 & That means it has no impact on any entity $\in$ D1 \\ 
 *** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\
+\textbf{Proof of the noninterference property for \texttt{read} on AEP or SPage objects from Domain 2:}\\ \\
 $\forall$ e $\in$ D1. \\
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.}  
+\clearpage
 \subsection{Remove}\label{sec:Remove}
 \texttt{Remove} can be executed on CNode, VSpace or Interrupt Controller object types. \\
 Like in the chapters before I distinguish between executing the operation inside and outside a domain. All legal object types are inside a domain. So I only have to differ between legal and not legal for the execution inside a domain. 
 \subsubsection{Remove on CNode, VSpace or Interrupt Controller objects} 
-Remove deletes a capability in an entity. This capability can point on an entity in the same domain or on an AEP object. 
+Remove deletes a capability in an entity. This capability can point on an entity in the same domain or on an AEP or SPage object. 
 \begin{itemize}
 \item Target object is in the same domain \\
 If the removed capability points to an entity in the same domain and  \texttt{remove} is legal for the executed entity, the operation is illustrated in figure \ref{fig:RemoveCNode}.
@@ -927,21 +967,111 @@ If the removed capability points to an entity in the same domain and  \texttt{re
 \end{figure}
 \end{flushleft}
 \begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\Rightarrow$ aquiv$\_$nonin s t D1	\\ 
-** & readOperation e$_2$ c$_1$ s changes the value $\in$ e$_3$ $\notin$ D1. \\
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & removeOperation e$_2$ c$_1$ c$_2$ s removes a capability $\in$ e$_2$ $\notin$ D1 that points on an entity $\notin$ D1. \\
 & That means it has no impact on any entity $\in$ D1 \\ 
-*** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an entity in the same domain:}\\ \\
 $\forall$ e $\in$ D1. \\
 \begin{tabular}{ll}
 & value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
+\item Target object = AEP or SPage object \\
+If the removed capability points to an AEP or SPage object, it may be possible that information flowes out of the H domain to the L domain. Figure \ref{fig:RemoveOutside} displays that no information flowes to Domain 1.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveOutside}
+\caption{Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity outside the H domain}
+\label{fig:RemoveOutside}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & removeOperation e$_2$ c$_1$ c$_2$ s removes a capability $\in$ e$_2$ $\notin$ D1 that points on an entity $\notin$ D1. This entity also owns no capability that points on an entity $\in$ D1. \\
+& That means it has no impact on any entity $\in$ D1 \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an object = AEP $\vee$ SPage:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
+\end{itemize}
+\subsubsection{Remove on objects $\neq$ CNode, VSpace and Interrupt Controller} 
+On all other object types the execution of \texttt{remove} is not legal. But for the sake of completeness I differ between a target object of the removed capability in the executing domain and one outside.
+\begin{itemize}
+\item Target object of the removed capability is in the same domain \\
+The execution is not legal because the object the operation is executed on $\neq$ CNode, VSpace and Interrupt Controller.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveOthers}
+\caption{Noninterference for Remove on objects $\neq$ CNode, VSpace and ICont. The removed capability points to an entity in the same domain}
+\label{fig:RemoveOthers}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRemove e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace and IContr where the removed capability points on an entity in the same domain:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace and ICont where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
+\item Target object = AEP or SPage \\
+If the removed capability points to an AEP or SPage object,also nothing happens to Domain 1 as the execution is not legal. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveOutside2}
+\caption{Noninterference for Remove on object types $\neq$ CNode, VSpace or IContr. The removed capability points to an entity outside the H domain}
+\label{fig:RemoveOutside2}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRemove e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace or IContr where the removed capability points on an object = AEP $\vee$ SPage:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace or IContr where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
 \end{itemize}
 \subsection{Revoke}\label{sec:Revoke}
-	\cleardoublepage
+\section{Conclution}
+Summarized I tried to show the noninterference property on the take-grant model as it was specified by the team of NICTA in the paper \href{http://www.ssrg.nicta.com/publications/nicta_full_text/6004.pdf}{%
+		Noninterference for Operating System Kernels}. This trial failed so I had to extend the model by \texttt{read} and \texttt{write} operations, a value and objectype for entities and a check if the object type is able to perform the particular system operation. \\
+		With this adaptions it was feasible to investigate if the system operations satisfy the noninterference property. \\ \\
+		The conclusion of the thesis is that the original model is not appropriate to show noninterference on it. With the extended one it was possible and every system operation fulfills it. \\ \\
+		As a next step the noninterference property should be specified and verified formal for the extended model. This can also be done with the theorem proof assistant Isabelle/HOL.  
+\clearpage
 	\begin{thebibliography}{99}
 
 	\bibitem{NonOp}
