@@ -65,6 +65,10 @@
 \pgfdeclareimage [ width =16 cm ]{RemoveOthers}{Pictures/RemoveCNode/RemoveOthers}
 \pgfdeclareimage [ width =16 cm ]{RemoveOutside}{Pictures/RemoveCNode/RemoveOutside}
 \pgfdeclareimage [ width =16 cm ]{RemoveOutside2}{Pictures/RemoveCNode/RemoveOutside2}
+\pgfdeclareimage [ width =16 cm ]{RevokeCNode}{Pictures/RevokeCNode/RevokeCNode}
+\pgfdeclareimage [ width =16 cm ]{RevokeOthers}{Pictures/RevokeCNode/RevokeOthers}
+\pgfdeclareimage [ width =16 cm ]{RevokeOutside}{Pictures/RevokeCNode/RevokeOutside}
+\pgfdeclareimage [ width =16 cm ]{RevokeOutside2}{Pictures/RevokeCNode/RevokeOutside2}
 
 \begin{document}
 	
@@ -81,9 +85,9 @@
 	\section*{Abstract}
 	\addcontentsline{toc}{section}{Abstract}
 	
-	 The thesis investigates the question if the specification of the seL4 access control system is strong enough to verify the Noninterference property on it. 
-Using the specification of the extended Take-Grant-Protection Model \cite{TakeG} I show the Noninterference property \cite{InfFlow} on each of it's system operations. 
-As the specifications and proofs of the take-grant model are developed in the theorem proof assistant Isabelle/HOL I use the same to formalise my datatypes and functions. 
+	 The thesis investigates the question whether the specification of the seL4 access control system is strong enough to verify the Noninterference property on it. 
+Using the specification of the extended Take-Grant-Protection Model \cite{TakeG} I show the Noninterference property \cite{InfFlow} on each of its system operations. 
+As the specifications and proofs of the take-grant model are developed in the theorem proof assistant Isabelle/HOL, I use the same to formalise my datatypes and functions. 
 	
 
 	\newpage
@@ -171,7 +175,7 @@ revokes all outstanding capabilities and reconfigures the object to its initial 
 	\begin{figure}[ht]
 	\centering
 		\includegraphics[width=0.7\textwidth]{./Pictures/applicationIntern.png}
-	\caption[Internal repersentation of application]{Internal representation of an application in seL4 \cite{sel4}}
+	\caption[Internal representation of an application]{Internal representation of an application in seL4 \cite{sel4}}
 	\label{fig:intapp}
 	\end{figure}
 	
@@ -239,8 +243,8 @@ revokes all outstanding capabilities and reconfigures the object to its initial 
 	\label{fig:clremove}
 	\end{figure}		
 	\end{itemize}	
-	\subsubsection{Take-Grant specified for the seL4}
-	The Take-Grant Model specified in the paper "Noninterference for Operating System Kernels" \cite{TakeG} is a variant of the classical Take-Grant model. \\
+	\subsubsection{Take-Grant specified for the seL4}\label{specT}
+	The Take-Grant Model specified in the paper "Verified Protection Model of the seL4 Microkernel" \cite{TakeG} is a variant of the classical Take-Grant model. \\
 	From the modifications made the one on the \textit{create rule} is the most important one. As I explained in chapter \ref{sec:seL4} authority in the kernel is implemented with capabilities. Adding a new node to the protection graph in the model corresponds to the creation of a new object a capability pointing on in it in the kernel. So the object executing the \texttt{create operation} needs a capability with \texttt{create} authority. \\
 	The \textit{remove rule} was modified as it doesn't remove parts of labels anymore but the whole capability. That means the complete arc pointing on an object is removed. \\
 	To diminish authority a capability has to be removed and newly created with diminished authority. \\
@@ -255,7 +259,7 @@ revokes all outstanding capabilities and reconfigures the object to its initial 
 	To remove a set of capabilities the operation \texttt{revoke} was implemented. \\ 
 	With this operation \texttt{remove} is executed on every capability that is in the CDT below the target capability. \\
 	A speciality of the extendet model is that objects and subjects are called \textit{entities}.\\
-	The goal of the paper "Noninterference for Operating System Kernels" was to show that it is accomblishable to implement isolated subsystems using the mechanisms of the seL4 kernel. \cite{TakeG} \\
+	The goal of the paper "Verified Protection Model of the seL4 Microkernel" was to show that it is accomblishable to implement isolated subsystems using the mechanisms of the seL4 kernel. \cite{TakeG} \\
 	Isolated subsystems are implemented as a collection of \textit{connected} entities. An entity that has \textit{grant authority} on another one is connected with this entity. Authority can neither get in nor out of these isolated subsystems.\\
 	The exact specificaton of subsystems and entities follows in Chapter \ref{sec:Formalisation}.
 	
@@ -958,7 +962,7 @@ Like in the chapters before I distinguish between executing the operation inside
 Remove deletes a capability in an entity. This capability can point on an entity in the same domain or on an AEP or SPage object. 
 \begin{itemize}
 \item Target object is in the same domain \\
-If the removed capability points to an entity in the same domain and  \texttt{remove} is legal for the executed entity, the operation is illustrated in figure \ref{fig:RemoveCNode}.
+If the removed capability points to an entity in the same domain and  \texttt{remove} is legal for the executed entity, the operation runs like is illustrated in figure \ref{fig:RemoveCNode}.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{RemoveCNode}
@@ -1065,6 +1069,118 @@ $\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim
 \clearpage
 \end{itemize}
 \subsection{Revoke}\label{sec:Revoke}
+With \texttt{revoke} the authority of a whole subsystem can be removed. As mentioned in capter \ref{specT} the kernel keeps a record of all capabilities in the system with a \textit{Capability Derivation Tree} (CDT). When \texttt{SysRevoke e c s} is performed, all children of c in the CDT are deleted with the \texttt{remove} operation executed on each of them. \\
+\texttt{Revoke} is legal on CNode and Untyped Memory objects. Like in chapter \ref{sec:Remove} I devide the proof in 4 parts. 
+\subsubsection{Revoke on CNode or Untyped Memory objects} 
+Revoke deletes all children of a specified capability. This capabilities can point on entities in the same domain or on an AEP or SPage object. 
+\begin{itemize}
+\item Target objects are in the same domain \\
+If the removed capabilities point on entities in the same domain and \texttt{revoke} is legal for the executed entity, the operation runs like is illustrated in figure \ref{fig:RevokeCNode}.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RevokeCNode}
+\caption{Noninterference for Revoke on object types = CNode or Untyped. The removed capabilities point to entities in the same domain}
+\label{fig:RevokeCNode}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & revokeOperation e$_2$ c$_1$ s removes capabilities $\in$ entities $\notin$ D1 that point on entities $\notin$ D1. \\
+& That means it has no impact on any entity $\in$ D1 \\ 
+*** & legal (SysRevoke e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{revoke} on CNode or Untyped objects where the removed capabilities point to entities in the same domain:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{revoke} on CNode or Untyped objects, where the removed capabilities point on entities in the same domain, is fulfilled.}  
+\clearpage
+\item Target object = AEP or SPage object \\
+Like in the \texttt{remove} operation I have to control if information flowes to Domain 1 if the removed capability points to an AEP or SPage object. Figure \ref{fig:RemoveOutside} illustrates it. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RevokeOutside}
+\caption{Noninterference for Revoke on object types = CNode or Untyped. The removed capabilities point to entities outside the H domain}
+\label{fig:RevokeOutside}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & revokeOperation e$_2$ c$_1$ s removes capabilities $\in$ entities $\notin$ D1 that point on entities $\notin$ D1. This entities also own no capability that points on an entity $\in$ D1. \\
+& That means it has no impact on any entity $\in$ D1 \\ 
+*** & legal (SysRevoke e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{remove} on CNode or Untyped objects, where the removed capabilities point on objects = AEP $\vee$ SPage:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on CNode or Untyped objects, where the removed capabilities point on objects = AEP $\vee$ SPage, is fulfilled.}  
+\clearpage
+\end{itemize}
+\subsubsection{Revoke on objects $\neq$ CNode and Untyped Memory} 
+On all other object types the execution of \texttt{revoke} is not legal. But again I differ between target objects in the executing domain and those outside.
+\begin{itemize}
+\item Target objects of the removed capabilities are in the same domain \\
+The execution is not legal because the object the operation is executed on $\neq$ CNodeand Untyped Memory.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RevokeOthers}
+\caption{Noninterference for Revoke on objects $\neq$ CNodeand Untyped Memory. The removed capabilities point to entities in the same domain}
+\label{fig:RevokeOthers}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRevoke e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRevoke e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{revoke} on objects $\neq$ CNode and Untyped where the removed capabilities point on entities in the same domain:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{revoke} on objects $\neq$ CNode and Untyped, where the removed capabilities point on entities in the same domain, is fulfilled.}  
+\clearpage
+\item Target objects = AEP or SPage \\
+If the removed capabilities point on AEP or SPage objects,also nothing happens to Domain 1 as the execution is not legal. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RevokeOutside2}
+\caption{Noninterference for Revoke on object types $\neq$ CNode and Untyped where the removed capabilities point on entities outside the H domain}
+\label{fig:RevokeOutside2}
+\end{figure}
+\end{flushleft}
+\begin{tabular}{ll}
+\textbf{Preconditions:} \\ \\
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRevoke e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRevoke e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{revoke} on objects $\neq$ CNode and Untyped, where the removed capabilities point on objects = AEP $\vee$ SPage:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{revoke} on objects $\neq$ CNode and Untyped, where the removed capabilities point on objects = AEP $\vee$ SPage is fulfilled.}  
+\clearpage
+\end{itemize}
 \section{Conclution}
 Summarized I tried to show the noninterference property on the take-grant model as it was specified by the team of NICTA in the paper \href{http://www.ssrg.nicta.com/publications/nicta_full_text/6004.pdf}{%
 		Noninterference for Operating System Kernels}. This trial failed so I had to extend the model by \texttt{read} and \texttt{write} operations, a value and objectype for entities and a check if the object type is able to perform the particular system operation. \\
