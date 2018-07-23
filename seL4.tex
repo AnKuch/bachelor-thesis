@@ -1,11 +1,11 @@
 % !TEX root = Bachelorarbeit.tex
 \subsection{The seL4 Microkernel}\label{sec:seL4}
-	The seL4 \cite{Manual} ist a small operation system kernel. It's based on the in the L4 microkernel developed in the 1990s and provieds a minimal number of services to applications, such as abstractions for virutal address spaces, threads, inter process comunication (IPC). \\
-	Each abstraction ist implemented by a kernel object with methodes dependent on the abstraction it supplies. The objects can be named and accessed by capablities which are also stored in kernel objects called \textit{CNodes}. \\
+	The seL4 \cite{Manual} ist a small operation system kernel. It is based on the in the L4 microkernel developed in the 1990s and provieds a minimal number of services to applications, such as abstractions for virutal address spaces, threads, inter process comunication (IPC). \\
+	Each abstraction ist implemented by a kernel object with methods dependent on the abstraction it supplies. The objects can be named and accessed by capablities which are also stored in kernel objects called \textit{CNodes}. \\
 	Each capability contains a target object and potentially several access rights. The access rights can be \texttt{Read, Write, Grant} and \texttt{Create}. By invoking a capability that points to the kernel object  with a corresponding method name, applications can invoke system calls. As arguments these system calls can have data or other capabilities. 
 
 \subsubsection{System Calls}
-Kernel provided system calls:
+The kernel provides the following system calls:
 \begin{itemize}
 \item \texttt{send()}: The system call argument ist delivered to the target object and the application is allowed to continue. If the target is not able to receive and/or process the arguments immediately, the sending application will be blocked until the arguments can be delivered.
 
@@ -48,7 +48,7 @@ Endpoints are used for the \textit{interprocess communication} between threads. 
 Threads in the seL4 kernel are grouped into security domains. Interprocess communication between different domains is only realised via AEPs. Generally capabilities to endpoints can be restricted to be read - or write - only. 
 \item \textbf{TCP} \\
 A thread of execution in seL4 is represented by a \textit{thread control block}. It is always associated with a CSpace (provides the capabilities required to manipulate the kernel objects) and a VSpace (provides the virtual memory environment required to contain the code and data application). \\
-The TCB object has the following methods: \\
+The thread control block object has the following methods: \\
 \texttt{CopyRegisters(), ReadRegisters(), WriteRegisters(), SetPriority(), \\ SetIPCBuffer(), SetSpace(), Configure(), Suspend(), Resume()}
 	\begin{figure}[ht]
 	\centering
@@ -60,7 +60,7 @@ The TCB object has the following methods: \\
 \item \textbf{Virtual Memory}\\
 Objects in the \textit{virtual address space} (VSpace) implement services for the management of virtual memory which largely directly correspond to those of the hardware: \\
 Page Directory, Page Table, Page, ASID Control, ASID Pool \\
-Figure \ref{fig:intapp} showes how they are connected.
+Figure \ref{fig:intapp} shows how they are connected.
 \item \textbf{Interrupt Objects} \\
 Device driver applications require \texttt{Interrupt Ojects} to be capable of receiving and acknowledging interrupts from hardware devices.
 \item \textbf{Untyped Memory} \\
@@ -69,15 +69,15 @@ Device driver applications require \texttt{Interrupt Ojects} to be capable of re
 
 \subsubsection{Memory Allocation Model} 
 A special characteristic of the seL4 is that the memory for kernel objects is not allocated dynamically. A goal was to isolate physical memory access between applications and to control the amount of physical memory that applications can use. \\
-For this applications get fixed sized memory reagions they have to control by themselves. \\
-Capabilities on Untyped Memory Objects (UMO) are needed to create new objects. So applications need the capabilities on UMOs to create new objects. After creation the objects have a fix amount of memory they can use. \\
+To accomplish this applications get fixed sized memory regions they have to control by themselves. \\
+Capabilities on Untyped Memory Objects (UMO) are needed to create new objects. So applications need the capabilities on UMOs to create new objects. After creation the objects have a fixed amount of memory they can use. \\
 At boot time the kernel pre-allocates all the memory required for the kernel to run. This includes the space for kernel code, data and kernel stack. The kernel then creates an \textit{Initial User Thread} with associated CSpace and VSpace and hands over the remainig memory in form of capabilities on UMOs. \\
-The Initial User Thread can create smaler sized UMOs out of an UMO or \texttt{retype} it into another object type. The creator of new objects has full authority over the objects. This "full authority" depends on the object type. \\
-Figure \ref{fig:systarch} shows a sample system architecture in which a resource manager running at user-level  has the authority to the remaining untyped memory after boot strapping. 
+The Initial User Thread can create smaller sized UMOs out of an UMO or \texttt{retype} it into another object type. The creator of new objects has full authority over the objects. This "full authority" depends on the object type. \\
+Figure \ref{fig:systarch} shows a sample system architecture in which a resource manager running at user-level  has the authority over the remaining untyped memory after bootstrapping. 
 	
 	\begin{figure}[ht]
 	\centering
 		\includegraphics[width=0.6\textwidth]{./Pictures/MemoryAllocation.png}
-	\caption[Sample system architecture]{Sample System Configuration \cite{TakeG}}
+	\caption[Sample system architecture]{Sample system configuration \cite{TakeG}}
 	\label{fig:systarch}
 	\end{figure}	

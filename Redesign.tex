@@ -1,6 +1,6 @@
 % !TEX root = Bachelorarbeit.tex
 \section{Redesign of the take-grant-model}
-This procedure worked until I came to the remove-operation. There I got the problem, that an entity in the given model is allowed to delete a capability and with that also an object in another domain without any restrictions:
+This procedure worked until I came to the remove-operation. There I noticed the issue, that an entity in the given model is allowed to delete a capability and with that also an object in another domain without any restrictions:
 \begin{figure}[H]
 \pgfuseimage{RemoveGraphic1}
 \caption{No confidentiality for Remove}
@@ -18,11 +18,11 @@ To study that problem I decided to classify the entities by their types, corresp
 \item Interrupt Handler
 \item Shared Pages (Pages (Frames) can be shared between domains. The corresponding capability has to be copied and then mapped in the VSpace of the other domain.)
 \end{itemize}
-The following table shows the different object types with the different operation executable on them and the corresponding take- grant system calls: 
+The following table shows the different object types with the different operation executable on them and the corresponding take-grant system calls: 
 \begin{table}[H]
 \begin{tabular}{|l|c|c|}
 \hline
-Capability Type & Concrete Kernel & protection model \\
+Capability Type & Concrete Kernel & Protection Model \\
 \hline
 \hline
 Untyped & Retype & sequence of \textit{SysCreate} \\
@@ -58,7 +58,7 @@ Interrupt Handler & Acknowledge interrupt & \textit{SysWrite}\\
 \hline
 \end{tabular}
 \caption{Relationship: operation of concrete kernel $\longleftrightarrow$ of protection model \cite{PhDseL4}} \end{table}
-To discem the different object types I need to revise the entity record and the preconditions for the different system operations. \\ \\ 
+To discern the different object types I need to revise the entity record and the preconditions for the different system operations. \\ \\ 
 New dataype for the object types: \\
 {\relsize{-1}
 	\textbf{datatype} 
@@ -73,7 +73,7 @@ New dataype for the object types: \\
 			 & | & VSpace \\
 			 & | & IContr \\
 			 & | & IHandl							
-	\end{tabular}}} \\ \\
+	\end{tabular}}} \\ \\ \\
 The final version of the \texttt{entity} record: \\
 	{\relsize{-1}
 	\textbf{record} 
@@ -91,20 +91,20 @@ The final version of the \texttt{entity} record: \\
 	\begin{tabular}{lllll}
 	  	&	"legal	&	(SysNoOp e) s	&	=	&	isEntityOf s e" \\
 	|	& 	"legal	&	(SysCreate e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ {c$_1$, c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ \\ & & & & Grant $\in$ rights c$_2$ $\wedge$ Create $\in$ rights c$_2$) $\wedge$ \\ & & & & eType (entity c$_1$ = Untyped" \\
-	| 	& "legal 	& 	(SysRead e c) s	&	=	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Read \\ & & & & $\in$ rights c) $\wedge$ eType (entity c) = TCB $\vee$ SEP $\vee$ AEP \\ $\vee$ SPage" \\
-	|	&	"legal 	&	(SysWrite e c) s&	= 	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Write \\ & & & & $\in$ rights c) $\wedge$ eType  (entity c) = TCB $\vee$ SEP $\vee$ AEP \\ & & & & $\vee$ IHandl $\vee$ SPage" \\
-	| 	&	"legal 	&	(SysGrant e c$_1$ c$_2$ r) s & = & (isEntityOf s e $\wedge$  isEntityOf s (entity c$_1$) \\ & & & & $\wedge$ {c$_1$,c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ Grant $\in$ rights c$_1$) $\wedge$ \\ & & & & eType (entity c$_1$)  = TCB $\vee$ SEP $\vee$ CNode $\vee$ VSpace $\vee$ \\ & & & & IContr" \\
+	| 	& "legal 	& 	(SysRead e c) s	&	=	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Read \\ & & & & $\in$ rights c) $\wedge$ eType (entity c) = TCB $\vee$ SEP $\vee$ \\ & & & & AEP $\vee$ SPage" \\
+	|	&	"legal 	&	(SysWrite e c) s&	= 	&	(isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e $\wedge$ Write \\ & & & & $\in$ rights c) $\wedge$ eType  (entity c) = TCB $\vee$ SEP $\vee$ \\ & & & & AEP $\vee$ IHandl $\vee$ SPage" \\
+	| 	&	"legal 	&	(SysGrant e c$_1$ c$_2$ r) s & = & (isEntityOf s e $\wedge$  isEntityOf s (entity c$_1$) \\ & & & & $\wedge$ {c$_1$,c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ Grant $\in$ rights c$_1$) $\wedge$ \\ & & & & eType (entity c$_1$)  = TCB $\vee$ SEP $\vee$ CNode $\vee$ VSpace \\ & & & & $\vee$ IContr" \\
 	| 	&	"legal 	&	(SysRemove e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ c$_1$ $\in$ caps$\_$of s e)  $\wedge$ \\ & & & & eType (entity c$_1$) = CNode $\vee$ VSpace $\vee$ IContr" \\
 	|	&	"legal	&	(SysRevoke e c) s	&	=	&	isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e  $\wedge$ \\ & & & & eType (entity c) = Untyped $\vee$ CNode"
 	\end{tabular}}} \\ \\ \\
 As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves whether a system operation is "legal" in state s. If it is, the system operation is performed. Otherwise the new state \texttt{s'} is defined as \texttt{s' = s}. This means that if a system operation is not legal nothing happens. 
-For the validation I took a subsystem (SS1) of one Domain (D1) and another subsystem (SS2) of a second Domain (D2). \\
-In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between Domains goes through \textit{Asynchronous Endpoints} and \textit{Shared Pages}. \\
-Figure \ref{overview} pictures an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} and \textit{Shared Pages} is implemented if the information is allowed to flow from Domain 1 to Domain 2: D1$\leadsto$D2 but D2$\not\leadsto$D1.
+For the validation I took a subsystem (SS1) of one domain (D1) and another subsystem (SS2) of a second domain (D2). \\
+In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between domains goes through \textit{Asynchronous Endpoints} and \textit{Shared Pages}. \\
+Figure \ref{overview} pictures an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} and \textit{Shared Pages} is implemented if the information is allowed to flow from domain 1 to domain 2: D1$\leadsto$D2 but D2$\not\leadsto$D1.
 \begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{OverviewObjects}
-\caption{Objects and Methods in the kernel}
+\caption{Objects and methods in the kernel}
 \label{overview}
 \end{figure}
 \end{flushleft}

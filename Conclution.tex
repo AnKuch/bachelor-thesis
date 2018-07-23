@@ -1,7 +1,7 @@
 % !TEX root = Bachelorarbeit.tex
 \section{Conclusion}
-Summarized I tried to show the noninterference property on the take-grant model as it was specified by the team of NICTA in the paper \href{http://www.ssrg.nicta.com/publications/nicta_full_text/6004.pdf}{%
-		Noninterference for Operating System Kernels}. This trial failed so I had to extend the model by \texttt{read} and \texttt{write} operations, a value and objectype for entities and a check if the object type is able to perform the particular system operation. \\
+Summarized I tried to show the noninterference property on the take-grant model as it was specified by the team of NICTA in the paper \href{http://ts.data61.csiro.au/publications/nicta_full_text/1474.pdf}{%
+		"Verified Protection Model of the seL4 Microkernel"}\cite{TakeG}. This trial failed so I had to extend the model by \texttt{read} and \texttt{write} operations, a value and objectype for entities and a check if the object type is able to perform the particular system operation. \\
 		With this adaptions it was feasible to investigate if the system operations satisfy the noninterference property. \\ \\
 		The conclusion of the thesis is that the original model is not appropriate to show noninterference on it. With the extended one it was possible and every system operation fulfills it. \\ \\
-		As a next step the noninterference property should be specified and verified formal for the extended model. This can also be done with the theorem proof assistant Isabelle/HOL.  
+		As a next step the noninterference property should be specified and verified formally for the extended model. This can also be done with the theorem proof assistant Isabelle/HOL.  

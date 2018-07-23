@@ -36,9 +36,9 @@ An entity has a set of capabilities: \\ \\
 	\textbf{record } \texttt{ 						
 	entity = caps :: cap set}} \\ \\
 	
-The systems state includes two flields: 
+The systems state includes two fields: 
 \begin{enumerate}
-\item The \texttt{heap}, which stores the entities of the system like an array form address \texttt{0} up to and excluding \texttt{next$\_$id}.
+\item The \texttt{heap}, which stores the entities of the system like an array from address \texttt{0} up to and excluding \texttt{next$\_$id}.
 \item \texttt{next$\_$id} contains slot for the next entity without overlapping with an existing one. 
 \end{enumerate} 
 	{\relsize{-1}	
@@ -88,7 +88,7 @@ The \texttt{diminish} function applies this mask on the given acces rights: \\ \
 	\end{tabular}}} \\ \\ \\
 	
 The function \texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}. \texttt{Caps$\_$of} issues the set of all capabilities  contained in the entity with the address \texttt{r} in state \texttt{s}. \\ \\
-The original executions of \texttt{SysRead} and \texttt{SysWrite} don't have an underlying function. For implying the noninterference property I have to include what happens if an entity reads or writes a value from another entity. For this purpose I defined a \texttt{readOperation} and a \texttt{writeOperation}. \\
+The original executions of \texttt{SysRead} and \texttt{SysWrite} do not have an underlying function. For implying the noninterference property I have to include what happens if an entity reads or writes a value from another entity. For this purpose I defined a \texttt{readOperation} and a \texttt{writeOperation}. \\
 	The \texttt{step'} and \texttt{step} functions define the execution of a single system operation: \\ \\
 	{\relsize{-1}	
 	\texttt{step' :: "sysOPs $\Rightarrow$ state $\Rightarrow$ state" \textbf{where}} \\

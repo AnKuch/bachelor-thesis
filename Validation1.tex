@@ -6,12 +6,13 @@ I took one Low-level-Subsystem and one High-level-Subsystem with entities in the
 \item H equates a High level domain that implements the subsystem 'H'
 \item L equates a Low level domain that implements the subsystem 'L'
 \item e$_1$ is an entity in H and e$_2$ is an entity in L
+\item s $\overset{\text{L}}{\sim}$ t
 \end{itemize}
 \begin{figure}[H]
 \pgfuseimage{WriteGraphic1}
 \caption{Noninterfernce of Write 1}
 \end{figure}
-To show noninterference I checked if the criterias for \texttt{aquiv$\_$nonin s' t' L} are fulfilled after the execution of the \texttt{write operation} and the following preconditions. \\ 
+To show noninterference I checked if the criterias for \texttt{aquiv$\_$nonin s' t' L} are fulfilled after the execution of the \texttt{write operation} and the named preconditions. \\ 
 The \texttt{write operation} in the extended model satisfies the noninterference property: 
 \begin{itemize}
 \item \texttt{value$\_$of s' e = value$\_$of s e $\wedge$ caps$\_$of s' e = caps$\_$of s e} and \texttt{subSys s' e = subSys s e} as the \texttt{write operation} on the entity, \texttt{c$_1 \in e_2$} is pointing on, changes an entity e$_1 \in$ H and does not affect an entity $\in$ L.
