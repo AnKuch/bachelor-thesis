@@ -1,0 +1,62 @@
+% !TEX root = Bachelorarbeit.tex
+\section{Formalisation of the Noninterference Model}\label{FormNon}
+For the validation a formalisation of the noninterference property. \\ 
+
+{\relsize{-1}
+\texttt{
+noninterference :: "bool" \textbf{where} \\
+"noninterference $\equiv$ $\forall$ \textit{a l h s t s' t'.}reachable \textit{s} $\wedge$ reachable \textit{t} $\wedge$ \textit{s $\overset{\text{l}}{\sim}$ t} $\wedge$ (\textit{h $\leadsto$ l $\longrightarrow$ \\
+ s $\overset{\text{h}}{\sim}$ t}) $\wedge$ \textit{(s,s')}$\in$ Step \textit{a} $\wedge$ \textit{(t,t')}$\in$ Step \textit{a} $\longrightarrow$ \textit{s' $\overset{\text{l}}{\sim}$ t'}}"} \\ \\
+
+"\texttt{a}" names the system operation, "\texttt{l}" a low level domain, "\texttt{h}" a high level domain, from the states "\texttt{s}" and "\texttt{t}" the system operation is executed and "\texttt{s'}" and "\texttt{t'}" are the resulting states. \\ \\
+First I tried to validate confidentiality for the different system operations as they are defined in the take-grant-model. With this model it is impossible to decide whether a change of value has been recognized by another domain. \\
+In the paper an entity only includes a set of capabilites. For my purpose I need the option to access the content of the entities, because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
+Therefore I extend the original record \texttt{entity} by adding a \textit{value} modelled by a natural number. \\ 
+
+My entity type: \\ \\
+	{\relsize{-1}
+	\textbf{record} 
+	\texttt{
+	\begin{tabular}[t]{ll}
+	entity = & caps :: cap set \\
+			 & eValue :: nat 													
+	\end{tabular}}} \\ \\ \\
+	
+To check noninterference I had to define a few functions. \\
+	
+\begin{enumerate}
+	
+\item The equivalence relation "$\sim$": \\
+\texttt{s $\overset{\text{d}}{\sim}$ t} means that for every entity \texttt{e} reachable from an entity in \texttt{d} the status of \texttt{e} in \texttt{s} and \texttt{t} has to be the same. \\
+
+I named the function \texttt{aquiv$\_$nonin}. It compares the value and capabilities of \texttt{e} and the entities of the subsystem \texttt{e} is located in for \texttt{s} and \texttt{t}. \\ \\
+{\relsize{-1}
+\texttt{
+aquiv$\_$nonin :: "state $\Rightarrow$ state $\Rightarrow$ subSysT $\Rightarrow$ bool" \textbf{where} \\
+"aquiv$\_$nonin s t d $\equiv$ $\{\forall$ e $\in$ d. value$\_$of s e = value$\_$of t e $\wedge$ caps$\_$of s e = \\
+ caps$\_$of t e $\wedge$ subSys s e = subSys t e$\}$"}} \\
+
+\item A function to read the value of an entity: \\ \\
+{\relsize{-1}
+\texttt{
+value$\_$of :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ nat" where \\
+"value$\_$of s sref $\equiv$ eValue(heap s sref)"}} \\
+
+\item The isolation with subsystems: \\
+Subsystems are defined by entities that are \texttt{connected} with an entity \texttt{e} in a state \texttt{s}. \\ \\
+To identify subsystems I need a datatype for them: \\ 
+
+{\relsize{-1}\textbf{type$\_$synonym}
+\texttt{
+subSysT = "entity$\_$id st"}} \\ 
+
+Now I can define Subsystems with the function \texttt{subSys}: \\ \\
+{\relsize{-1}
+\texttt{
+subSys :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ subSysT" where \\ 
+"subSys s e $\equiv$ $\{\forall$ e$_i$.in$\_$conc$\_$connected s e e$_i\}$"}} \\ \\
+\texttt{in$\_$conc$\_$connected s e e$_i$} is true for entities \texttt{e} and \textbf{e$_i$} that are connected in state s. \\
+\texttt{e} and \textbf{e$_i$} are connected in state \texttt{s} if a grant capability on \texttt{e$_i$} is part of \texttt{caps$\_$of e} or if a grant capability on \texttt{e} is part of \texttt{caps$\_$of e$_i$}.
+\end{enumerate} 
+
+The function \texttt{caps$\_$of e$_i$} was defined in chapter \ref{sec:Formalisation}. 

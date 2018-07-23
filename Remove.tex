@@ -1,0 +1,115 @@
+% !TEX root = Bachelorarbeit.tex
+\subsection{Remove}\label{sec:Remove}
+\texttt{Remove} can be executed on CNode, VSpace or Interrupt Controller object types. \\
+As in previous chapters I distinguish between executing the operation inside and outside a domain. All legal object types are inside a domain. So I only have to differ between legal and not legal for the execution inside a domain. 
+\subsubsection{Remove on CNode, VSpace or Interrupt Controller objects} 
+Remove deletes a capability in an entity. This capability can point on an entity in the same domain or on an AEP or SPage object. 
+\begin{itemize}
+\item Target object is in the same domain \\
+If the removed capability points to an entity in the same domain and  \texttt{remove} is legal for the executed entity, the operation runs as illustrated in figure \ref{fig:RemoveCNode}.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveCNode}
+\caption{Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity in the same domain}
+\label{fig:RemoveCNode}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & removeOperation e$_2$ c$_1$ c$_2$ s removes a capability $\in$ e$_2$ $\notin$ D1 that points on \\
+& an entity $\notin$ D1. \\
+& That means it has no impact on any entity $\in$ D1 \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an entity in the same domain:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
+\item Target object = AEP or SPage object \\
+If the removed capability points to an AEP or SPage object, it may be possible that information flows out of the H domain to the L domain. Figure \ref{fig:RemoveOutside} displays that no information flowes to Domain 1.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveOutside}
+\caption{Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity outside the H domain}
+\label{fig:RemoveOutside}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & removeOperation e$_2$ c$_1$ c$_2$ s removes a capability $\in$ e$_2$ $\notin$ D1 that points on \\
+& an entity $\notin$ D1. This entity also owns no capability that points on an entity $\in$ D1. \\
+& That means it has no impact on any entity $\in$ D1 \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an object = AEP $\vee$ SPage:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on CNode, VSpace or IContr objects where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
+\end{itemize}
+\subsubsection{Remove on objects $\neq$ CNode, VSpace and Interrupt Controller} 
+On all other object types the execution of \texttt{remove} is not legal. But for the sake of completeness I consider the difference between a target object of the removed capability in the executing domain and one outside.
+\begin{itemize}
+\item Target object of the removed capability is in the same domain \\
+The execution is not legal because the object on which the operation is executed $\neq$ CNode, VSpace and Interrupt Controller.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveOthers}
+\caption{Noninterference for Remove on objects $\neq$ CNode, VSpace and ICont. The removed capability points to an entity in the same domain}
+\label{fig:RemoveOthers}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRemove e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace and IContr where the removed capability points on an entity in the same domain:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace and ICont where the removed capability points on an entity in the same domain is fulfilled.}  
+\clearpage
+\item Target object = AEP or SPage \\
+If the removed capability points to an AEP or SPage object,also nothing happens to Domain 1 as the execution is not legal. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{RemoveOutside2}
+\caption{Noninterference for Remove on object types $\neq$ CNode, VSpace or IContr. The removed capability points to an entity outside the H domain}
+\label{fig:RemoveOutside2}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRemove e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRemove e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace or IContr where the removed capability points on an object = AEP $\vee$ SPage:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{remove} on objects $\neq$ CNode, VSpace or IContr where the removed capability points on an entity in the same domain is fulfilled.}  
+\end{itemize}

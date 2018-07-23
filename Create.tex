@@ -1,0 +1,81 @@
+% !TEX root = Bachelorarbeit.tex
+\subsection{Create}\label{sec:Create}
+Create corresponds to the \textit{Retype} operation on untyped memory objects (UMOs). Each Domain has a own and fixed section of memory. So the UMO for the \texttt{retype} is located in the same Domain as the implementing entity. Furthermore the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
+\subsubsection{Create on UMO}
+The following picture shows how a create operation in a \texttt{H} domain changes or not the equivalence criteria in the \texttt{L} domain that is not allowed to get information from the former one. \\
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{CreateUMO}
+\caption{Noninterference for Create on Untyped Memory Objects}
+\end{figure}
+\end{flushleft}
+I have to show that if s $\overset{\text{D1}}{\sim}$ t and (s,s') $\in$ Step a and (t,t') $\in$ Step a then s' $\overset{\text{D1}}{\sim}$ t'. 
+s $\overset{\text{D1}}{\sim}$ t was defined in Chapter \ref{ValNon} as the boolean fuction aquiv$\_$nonin s t D1. The function is true if all entities e $\in$ D1 have the same value in s and t (value$\_$of s e = value$\_$of t e), if they also have the same capabilities in s and t (caps$\_$of s e = caps$\_$of t e) and if D1 has the same entities in s and t (subSys s e = subSys t e).\\
+In the following section I check if value$\_$of s' e = value$\_$of t' e, caps$\_$of s' e = caps$\_$of t’ e and subSys s' e = subSys t' e for all e $\in$ D1 after the execution of 
+createOperation e$_2$ c$_1$ c$_2$ s respectively createOperation e$_2$ c$_1$ c$_2$ t. If that is the case I can say that aquiv$\_$nonin s' t' D1 = true. From my definition of \texttt{aquiv$\_$nonin} this leads to s' $\overset{\text{D1}}{\sim}$ t'. \\ \\
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
+** & createOperation e$_2$ c$_1$ c$_2$ s creates e$_3$ $\in$ D2 and doesn't change or create any e $\in$ \\
+&  D1 \\
+*** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular}\\ \\ \\
+\textbf{Proof of the noninterference property for create on UMO:} \\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on an untyped memory object is fulfilled.} 
+\clearpage
+\subsubsection{Create on all other object types inside a domain}
+If \texttt{create} is performed on another object type than an untyped memory object, the  function step' (SysCreate e c$_1$ c$_2$)s does nothing. So the new state \texttt{s'} equates the old state \texttt{s}. \\
+The following figure shows the createOperation for every other object type inside a domain.\\
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{CreateOther}
+\caption{Noninterference for Create on object types $\neq$ Untyped Memory Objects}
+\end{figure}
+\end{flushleft} 
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
+** & legal (SysCreate e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular}\\ \\  \\
+\textbf{Proof of the noninterference property for create on other object types in a domain:} \\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on other object types in a domain is fulfilled.} 
+\clearpage
+\subsubsection{Create on Asynchronous IPC Endpoint or Shared Page objects}
+Next I whant to be sure that create has no impact on the entities in the L domain if it's executed on AEP or SPage objects.\\
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{CreateOutside}
+\caption{Noninterference for Create on object types = AEP $\vee$ SPage}
+\end{figure}
+\end{flushleft} 
+In this case the check if the execution is legal = false in both states. So in both states the step' function leads to the definition of the old state. \\ \\
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
+** & legal (SysCreate e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysCreate e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
+\end{tabular}\\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{create} on Asynchronous IPC Endpoint or Shared Page objects:}\\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on Asynchronous IPC Endpoint or Shared Page objects is fulfilled.} 

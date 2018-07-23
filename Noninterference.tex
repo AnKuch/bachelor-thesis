@@ -1,0 +1,8 @@
+% !TEX root = Bachelorarbeit.tex
+\subsection{Noninterference}
+Noninterference is an enhancement of the information flow model, first published by Goguen and Meseguer in 1982 and updated in 1984. It ensures that objects and subject from different security levels don't interfere with those at other levels. In the model variables are classified to be L (low security) or H (high security, private) variables. The goal is to prevent information to flow from H variables to L variables. \\
+I use the noninterference formulation of Geoffrey Smith \cite{InfFlow}, which reads "Program c satisfies noninterference if, for any memories $\mu$ and $\nu$ that agree on L variables, the memories produced by running c on $\mu$ and on $\nu$ also agree on L variables (provided that both runs terminate successfully)." \\
+This means that, if in a program two states are equivalent on a low level domain, then they are still equivalent on this level after a program was executed.\\
+Central to to noninterference is the notion of a \textit{policy} $\leadsto$. It specifies the allowed information  flows between domain. $L \leadsto H$ if information is allowed to flow from domain L to domain H. \\
+The model says two memories $\mu$ and $\nu$ agree on L variables if they fullfil an equivalence relation $\mu$ $\overset{\text{L}}{\sim}$ $\nu$. \\
+The exact formalisation of noninterferenc for the validation follows in chapter \ref{FormNon}.

@@ -1,0 +1,106 @@
+% !TEX root = Bachelorarbeit.tex
+\subsection{Read}\label{sec:Read}
+Read is legal on TCB, Sychronous IPC Endpoint, Asynchronous IPC Endpoint and Shared Page objects. \\
+Like in chapter \ref{Write} I distinguish between objects with legal execution of \texttt{read} on objects inside a domain, illegal execution of \texttt{read} on objects inside a domain and both on objects outside a domain.
+\subsubsection{Read on TCB or Sychronous IPC Endpoint objects}
+TCB and SEP objects are the two object types that are executable with \texttt{read} from an endpoint in the same domain. \\
+Figure \ref{fig:ReadTCB} illustrates if the operation influences the L domain.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{ReadTCB}
+\caption{Noninterference for Read on a TCB or Sychronous IPC Endpoint object}
+\label{fig:ReadTCB}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & readOperation e$_2$ c$_1$ s only changes the value of an entity $\in$ D2 nothing in D1 \\ 
+*** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{read} on TCB or SEP objects:}\\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{read} on TCB or SEP objects is fulfilled.}  
+\clearpage
+\subsubsection{Read on other object types inside a domain} 
+Figure \ref{fig:ReadOthers} depicts the read operation on objects in the same domain on which \texttt{read} is not executable. It's similar to \texttt{write} in chapter \ref{WriteOthers}.
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{ReadOthers}
+\caption{Noninterference for Read on objects $\neq$ TCB, Asynchronous IPC Endpoint, Sychronous IPC Endpoint or Shared Page}
+\label{fig:ReadOthers}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRead e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{read} on objects $\neq$ TCB, SEP, SPage and AEP:}\\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{read} on objects $\neq$ TCB, SEP, SPage and AEP is fulfilled.}  
+\clearpage
+\subsubsection{Read on AEP or SPage objects from Domain 1}
+Similar to chapter \ref{WriteOut} \texttt{read} can only be executed from a \texttt{H} domain. That is the one to which information is allowed to flow. In my case it is Domain 2. No information is allowed to flow to Domain 1. So \texttt{read} is not legal if it is executed from Domain 1.\\
+Figure \ref{fig:ReadOut} shows that this does not affect Domain 1. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{ReadOutside2}
+\caption{Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 1}
+\label{fig:ReadOut}
+\end{figure}
+\end{flushleft} 
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysRead e$_1$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysRead e$_1$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{read} on AEP or SPage objects from Domain 1:}\\ \\
+$\forall$ e $\in$ D1. \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.}  
+\clearpage
+\subsubsection{Read on AEP or SPage objects from Domain 2}
+Read can be executed from Domain 2. In Figure \ref{fig:ReadOut2} I show the impact of this execution. 
+\begin{flushleft}
+\begin{figure}[H]
+\pgfuseimage{ReadOutside}
+\caption{Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 2}
+\label{fig:ReadOut2}
+\end{figure}
+\end{flushleft}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & readOperation e$_2$ c$_1$ s changes the value $\in$ e$_3$ $\notin$ D1. \\
+& That means it has no impact on any entity $\in$ D1 \\ 
+*** & legal (SysRead e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ \\
+\textbf{Proof of the noninterference property for \texttt{read} on AEP or SPage objects from Domain 2:}\\ \\
+$\forall$ e $\in$ D1. \\
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.}  
