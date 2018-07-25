@@ -2,7 +2,7 @@
 \section{Formalisation of the Take-Grant Model}\label{sec:Formalisation}
 \subsection{Capabilities}
 In the Take-Grant model for seL4 \cite{TakeG}, where I got the formalisation from, the authors waived the usual differentation between subjects and objects and called all kernel objects \textit{entities}. \\ \\
-The entities memory address identifies them and is modeled as a natural number. \\ \\
+The entities' memory address identifies them and is modeled as a natural number. \\ \\
 	{\relsize{-1}
 	\textbf{type$\_$synonym} \texttt{ entity$\_$id = nat}} \\ \\
 With each capability a set of rights is associated. There are four access rights in the system model:	\\ \\
@@ -18,8 +18,8 @@ With each capability a set of rights is associated. There are four access rights
 	
 A capability has two fields:
 \begin{enumerate}
-\item An identifier which names a target-entity
-\item A set of rights which defines which system operations the source-entity is authorized to perform on the target-entity. 
+\item An identifier that names a target-entity
+\item A set of rights that defines which system operations the source-entity is authorized to perform on the target-entity. 
 \end{enumerate} 
 
 	{\relsize{-1}
@@ -36,7 +36,7 @@ An entity has a set of capabilities: \\ \\
 	\textbf{record } \texttt{ 						
 	entity = caps :: cap set}} \\ \\
 	
-The systems state includes two fields: 
+The systems' state includes two fields: 
 \begin{enumerate}
 \item The \texttt{heap}, which stores the entities of the system like an array from address \texttt{0} up to and excluding \texttt{next$\_$id}.
 \item \texttt{next$\_$id} contains slot for the next entity without overlapping with an existing one. 
@@ -88,15 +88,16 @@ The \texttt{diminish} function applies this mask on the given acces rights: \\ \
 	\end{tabular}}} \\ \\ \\
 	
 The function \texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}. \texttt{Caps$\_$of} issues the set of all capabilities  contained in the entity with the address \texttt{r} in state \texttt{s}. \\ \\
-The original executions of \texttt{SysRead} and \texttt{SysWrite} do not have an underlying function. For implying the noninterference property I have to include what happens if an entity reads or writes a value from another entity. For this purpose I defined a \texttt{readOperation} and a \texttt{writeOperation}. \\
-	The \texttt{step'} and \texttt{step} functions define the execution of a single system operation: \\ \\
+
+	The \texttt{step'} and \texttt{step} functions define the execution of a single system operation. The original executions of \texttt{SysNoOp}, \texttt{SysRead} and \texttt{SysWrite} do not have an underlying function. All other functions are defined. \\ \\
+	The \texttt{step} function: \\ \\
 	{\relsize{-1}	
 	\texttt{step' :: "sysOPs $\Rightarrow$ state $\Rightarrow$ state" \textbf{where}} \\
 	\texttt{
 	\begin{tabular}{lllll}
 		&	"step'	&	(SysNoOp e) s	&	=	&	s" \\
-	|	&	"step'	&	(SysRead e c) s	&	=	&	readOperation e c s" \\
-	|	&	"step'	&	(SysWrite e c) s &	=	&	writeOperation e c s" \\
+	|	&	"step'	&	(SysRead e c) s	&	=	&	s" \\
+	|	&	"step'	&	(SysWrite e c) s &	=	&	s" \\
 	|	&	"step'	&	(SysCreat e c$_1$ c$_2$) s & = & createOperation e c$_1$ c$_2$ s" \\
 	|	&	"step'	&	(SysGrant e c$_1$ c$_2$ \textit{R}) s & = & grantOperation e c$_1$ c$_2$ \textit{R} s" \\
 	|	&	"step'	&	(SysRemove e c$_1$ c$_2$) s & = & removeOperation e c$_1$ c$_2$ s" \\
@@ -104,14 +105,7 @@ The original executions of \texttt{SysRead} and \texttt{SysWrite} do not have an
 	\end{tabular}} \\ \\
 	\texttt{step :: "sysOps $\Rightarrow$ state $\Rightarrow$ state" \textbf{where} \\
 	step cmd s $\equiv$ if legal cmd s then step' cmd s else s}} \\ \\
-	The new defined functions \texttt{readOperation} and \texttt{writeOperation}: \\ \\
-	{\relsize{-1}	
-	\texttt{readOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
-	\texttt{"readOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(e := $\llparenthesis$caps = caps$\_$of s e, eValue = value$\_$of s (entity c)$\rrparenthesis$)$\rrparenthesis$"}}\\ \\
-	{\relsize{-1}	
-	\texttt{writeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
-	\texttt{"writeOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(entity c := $\llparenthesis$caps = caps$\_$of s (entity c), eValue = value$\_$of s e|))|)"}}\\ \\
-	The rest of the system operations stay as they are: \\ \\
+	The defined functions for the system operations \texttt{create, grant, remove} and \texttt{revoke}: \\ \\
 	{\relsize{-1}
 	\texttt{createOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
   \texttt{createOperation e c$_1$ c$_2$ s $\equiv$ \\

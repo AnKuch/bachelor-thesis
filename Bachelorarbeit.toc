@@ -1,5 +1,5 @@
-\select@language {english}
-\select@language {english}
+\babel@toc {english}{}
+\babel@toc {english}{}
 \contentsline {section}{Abstract}{I}{section*.1}
 \contentsline {section}{List of Figures}{II}{section*.2}
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}

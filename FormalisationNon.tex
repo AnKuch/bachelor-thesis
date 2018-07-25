@@ -21,7 +21,34 @@ My entity type: \\ \\
 	entity = & caps :: cap set \\
 			 & eValue :: nat 													
 	\end{tabular}}} \\ \\ \\
-	
+I also had to modify the formalisation of the \texttt{read} and \texttt{write} functions as they should be able to \texttt{read} and \texttt{write} the value of an entity. \\ \\
+For that they need a fuction that returns the value of an entity: \\ \\
+{\relsize{-1}
+\texttt{
+value$\_$of :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ nat" where \\
+"value$\_$of s sref $\equiv$ eValue(heap s sref)"}} \\ \\
+The modified \texttt{read} and \texttt{write} operations: \\ \\
+	{\relsize{-1}	
+	\texttt{readOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
+	\texttt{"readOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(e := $\llparenthesis$caps = caps$\_$of s e, eValue = value$\_$of s (entity c)$\rrparenthesis$)$\rrparenthesis$"}}\\ \\
+	{\relsize{-1}	
+	\texttt{writeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
+	\texttt{"writeOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(entity c := $\llparenthesis$caps = caps$\_$of s (entity c), eValue = value$\_$of s e|))|)"}}\\ \\
+The modified \texttt{step} and \texttt{step'} functions: \\ \\
+{\relsize{-1}	
+	\texttt{step' :: "sysOPs $\Rightarrow$ state $\Rightarrow$ state" \textbf{where}} \\
+	\texttt{
+	\begin{tabular}{lllll}
+		&	"step'	&	(SysNoOp e) s	&	=	&	s" \\
+	|	&	"step'	&	(SysRead e c) s	&	=	&	readOperation e c s" \\
+	|	&	"step'	&	(SysWrite e c) s &	=	&	writeOperation e c s" \\
+	|	&	"step'	&	(SysCreat e c$_1$ c$_2$) s & = & createOperation e c$_1$ c$_2$ s" \\
+	|	&	"step'	&	(SysGrant e c$_1$ c$_2$ \textit{R}) s & = & grantOperation e c$_1$ c$_2$ \textit{R} s" \\
+	|	&	"step'	&	(SysRemove e c$_1$ c$_2$) s & = & removeOperation e c$_1$ c$_2$ s" \\
+	|	&	"step'	&	(SysRevoke	e c) s & =	&	revokeOperation e c s" 
+	\end{tabular}} \\ \\
+	\texttt{step :: "sysOps $\Rightarrow$ state $\Rightarrow$ state" \textbf{where} \\
+	step cmd s $\equiv$ if legal cmd s then step' cmd s else s}} \\ \\
 To check noninterference I had to define a few functions. \\
 	
 \begin{enumerate}
