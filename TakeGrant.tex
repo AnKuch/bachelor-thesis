@@ -9,7 +9,7 @@ Rules for graph mutation represent the different system operations to modify  th
 The most common rules in the classical model are \textit{take, grant, create} and \textit{remove}. 
 	
 \begin{itemize}
-\item \textbf{take rule}: Let S,X,Y be three distinct vertices in the protection graph with an arc, labelled with $\alpha$, from X to Y and one labelled with $\gamma$ from S to X, such that t $\in \gamma.$  
+\item \textbf{take rule}: Let S,X,Y be three distinct vertices in the protection graph with an arc, labelled with $\alpha$, from X to Y and one labelled with $\gamma$ from S to X, such that t $\in \gamma.$  "t" denotes the take authority.
 \begin{figure}[ht]
 \centering
 	\includegraphics[width=0.7\textwidth]{./Pictures/takeRule.png}
@@ -17,7 +17,7 @@ The most common rules in the classical model are \textit{take, grant, create} an
 	\label{fig:cltake}
 \end{figure}	
 	
-\item \textbf{grant rule}:	Let S,X,Y agein be three distinct vertices in the graph with an arc, labelled with  $\alpha$, from S to Y and one labelled with $\gamma$ from S to X, such that g $\in \gamma$. 
+\item \textbf{grant rule}:	Let S,X,Y agein be three distinct vertices in the graph with an arc, labelled with  $\alpha$, from S to Y and one labelled with $\gamma$ from S to X, such that g $\in \gamma$. "g" denotes the grant authority.
 \begin{figure}[ht]
 \centering
 	\includegraphics[width=0.7\textwidth]{./Pictures/grantRule.png}
@@ -43,7 +43,7 @@ The most common rules in the classical model are \textit{take, grant, create} an
 \end{itemize}	
 	
 \subsubsection{Take-Grant specified for the seL4}\label{specT}
-The Take-Grant Model specified in the paper "Verified Protection Model of the seL4 Microkernel" \cite{TakeG} is a variant of the classical Take-Grant model. \\
+The Take-Grant Model specified in the paper "Verified Protection Model of the seL4 Microkernel" \cite{TakeG} is a variant of the classical Take-Grant model. In the paper the developers extended the original model in several ways. \\
 From the modifications made the one on the \textit{create rule} is the most important one. As I explained in chapter \ref{sec:seL4} authority in the kernel is implemented with capabilities. Adding a new node to the protection graph in the model corresponds to the creation of a new object with a capability pointing on it in the kernel. Therefore the object executing the \texttt{create operation} needs a capability with \texttt{create} authority. \\
 The \textit{remove rule} was modified as it does not remove parts of labels anymore but the whole capability. That means the complete arc pointing on an object is removed. \\
 To diminish authority a capability has to be removed and newly created with diminished authority. \\
@@ -57,6 +57,8 @@ A capability  copied with \texttt{mint} is inserted in the CDT as child of the o
 	\end{figure}
 To remove a set of capabilities the operation \texttt{revoke} was implemented. \\ 
 With this operation \texttt{remove} is executed on every capability that is in the CDT below the target capability. \\
+The take rule was removed from the model and the grant rule was not modified: \\
+An entity e$_1$, that has a capability with the grant right in it, pointing to an entity e$_2$ can give the same or less amount of rights on another entity to e$_2$. \\ 
 A speciality of the extended model is, that objects and subjects are called \textit{entities}.\\
 The goal of the paper "Verified Protection Model of the seL4 Microkernel" was to show that implementing isolated subsystems, using the mechanisms of the seL4 kernel, can be accomplished. \cite{TakeG} \\
 Isolated subsystems are implemented as a collection of \textit{connected} entities. An entity that has \textit{grant authority} on another one is connected with this entity. Authority can neither get in nor get out of these isolated subsystems.\\
