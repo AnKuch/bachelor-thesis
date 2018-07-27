@@ -110,13 +110,15 @@ The function \texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}
 	\texttt{createOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
   \texttt{createOperation e c$_1$ c$_2$ s $\equiv$ \\
   \begin{tabular}{ll}
-            let & nullEntity = $\llparenthesis$cap = {}, eValue = NULL$\rrparenthesis$ ; \\
+            let & nullEntity = $\llparenthesis$cap = $\emptyset\rrparenthesis$ ; \\
                 & newCap = $\llparenthesis$entity = next$\_$id s, rights = all$\_$rights$\rrparenthesis$; \\
-                & newTarget = $\llparenthesis$caps = {newCap} ∪ caps$\_$of s (entity c$_2$), eValue = NULL$\rrparenthesis$ \\
-             in & s$\llparenthesis$heap := (heap s)(entity c$_2$ := newTarget, next$\_$id s := nullEntity), next$\_$id := next$\_$id s+1$\rrparenthesis$"
+                & newTarget = $\llparenthesis$caps = {newCap} ∪ caps$\_$of s (entity c$_2$)$\rrparenthesis$ \\
+             in & s$\llparenthesis$heap := (heap s)(entity c$_2$ := newTarget, next$\_$id s := nullEntity), next$\_$id := \\
+                & next$\_$id s+1$\rrparenthesis$"
    \end{tabular} \\ \\ \\
     grantOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ rights set $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "grantOperation e c$_1$ c$_2$ \textit{R} s $\equiv$ \\
-  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$), eValue = value$\_$of s \\(entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"\\ \\ \\
+  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$""\\ \\ \\
    removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
-  "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}}
+  "removeOperation c$_1$ c$_2$ s $\equiv$ \\
+  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}$\rrparenthesis$)$\rrparenthesis$"}}
