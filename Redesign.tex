@@ -1,5 +1,5 @@
 % !TEX root = Bachelorarbeit.tex
-\section{Redesign of the take-grant-model}
+\chapter{Redesign of the Take-Grant-Model}\label{Redesign}
 This procedure worked until I came to the remove-operation. There I noticed the issue, that an entity in the given model is allowed to delete a capability and with that also an object in another domain without any restrictions:
 \begin{figure}[H]
 \pgfuseimage{RemoveGraphic1}
@@ -22,13 +22,13 @@ The following table shows the different object types with the different operatio
 \begin{table}[H]
 \begin{tabular}{|l|c|c|}
 \hline
-Capability Type & Concrete Kernel & Protection Model \\
+Capability Type & Concrete Kernel & Take-Grant-Model \\
 \hline
 \hline
 Untyped & Retype & sequence of \textit{SysCreate} \\
 & Revoke & \textit{SysRevoke} \\
 \hline
-TCB & TreadControl & \textit{SysNoOP, SysGrant} \\
+TCB & ThreadControl & \textit{SysNoOP, SysGrant} \\
 & Exchange Registers & \textit{SystWrite} or \textit{SysRead} \\
 & Yield & \textit{SysNoOP} \\
 \hline
@@ -73,7 +73,7 @@ New dataype for the object types: \\
 			 & | & VSpace \\
 			 & | & IContr \\
 			 & | & IHandl							
-	\end{tabular}}} \\ \\ \\
+	\end{tabular}}} \\ 
 The final version of the \texttt{entity} record: \\
 	{\relsize{-1}
 	\textbf{record} 
@@ -82,8 +82,7 @@ The final version of the \texttt{entity} record: \\
 	entity = & caps :: cap set \\
 			 & eValue :: nat \\
 			 & eType :: eType										
-	\end{tabular}}} 
-\clearpage
+	\end{tabular}}} \\ \\
 	The revised version of the \texttt{legal} function:\\
 		{\relsize{-1}
 	\texttt{legal :: "sysOPs $\Rightarrow$ state $\Rightarrow$ bool" \texttt{where}}\\ \\
@@ -100,10 +99,11 @@ The final version of the \texttt{entity} record: \\
 As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves whether a system operation is "legal" in state s. If it is, the system operation is performed. Otherwise the new state \texttt{s'} is defined as \texttt{s' = s}. This means that if a system operation is not legal nothing happens. 
 For the validation I took a subsystem (SS1) of one domain (D1) and another subsystem (SS2) of a second domain (D2). \\
 In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between domains goes through \textit{Asynchronous Endpoints} and \textit{Shared Pages}. \\
-Figure \ref{overview} pictures an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} and \textit{Shared Pages} is implemented if the information is allowed to flow from domain 1 to domain 2: D1$\leadsto$D2 but D2$\not\leadsto$D1.
+Figure \ref{overview} pictures an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} and \textit{Shared Pages} is implemented if the information is allowed to flow from domain 1 to domain 2: D1$\leadsto$D2 but D2$\not\leadsto$D1. \\ 
+The connections between the objects inside a domain are just examples. Exept from those from each TCB to a VSpace and a CSpace. At boot time the initial resourcemanager gives authorities to the applications. If information is allowed to flow from domain 1 to domain 2, domain 1 gets write rights on the shared SPage and AEP object and domain 2 only read on both of them. 
 \begin{flushleft}
 \begin{figure}[H]
-\pgfuseimage{OverviewObjects}
+\pgfuseimage{OverviewObjects2}
 \caption{Objects and methods in the kernel}
 \label{overview}
 \end{figure}

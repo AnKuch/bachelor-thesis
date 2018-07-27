@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,twoside]{article}
+\documentclass[11pt,a4paper,twoside]{book}
 \usepackage{bachelorarbeit}
 \usepackage{subfigure}
 \usepackage{xspace}
@@ -12,6 +12,9 @@
 \usepackage{stmaryrd}
 \usepackage{latexsym}
 \usepackage[justification=centering]{caption}
+\usepackage{setspace}
+%\onehalfspacing
+\setstretch {0.99}
 
 \setlength{\headheight}{52pt}
 \setlength{\parindent}{0em} %Einrücken verhindern
@@ -44,31 +47,31 @@
 }
 \setcounter{secnumdepth}{5}
 
-\pgfdeclareimage [ width =15 cm ]{RemoveGraphic1}{Pictures/RemoveGraphicOld/RemoveGraphic1}
+\pgfdeclareimage [ width =14 cm ]{RemoveGraphic1}{Pictures/RemoveGraphicOld/RemoveGraphic1}
 \pgfdeclareimage [ width =14 cm ]{WriteGraphic1}{Pictures/WriteGraphicOld/WriteGraphic1}
-\pgfdeclareimage [ width =15 cm ]{CreateUMO}{Pictures/CreateUMO/CreateUMO}
-\pgfdeclareimage [ width =15 cm ]{CreateOther}{Pictures/CreateUMO/CreateOther}
-\pgfdeclareimage [ width =15 cm ]{CreateOutside}{Pictures/CreateUMO/CreateOutside}
-\pgfdeclareimage [ width =15 cm ]{OverviewObjects}{Pictures/OverviewObjects/OverviewObjectDomains2}
-\pgfdeclareimage [ width =15 cm ]{GrantTCB}{Pictures/GrantTCB/GrantTCB}
-\pgfdeclareimage [ width =15 cm ]{GrantOthers}{Pictures/GrantTCB/GrantOthers}
-\pgfdeclareimage [ width =15 cm ]{GrantOutside}{Pictures/GrantTCB/GrantOutside}
-\pgfdeclareimage [ width =15 cm ]{WriteTCB}{Pictures/WriteTCB/WriteTCB}
-\pgfdeclareimage [ width =15 cm ]{WriteOthers}{Pictures/WriteTCB/WriteOthers}
-\pgfdeclareimage [ width =15 cm ]{WriteOutside}{Pictures/WriteTCB/WriteOutside}
-\pgfdeclareimage [ width =15 cm ]{WriteOutside2}{Pictures/WriteTCB/WriteOutside2}
-\pgfdeclareimage [ width =15 cm ]{ReadTCB}{Pictures/ReadTCB/ReadTCB}
-\pgfdeclareimage [ width =15 cm ]{ReadOthers}{Pictures/ReadTCB/ReadOthers}
-\pgfdeclareimage [ width =15 cm ]{ReadOutside}{Pictures/ReadTCB/ReadOutside}
-\pgfdeclareimage [ width =15 cm ]{ReadOutside2}{Pictures/ReadTCB/ReadOutside2}
-\pgfdeclareimage [ width =15 cm ]{RemoveCNode}{Pictures/RemoveCNode/RemoveCNode}
-\pgfdeclareimage [ width =15 cm ]{RemoveOthers}{Pictures/RemoveCNode/RemoveOthers}
-\pgfdeclareimage [ width =15 cm ]{RemoveOutside}{Pictures/RemoveCNode/RemoveOutside}
-\pgfdeclareimage [ width =15 cm ]{RemoveOutside2}{Pictures/RemoveCNode/RemoveOutside2}
-\pgfdeclareimage [ width =15 cm ]{RevokeCNode}{Pictures/RevokeCNode/RevokeCNode}
-\pgfdeclareimage [ width =15 cm ]{RevokeOthers}{Pictures/RevokeCNode/RevokeOthers}
-\pgfdeclareimage [ width =15 cm ]{RevokeOutside}{Pictures/RevokeCNode/RevokeOutside}
-\pgfdeclareimage [ width =15 cm ]{RevokeOutside2}{Pictures/RevokeCNode/RevokeOutside2}
+\pgfdeclareimage [ width =14 cm ]{CreateUMO}{Pictures/CreateUMO/CreateUMO}
+\pgfdeclareimage [ width =14 cm ]{CreateOther}{Pictures/CreateUMO/CreateOther}
+\pgfdeclareimage [ width =14 cm ]{CreateOutside}{Pictures/CreateUMO/CreateOutside}
+\pgfdeclareimage [ width =15 cm ]{OverviewObjects2}{Pictures/OverviewObjects/OverviewObjectDomains2}
+\pgfdeclareimage [ width =14 cm ]{GrantTCB}{Pictures/GrantTCB/GrantTCB}
+\pgfdeclareimage [ width =14 cm ]{GrantOthers}{Pictures/GrantTCB/GrantOthers}
+\pgfdeclareimage [ width =14 cm ]{GrantOutside}{Pictures/GrantTCB/GrantOutside}
+\pgfdeclareimage [ width =14 cm ]{WriteTCB}{Pictures/WriteTCB/WriteTCB}
+\pgfdeclareimage [ width =14 cm ]{WriteOthers}{Pictures/WriteTCB/WriteOthers}
+\pgfdeclareimage [ width =14 cm ]{WriteOutside}{Pictures/WriteTCB/WriteOutside}
+\pgfdeclareimage [ width =14 cm ]{WriteOutside2}{Pictures/WriteTCB/WriteOutside2}
+\pgfdeclareimage [ width =14 cm ]{ReadTCB}{Pictures/ReadTCB/ReadTCB}
+\pgfdeclareimage [ width =14 cm ]{ReadOthers}{Pictures/ReadTCB/ReadOthers}
+\pgfdeclareimage [ width =14 cm ]{ReadOutside}{Pictures/ReadTCB/ReadOutside}
+\pgfdeclareimage [ width =14 cm ]{ReadOutside2}{Pictures/ReadTCB/ReadOutside2}
+\pgfdeclareimage [ width =14 cm ]{RemoveCNode}{Pictures/RemoveCNode/RemoveCNode}
+\pgfdeclareimage [ width =14 cm ]{RemoveOthers}{Pictures/RemoveCNode/RemoveOthers}
+\pgfdeclareimage [ width =14 cm ]{RemoveOutside}{Pictures/RemoveCNode/RemoveOutside}
+\pgfdeclareimage [ width =14 cm ]{RemoveOutside2}{Pictures/RemoveCNode/RemoveOutside2}
+\pgfdeclareimage [ width =14 cm ]{RevokeCNode}{Pictures/RevokeCNode/RevokeCNode}
+\pgfdeclareimage [ width =14 cm ]{RevokeOthers}{Pictures/RevokeCNode/RevokeOthers}
+\pgfdeclareimage [ width =14 cm ]{RevokeOutside}{Pictures/RevokeCNode/RevokeOutside}
+\pgfdeclareimage [ width =14 cm ]{RevokeOutside2}{Pictures/RevokeCNode/RevokeOutside2}
 
 \begin{document}
 	
@@ -103,28 +106,42 @@ As the specifications and proofs of the take-grant model are developed in the th
 \input{Introduction}
 	 
 \newpage
-\section{Requirements}
+\chapter{Requirements}
 \input{seL4}
-\newpage
 \input{TakeGrant}
-\clearpage
 \input{Noninterference}
 \newpage
 \input{FormalisationTG} 
-\newpage
 \input{FormalisationNon}
-\newpage
 \input{Validation1}
-\newpage
 \input{Redesign}
-\newpage
-\section{Validation with the new model}\label{sec:ValNew}
+\chapter{Validation with the new model}\label{ValNew}
+Now I whant to show that noninterference is valid for all system operations in the new defined model. \\ \\
+\textbf{Theorem 1:}\\ 
+\textit{Let \texttt{s} an \texttt{t} be well defined states. That means: 
+\begin{itemize}
+\item They are reachable from the initial state s$_0$.
+\item They only include the in Chapter \ref{Redesign} defined object types.
+\item The capabilities pointing on \texttt{Shared Pages (SPage)} and \texttt{Asynchronous IPC Endpoints (AEP)} correspond to the rights the \texttt{Initial Resource Manager (IRM)} assigned the domains at boottime, corresponding to the given information flow policy. I this case D1$\leadsto$D2.
+\item If information is also allowed to flow from domain 2 to domain 1 then s and t are equivalent for domain 2.
+\end{itemize}
+If \texttt{s} and \texttt{t} are equivalent for domain 1 (s $\overset{\text{D1}}{\sim}$ t) the the states \texttt{s'} and \texttt{t'} are still equivalent for D1 (s' $\overset{\text{D1}}{\sim}$ t'), after the execution of a system operation \texttt{a}.} \\ \\
+\textbf{Lemma 1:}\\
+\textit{If the information flow policy allows information to flow from D1 to D2 the IRM gives D1 write right on the \texttt{SPage} and \texttt{AEP} and D2 read rights on both of them. If it is allowed to flow from D2 to D1 it is the other way arround. \\
+As the only way to get new rights on an object is through the \texttt{SysCreate} or \texttt{SysGrant} operations and the only connection out of daomains are those to the \texttt{SPages} and \texttt{AEPs}, the maximum of rights adomain can get on these objects is the set of rights it got from the \texttt{IRM} at boot time.} \\ \\
+\textbf{Proof:}
 I examine each operation of the protection model and distinguish therefore between the different object types. \\
 For this I assume that Domain 1 equates a low level domain and Domain 2 a high level domain. So  information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. \\ \\
 \textbf{D1$\leadsto$D2 but D2$\not\leadsto$D1} \\ \\
-Further I assume that state s is equivalent to state t for Domain 1. What is represented by the function  \texttt{aquiv$\_$nonin} \\ \\
-\textbf{s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1}	\\ \\
-In this chapter I show that the criteria for the equivalence relation still holds in Domain 1, between s' and t', after every type of operation. 
+Further I assume:
+\begin{itemize}
+\item State s is equivalent to state t for Domain 1, what is represented by the function  \texttt{aquiv$\_$nonin}: \\ 
+\textbf{s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1}	\\ 
+\item The states s and t are reachable from the initial state s$_0$.
+\item The included object types correspond to those defined in Chapter \ref{Redesign}.
+\item Because of \textit{Lemma 1} I can assume that the connections on \texttt{SPages} and \texttt{AEPs} are well defined as claimed in \textit{Theorem 1}.
+\end{itemize} 
+In this Chapter I show that the criteria for the equivalence relation still holds in Domain 1, between s' and t', after the execution of every type of system operation. 
 \input{Create}
 \clearpage
 \input{Grant}

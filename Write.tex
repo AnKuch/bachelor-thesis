@@ -1,103 +1,93 @@
 % !TEX root = Bachelorarbeit.tex
-\subsection{Write}\label{Write}
+\section{Write}\label{Write}
 \texttt{Write} can be executed on TCB, SEP, AEP, SPage and Interrupt Handler objects.
-\subsubsection{Write on TCB, SEP or IHandl objects}
+\subsection{Write on TCB, SEP or IHandl objects}
 I start with the \texttt{write} operation on all executable objects inside a domain. So in the next figure e$_3$ = TCB $\vee$ SEP $\vee$ IHandl.
-\begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteTCB}
 \caption{Noninterference for Write on a TCB, Sychronous IPC Endpoint or Interrupt Handler object}
 \end{figure}
-\end{flushleft}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & writeOperation e$_2$ c$_1$ s only changes the value of an entity $\in$ D2 nothing in D1 \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
 \textbf{Proof of the noninterference property for \texttt{write} on TCB, SEP or IHandl objects:}\\ \\
-$\forall$ e $\in$ D1. \\ 
-\begin{tabular}{ll}
-& value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
-$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
-$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e
-\end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
-\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on TCB, SEP or IHandl objects is fulfilled.} 
-\clearpage
-\subsubsection{Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}\label{WriteOthers}
-Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executeable with the \texttt{write} operation. Those are CNodes, VSpaces, UMOs and Interrupt Controllers. \\
-\texttt{Write} operation on these objects: \\
-\begin{flushleft}
-\begin{figure}[H]
-\pgfuseimage{WriteOthers}
-\caption{Noninterference for Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}
-\end{figure}
-\end{flushleft}
-\textbf{Preconditions:} \\ \\
-\begin{tabular}{ll}
-* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
-** & legal (SysWrite e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
-*** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
-\textbf{Proof of the noninterference property for \texttt{write} on objects $\neq$ TCB, SEP, IHandl, SPage and AEP:}\\ \\
-$\forall$ e $\in$ D1. \\ 
+For all e $\in$ D1, we have: \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
+\textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on TCB, SEP or IHandl objects is fulfilled.} 
+\subsection{Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}\label{WriteOthers}
+Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executeable with the \texttt{write} operation. Those are CNodes, VSpaces, UMOs and Interrupt Controllers. \\
+\texttt{Write} operation on these objects: \\
+\begin{figure}[H]
+\pgfuseimage{WriteOthers}
+\caption{Noninterference for Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}
+\end{figure}
+\textbf{Preconditions:} \\ \\
+\begin{tabular}{ll}
+* & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
+** & legal (SysWrite e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
+*** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
+\end{tabular} \\ \\ 
+\textbf{Proof of the noninterference property for \texttt{write} on objects $\neq$ TCB, SEP, IHandl, SPage and AEP:}\\ \\
+For all e $\in$ D1, we have: \\ 
+\begin{tabular}{ll}
+& (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
+$\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
+$\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
+\end{tabular} \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'\\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on objects $\neq$ TCB, SEP, IHandl, SPage and AEP is fulfilled.} 
-\clearpage
-\subsubsection{Write on AEP or SPage objects from Domain 2}\label{WriteOut}
+\subsection{Write on AEP or SPage objects from Domain 2}\label{WriteOut}
 In Chapter \ref{sec:ValNew} I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Asychronous Endpoints and Shared Pages are restricted to \texttt{read}. 
 If the write operation is called from Domain 2 it looks like it is illustrated in Figure \ref{fig:WriteOut1}. The policy prescribes that information is only allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. As a consequence \texttt{write} can not be part of c$_1$. 
-\begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteOutside}
 \caption{Noninterference for Write on an object = AEP executed from an entity $\in$ Domain 2}
 \label{fig:WriteOut1}
 \end{figure}
-\end{flushleft}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysWrite e$_2$ c$_1$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
 \textbf{Proof of the noninterference property for \texttt{write} on AEP or SPage objects from Domain 2:}\\ \\
-$\forall$ e $\in$ D1. \\ 
+For all e $\in$ D1, we have: \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'\\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 2 is fulfilled.}  
 \clearpage
-\subsubsection{Write on an AEP or SPage object from Domain 1}\label{WriteOut2}
+\subsection{Write on an AEP or SPage object from Domain 1}\label{WriteOut2}
 Write on AEP objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} shows that this has no influence on the noninterference property.
-\begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{WriteOutside2}
 \caption{Noninterference for Write on an object = AEP executed from an entity $\in$ D1}
 \label{fig:WriteOut2}
 \end{figure}
-\end{flushleft}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & writeOperation e$_1$ c$_1$ s changes the value $\in$ e$_3$ $\notin$ D1. \\
 & That means it has no impact on any entity $\in$ D1 \\ 
 *** & legal (SysWrite e$_2$ c$_1$) t = false $\Rightarrow$ t' = t
-\end{tabular} \\ \\ \\
+\end{tabular} \\ \\ 
 \textbf{Proof of the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1:}\\ \\
-$\forall$ e $\in$ D1. \\
+For all e $\in$ D1, we have: \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t'\\ \\ \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'\\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.} 

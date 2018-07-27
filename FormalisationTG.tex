@@ -1,7 +1,7 @@
 % !TEX root = Bachelorarbeit.tex
-\section{Formalisation of the Take-Grant Model}\label{sec:Formalisation}
-\subsection{Capabilities}
-In the Take-Grant model for seL4 \cite{TakeG}, where I got the formalisation from, the authors waived the usual differentation between subjects and objects and called all kernel objects \textit{entities}. \\ \\
+\chapter{Formalisation of the Take-Grant Model}\label{sec:Formalisation}
+\section{Capabilities}
+In the Take-Grant model for seL4 \cite{TakeG}, where I got the formalisation from, the authors waived the usual differentation between subjects and objects and called all kernel objects \textit{entities}. \\ 
 The entities' memory address identifies them and is modeled as a natural number. \\ \\
 	{\relsize{-1}
 	\textbf{type$\_$synonym} \texttt{ entity$\_$id = nat}} \\ \\
@@ -29,7 +29,7 @@ A capability has two fields:
 	cap = & entity :: entity$\_$id \\
 	      & rights :: rights set
 	\end{tabular}} }
-	\\ \\ \\
+	\\ \\ 
 	
 An entity has a set of capabilities: \\ \\
 	{\relsize{-1}
@@ -49,7 +49,7 @@ The systems' state includes two fields:
 			& next$\_$id :: entity$\_$id
 	\end{tabular}}}  \\
 	
-\subsection{System Operations}\label{sec:System Operations}
+\section{System Operations}\label{sec:System Operations}
 The data type \texttt{sysOps} defines the different system operations of the seL4. \\ \\
 	{\relsize{-1}	
 	\textbf{datatype}
@@ -63,14 +63,14 @@ The data type \texttt{sysOps} defines the different system operations of the seL
 			&	|	&	SysRemove	entity$\_$id cap cap \\
 			&	|	&	SysRevoke entity$\_$id cap
 	\end{tabular}}} \\ \\ 
-	
 The entity$\_$id in each operation is the entity initiating the operation. The first named capability is the one that is being invoked. The second capability for \texttt{SysCreate} points to the target entity for the new capability. For \texttt{SysGrant} it is the passed capability and for \texttt{SysRemove} it is the one that has to be removed. The rights set in \texttt{SysGrant} is necessary for the initiating entity to have the option only to transport a subset of the authority it offers to the receiver. 	\\
 
-The \texttt{diminish} function applies this mask on the given acces rights: \\ \\
+The \texttt{diminish} function applies this mask on the given acces rights: \\ 
+
 	{\relsize{-1}	
 	\texttt{
 	diminish :: "cap $\Rightarrow$ rights set $\Rightarrow$ cap" \textbf{where} \\
-	diminish c R $\equiv$ c$\llparenthesis$rights := rights c $\cap$ \textit{R}$\rrparenthesis$}} \\ \\ \\
+	diminish c R $\equiv$ c$\llparenthesis$rights := rights c $\cap$ \textit{R}$\rrparenthesis$}} \\ \\
 	
 \texttt{legal} defines on what terms any system operation is allowed. \\ \\
 	{\relsize{-1}
@@ -85,10 +85,9 @@ The \texttt{diminish} function applies this mask on the given acces rights: \\ \
 	| 	&	"legal 	&	(SysGrant e c$_1$ c$_2$ r) s & = & (isEntityOf s e $\wedge$  isEntityOf s (entity c$_1$) \\ & & & & $\wedge$ {c$_1$,c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ Grant $\in$ rights c$_1$)" \\
 	| 	&	"legal 	&	(SysRemove e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ c$_1$ $\in$ caps$\_$of s e)" \\
 	|	&	"legal	&	(SysRevoke e c) s	&	=	&	isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e"
-	\end{tabular}}} \\ \\ \\
+	\end{tabular}}} \\ \\ 
 	
 The function \texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}. \texttt{Caps$\_$of} issues the set of all capabilities  contained in the entity with the address \texttt{r} in state \texttt{s}. \\ \\
-
 	The \texttt{step'} and \texttt{step} functions define the execution of a single system operation. The original executions of \texttt{SysNoOp}, \texttt{SysRead} and \texttt{SysWrite} do not have an underlying function. All other functions are defined. \\ \\
 	The \texttt{step} function: \\ \\
 	{\relsize{-1}	

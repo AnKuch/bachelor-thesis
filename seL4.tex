@@ -1,10 +1,10 @@
 % !TEX root = Bachelorarbeit.tex
-\subsection{The seL4 Microkernel}\label{sec:seL4}
+\section{The seL4 Microkernel}\label{sec:seL4}
 	The seL4 \cite{Manual} ist a small operation system kernel developed for the ARM11 arcitecture. All concepts, however, can be generalised to any architecture with a multilevel-page-table structure. \cite{PhDseL4} It is based on the L4 microkernel developed in the 1990s and proviedes a minimal number of services to applications, such as abstractions for virutal address spaces, threads, inter process comunication (IPC). \\
 	Each abstraction ist implemented by a kernel object with methods dependent on the abstraction it supplies. If an application whants to use one of the implemented services it to call the corresponding object through capabilities. They are stored in kernel objects called \textit{CNodes}. \\
 	Each capability contains a target object and potentially several access rights. The access rights can be \texttt{Read, Write, Grant} and \texttt{Create}. By invoking a capability that points to the kernel object  with a corresponding method name, applications can invoke system calls. As arguments these system calls can have data or other capabilities. For example: If an object has a capability with write authority in it, pointing on a synchronous endpoint, it can send a message to another object, that has read authority on this endboint. It can do it by invoking the capability, with the write right in it, that points on the synchronous endpoint object. The other object in turn has to own and invoke a capability with the read right in it, that also point on the synchronous endpoint.
 
-\subsubsection{System Calls}
+\subsection{System Calls}
 The kernel provides the following system calls:
 \begin{itemize}
 \item \texttt{send()}: The system call argument is delivered to the target object and the application is allowed to continue. If the target is not able to receive and/or process the arguments immediately, the sending application will be blocked until the arguments can be delivered.
@@ -17,7 +17,7 @@ If the argument is delivered to an application via Endpoint the receiver needs t
 \item \texttt{ReplyWait()}: As a combination of \texttt{Reply()} and \texttt{Wait()} it is efficent for the common case that replying to a request and waiting for the next can be performed in a single system call. 
 \end{itemize}
 	
-\subsubsection{Kernel Objects}\label{sec:KernelObjects}
+\subsection{Kernel Objects}\label{sec:KernelObjects}
 The kernel implements several objects to allocate the system operations \cite{Manual}.
 \begin{itemize}
 \item \textbf{CNodes} \\
@@ -99,7 +99,7 @@ Device driver applications require \texttt{Interrupt Ojects} to be capable of re
 \texttt{Untyped memory objects (UMO)} encapsulate a fixed-sized, size-aligned, continuous region of the physical memory. Each object can be devided into a group of smaller untyped memory objects. With \texttt{Retype()} a number of new kernel objects are created. It also returns capabilities to the new objects if it succeeds. 
 \end{itemize}
 
-\subsubsection{Memory Allocation Model} 
+\subsection{Memory Allocation Model} 
 A special characteristic of the seL4 is that the memory for kernel objects is not allocated dynamically. A goal was to isolate physical memory access between applications and to control the amount of physical memory that applications can use. \\
 To accomplish this applications get fixed sized memory regions they have to control by themselves. \\
 Capabilities on Untyped Memory Objects (UMO) are needed to create new objects. So applications need the capabilities on UMOs to create new objects. After creation the objects have a fixed amount of memory they can use. \\

@@ -1,9 +1,9 @@
 % !TEX root = Bachelorarbeit.tex
-\subsection{The Take-Grant Model}	
+\section{The Take-Grant Model}	
 Protection or acces control models specify, analyse and implemente security policies. 
 The classical Take-Grant Model was primary introduced by Lipton and Snyder, 1977 in  \href{https://www.cs.nmt.edu/~doshin/t/s06/cs589/pub/2.JLS-TG.pdf}{%
 "A Linear Time Algorithm for Deciding Subject Security"} \cite{1TG}.
-\subsubsection{The Classical Model}
+\subsection{The Classical Model}
 In the Take-Grant Model \cite{TakeG} subjects or objects are represented as nodes and authority as arcs in a directed graph that represents the system. \\ 
 Rules for graph mutation represent the different system operations to modify  the authority distibution. 
 The most common rules in the classical model are \textit{take, grant, create} and \textit{remove}. 
@@ -42,7 +42,7 @@ The most common rules in the classical model are \textit{take, grant, create} an
 \end{figure}		
 \end{itemize}	
 	
-\subsubsection{Take-Grant specified for the seL4}\label{specT}
+\subsection{Take-Grant specified for the seL4}\label{specT}
 The Take-Grant Model specified in the paper "Verified Protection Model of the seL4 Microkernel" \cite{TakeG} is a variant of the classical Take-Grant model. In the paper the developers extended the original model in several ways. \\
 From the modifications made the one on the \textit{create rule} is the most important one. As I explained in chapter \ref{sec:seL4} authority in the kernel is implemented with capabilities. Adding a new node to the protection graph in the model corresponds to the creation of a new object with a capability pointing on it in the kernel. Therefore the object executing the \texttt{create operation} needs a capability with \texttt{create} authority. \\
 The \textit{remove rule} was modified as it does not remove parts of labels anymore but the whole capability. That means the complete arc pointing on an object is removed. \\

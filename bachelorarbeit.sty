@@ -39,12 +39,23 @@
 %\geometry{body={140mm,210mm},footskip=14mm}
 
 % Gestaltung der Kopf- und Fusszeilen
+%\pagestyle{fancyplain}
+%\lhead[\fancyplain{}{\sl\leftmark}]{\fancyplain{}{}}
+%\chead{}
+%\rhead[\fancyplain{}{}]{\fancyplain{}{\sl\rightmark}}
+%\lfoot[\fancyplain{\sl\thepage}{}]{}
+%\rfoot[]{\fancyplain{\sl\thepage}{}}
+
 \pagestyle{fancyplain}
-\lhead[\fancyplain{}{\sl\leftmark}]{\fancyplain{}{}}
-\chead{}
-\rhead[\fancyplain{}{}]{\fancyplain{}{\sl\rightmark}}
-\lfoot[\fancyplain{\sl\thepage}{}]{}
-\rfoot[]{\fancyplain{\sl\thepage}{}}
+\renewcommand{\chaptermark}[1]%
+         {\markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]%
+         {\markright{\thesection\ #1}}
+\lhead[\fancyplain{}{\bfseries\thepage}]%
+    {\fancyplain{}{\bfseries\rightmark}}
+\rhead[\fancyplain{}{\bfseries\leftmark}]%
+    {\fancyplain{}{\bfseries\thepage}}
+\cfoot{}
 
 % subsubsections numerieren und ins Inhaltsverzeichnis aufnehmen
 \setcounter{secnumdepth}{3}
@@ -67,7 +78,7 @@
 %%
 \newcommand{\deckblatt}{
   \begin{titlepage}
-  ~
+  
   \vspace{-1cm}
   \begin{center}
   {\Huge INSTITUT F\"UR INFORMATIK\\[1mm]}
@@ -77,9 +88,6 @@
   \vspace*{2cm}
   
   \includegraphics[width=0.4\textwidth]{./Pictures/lmu_siegel.jpg}
-  \end{center}
-    
-  \begin{center}
   
       \vspace{2cm}\Large
       \the\arbeit

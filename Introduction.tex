@@ -1,7 +1,7 @@
 % !TEX root = Bachelorarbeit.tex
-\section{Introduction}
+\chapter{Introduction}
 	\pagenumbering{arabic}
-	\subsection{Motivation}
+	\section{Motivation}
 Nowadays our society becomes progressivly dependent on computer systems.\\ Througout our whole life smaller and smaller computers increasingly take over control. Wheter in a smart TV, our car or the lights in a connected home. We are therefore forced to confront ourselves with the safety and reliability of these systems. \\
 This is particular essential when we entrust our lives to one of these computers. We expect on-board computers in cars or flight-computers to be free from defects and unhackable. Unfortunately the reality is often different. For example, hackers have proven that the onboard computer of some cars can be taken over from a smartphone in a nearby car. \\
 A key component in developing secure systems is the operating-system (OS) kernel. The kernel has full access to hardware resources. One defect in the kernel can compromise the security and reliability of the entire system. \\
@@ -11,12 +11,12 @@ Because we feed our smartphones, tablets, on-board computers, etc. with an ever 
 Through isolation of small subsystems, like it is done in microkernels, the security already can be raised to a higher level. With testing one can detect an huge amount of bugs. But as Dijkstra said "Testing can only show the presence, not the absence, of bugs." \cite{EngTec} \\
 As already mentioned, less lines of codes makes it more feasible to verify it relating to its specification. 
 The seL4 microkernel is the first microkernel whose correctness is formally verified. It is a high-assurance, high-performance microkernel, primarily developed, maintained and formally verified by NICTA (now Trustworthy Systems Group at Data61) for secure embedded systems. Its security model is based on the take-grant model, which was extended for being able to reason about kernel memory consumption of components. 
-	\subsection{Aim of the thesis}
+	\section{Aim of the thesis}
 	With this thesis I will explore if the extended take-grant model is strong enough to show noninterference properties on it. \\
 	The security property of noninterference ensures that there is no unwanted information flow within a system. The take-grant model is an access control model. Therefore its duty is to "control" the access or the transfer of access on objects of a system. The noninterference property assures that there is no way information can flow to undesirable parties. \\
 The thesis should investigate the different system operations of the model regarding the thereby occurring information flow. \\
 With the collected information I want to answer two questions. First if the noninterference properties can be illustrated on the existing take-grant model and second if the noninterference properties are fulfilled or the different system operations the take-grant model provides. 
-\subsection{Structure of the Thesis}
+\section{Structure of the Thesis}
 At the beginning I want to give a survey of the seL4 kernel, its set-up, the implementation of services and the memory management. For a better comprehension I then give a brief overview of the take-grant and the noninterference model. 
 Chapter 3 focuses on the formalisation of the take-grant model an Chapter 4 on the formalisation of the noninterference model. \\
 From chapter 5 on I turn to the validation of the noninterference property. In chapter 7 the validation is subdivided into the different system operations. To show the property for the model I am going to extend the model in Chapter 6. \\

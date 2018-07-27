@@ -1,50 +1,50 @@
 \select@language {english}
 \select@language {english}
 \contentsline {section}{Abstract}{I}{section*.1}
-\contentsline {section}{List of Figures}{II}{section*.2}
-\contentsline {section}{\numberline {1}Introduction}{1}{section.1}
-\contentsline {subsection}{\numberline {1.1}Motivation}{1}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Aim of the thesis}{1}{subsection.1.2}
-\contentsline {subsection}{\numberline {1.3}Structure of the Thesis}{2}{subsection.1.3}
-\contentsline {section}{\numberline {2}Requirements}{3}{section.2}
-\contentsline {subsection}{\numberline {2.1}The seL4 Microkernel}{3}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}System Calls}{3}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}Kernel Objects}{3}{subsubsection.2.1.2}
-\contentsline {subsubsection}{\numberline {2.1.3}Memory Allocation Model}{6}{subsubsection.2.1.3}
-\contentsline {subsection}{\numberline {2.2}The Take-Grant Model}{7}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}The Classical Model}{7}{subsubsection.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Take-Grant specified for the seL4}{8}{subsubsection.2.2.2}
-\contentsline {subsection}{\numberline {2.3}Noninterference}{10}{subsection.2.3}
-\contentsline {section}{\numberline {3}Formalisation of the Take-Grant Model}{11}{section.3}
-\contentsline {subsection}{\numberline {3.1}Capabilities}{11}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}System Operations}{12}{subsection.3.2}
-\contentsline {section}{\numberline {4}Formalisation of the Noninterference Model}{14}{section.4}
-\contentsline {section}{\numberline {5}Validation of Noninterference}{17}{section.5}
-\contentsline {section}{\numberline {6}Redesign of the take-grant-model}{19}{section.6}
-\contentsline {section}{\numberline {7}Validation with the new model}{22}{section.7}
-\contentsline {subsection}{\numberline {7.1}Create}{22}{subsection.7.1}
-\contentsline {subsubsection}{\numberline {7.1.1}Create on UMO}{22}{subsubsection.7.1.1}
-\contentsline {subsubsection}{\numberline {7.1.2}Create on all other object types inside a domain}{25}{subsubsection.7.1.2}
-\contentsline {subsubsection}{\numberline {7.1.3}Create on Asynchronous IPC Endpoint or Shared Page objects}{26}{subsubsection.7.1.3}
-\contentsline {subsection}{\numberline {7.2}Grant}{27}{subsection.7.2}
-\contentsline {subsubsection}{\numberline {7.2.1}Grant on TCB, SEP, CNode, VSpace or IContr objects}{27}{subsubsection.7.2.1}
-\contentsline {subsubsection}{\numberline {7.2.2}Grant on other objects inside a domain}{29}{subsubsection.7.2.2}
-\contentsline {subsubsection}{\numberline {7.2.3}Grant on Asynchronous IPC Endpoint or Shared Page objects}{30}{subsubsection.7.2.3}
-\contentsline {subsection}{\numberline {7.3}Write}{31}{subsection.7.3}
-\contentsline {subsubsection}{\numberline {7.3.1}Write on TCB, SEP or IHandl objects}{31}{subsubsection.7.3.1}
-\contentsline {subsubsection}{\numberline {7.3.2}Write on objects $\not =$ TCB, SEP, IHandl, SPage and AEP}{33}{subsubsection.7.3.2}
-\contentsline {subsubsection}{\numberline {7.3.3}Write on AEP or SPage objects from Domain 2}{34}{subsubsection.7.3.3}
-\contentsline {subsubsection}{\numberline {7.3.4}Write on an AEP or SPage object from Domain 1}{35}{subsubsection.7.3.4}
-\contentsline {subsection}{\numberline {7.4}Read}{36}{subsection.7.4}
-\contentsline {subsubsection}{\numberline {7.4.1}Read on TCB or Sychronous IPC Endpoint objects}{36}{subsubsection.7.4.1}
-\contentsline {subsubsection}{\numberline {7.4.2}Read on other object types inside a domain}{38}{subsubsection.7.4.2}
-\contentsline {subsubsection}{\numberline {7.4.3}Read on AEP or SPage objects from Domain 1}{39}{subsubsection.7.4.3}
-\contentsline {subsubsection}{\numberline {7.4.4}Read on AEP or SPage objects from Domain 2}{40}{subsubsection.7.4.4}
-\contentsline {subsection}{\numberline {7.5}Remove}{41}{subsection.7.5}
-\contentsline {subsubsection}{\numberline {7.5.1}Remove on CNode, VSpace or Interrupt Controller objects}{41}{subsubsection.7.5.1}
-\contentsline {subsubsection}{\numberline {7.5.2}Remove on objects $\not =$ CNode, VSpace and Interrupt Controller}{44}{subsubsection.7.5.2}
-\contentsline {subsection}{\numberline {7.6}Revoke}{47}{subsection.7.6}
-\contentsline {subsubsection}{\numberline {7.6.1}Revoke on CNode or Untyped Memory objects}{47}{subsubsection.7.6.1}
-\contentsline {subsubsection}{\numberline {7.6.2}Revoke on objects $\not =$ CNode and Untyped Memory}{50}{subsubsection.7.6.2}
-\contentsline {section}{\numberline {8}Conclusion}{53}{section.8}
-\contentsline {section}{References}{54}{section*.37}
+\contentsline {chapter}{List of Figures}{III}{chapter*.2}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Motivation}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Aim of the thesis}{2}{section.1.2}
+\contentsline {section}{\numberline {1.3}Structure of the Thesis}{2}{section.1.3}
+\contentsline {chapter}{\numberline {2}Requirements}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}The seL4 Microkernel}{3}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}System Calls}{3}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}Kernel Objects}{4}{subsection.2.1.2}
+\contentsline {subsection}{\numberline {2.1.3}Memory Allocation Model}{6}{subsection.2.1.3}
+\contentsline {section}{\numberline {2.2}The Take-Grant Model}{7}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}The Classical Model}{7}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Take-Grant specified for the seL4}{8}{subsection.2.2.2}
+\contentsline {section}{\numberline {2.3}Noninterference}{9}{section.2.3}
+\contentsline {chapter}{\numberline {3}Formalisation of the Take-Grant Model}{11}{chapter.3}
+\contentsline {section}{\numberline {3.1}Capabilities}{11}{section.3.1}
+\contentsline {section}{\numberline {3.2}System Operations}{12}{section.3.2}
+\contentsline {chapter}{\numberline {4}Formalisation of the Noninterference Model}{15}{chapter.4}
+\contentsline {chapter}{\numberline {5}Validation of Noninterference}{19}{chapter.5}
+\contentsline {chapter}{\numberline {6}Redesign of the Take-Grant-Model}{21}{chapter.6}
+\contentsline {chapter}{\numberline {7}Validation with the new model}{25}{chapter.7}
+\contentsline {section}{\numberline {7.1}Create}{26}{section.7.1}
+\contentsline {subsection}{\numberline {7.1.1}Create on UMO}{26}{subsection.7.1.1}
+\contentsline {subsection}{\numberline {7.1.2}Create on all other object types inside a domain}{27}{subsection.7.1.2}
+\contentsline {subsection}{\numberline {7.1.3}Create on Asynchronous IPC Endpoint or Shared Page objects}{28}{subsection.7.1.3}
+\contentsline {section}{\numberline {7.2}Grant}{30}{section.7.2}
+\contentsline {subsection}{\numberline {7.2.1}Grant on TCB, SEP, CNode, VSpace or IContr objects}{30}{subsection.7.2.1}
+\contentsline {subsection}{\numberline {7.2.2}Grant on other objects inside a domain}{31}{subsection.7.2.2}
+\contentsline {subsection}{\numberline {7.2.3}Grant on Asynchronous IPC Endpoint or Shared Page objects}{32}{subsection.7.2.3}
+\contentsline {section}{\numberline {7.3}Write}{33}{section.7.3}
+\contentsline {subsection}{\numberline {7.3.1}Write on TCB, SEP or IHandl objects}{33}{subsection.7.3.1}
+\contentsline {subsection}{\numberline {7.3.2}Write on objects $\not =$ TCB, SEP, IHandl, SPage and AEP}{33}{subsection.7.3.2}
+\contentsline {subsection}{\numberline {7.3.3}Write on AEP or SPage objects from Domain 2}{34}{subsection.7.3.3}
+\contentsline {subsection}{\numberline {7.3.4}Write on an AEP or SPage object from Domain 1}{36}{subsection.7.3.4}
+\contentsline {section}{\numberline {7.4}Read}{37}{section.7.4}
+\contentsline {subsubsection}{\numberline {7.4.0.1}Read on TCB or Sychronous IPC Endpoint objects}{37}{subsubsection.7.4.0.1}
+\contentsline {subsection}{\numberline {7.4.1}Read on other object types inside a domain}{38}{subsection.7.4.1}
+\contentsline {subsection}{\numberline {7.4.2}Read on AEP or SPage objects from Domain 1}{38}{subsection.7.4.2}
+\contentsline {subsection}{\numberline {7.4.3}Read on AEP or SPage objects from Domain 2}{40}{subsection.7.4.3}
+\contentsline {section}{\numberline {7.5}Remove}{41}{section.7.5}
+\contentsline {subsection}{\numberline {7.5.1}Remove on CNode, VSpace or Interrupt Controller objects}{41}{subsection.7.5.1}
+\contentsline {subsection}{\numberline {7.5.2}Remove on objects $\not =$ CNode, VSpace and Interrupt Controller}{43}{subsection.7.5.2}
+\contentsline {section}{\numberline {7.6}Revoke}{45}{section.7.6}
+\contentsline {subsection}{\numberline {7.6.1}Revoke on CNode or Untyped Memory objects}{45}{subsection.7.6.1}
+\contentsline {subsection}{\numberline {7.6.2}Revoke on objects $\not =$ CNode and Untyped Memory}{47}{subsection.7.6.2}
+\contentsline {chapter}{\numberline {8}Conclusion}{49}{chapter.8}
+\contentsline {chapter}{Bibliography}{51}{chapter*.37}

@@ -1,6 +1,6 @@
 % !TEX root = Bachelorarbeit.tex
-\section{Formalisation of the Noninterference Model}\label{FormNon}
-For the validation a formalisation of the noninterference property. \\ 
+\chapter{Formalisation of the Noninterference Model}\label{FormNon}
+For the validation I need a formalisation of the noninterference property. \\ 
 
 {\relsize{-1}
 \texttt{
@@ -14,7 +14,7 @@ The definition says that if the states \texttt{s} and \texttt{t} of a system are
 \item \texttt{s} and \texttt{t} are \texttt{reachable} in the system. That means there exists a command sequence as such that the state s is reachable with as from the initial state s$_0$ and a command sequence bs such that the state t is reachable with bs from s$_0$.
 \item If the policy says that information is allowed to flow from \texttt{h} to \texttt{l}, \texttt{s} and \texttt{t} have to be equivalent for the high level domain \texttt{h}.
 \item The program \texttt{a} has to be defined for the states s and t.
-\end{itemize}
+\end{itemize} 
 First I tried to validate confidentiality for the different system operations as they are defined in the take-grant-model. With this model it is impossible to decide whether a change of value has been recognized by another domain. \\
 In the paper an entity only includes a set of capabilites. For my purpose I need the option to access the content of the entities, because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
 Therefore I extend the original record \texttt{entity} by adding a \textit{value} modelled by a natural number. \\ 
@@ -83,7 +83,7 @@ Now I can define Subsystems. First I need a new datatype \texttt{subSusT} to ide
 
 {\relsize{-1}\textbf{type$\_$synonym}
 \texttt{
-subSysT = "entity$\_$id st"}} \\ 
+subSysT = "entity$\_$id set"}} \\ 
 
 The following function defines subsystems: \\
 
@@ -102,3 +102,4 @@ I named the function \texttt{aquiv$\_$nonin}. It compares the value and capabili
 aquiv$\_$nonin :: "state $\Rightarrow$ state $\Rightarrow$ subSysT $\Rightarrow$ bool" \textbf{where} \\
 "aquiv$\_$nonin s t d $\equiv$ $\{\forall$ e $\in$ d. value$\_$of s e = value$\_$of t e $\wedge$ caps$\_$of s e = \\
  caps$\_$of t e $\wedge$ subSys s e = subSys t e$\}$"}} 
+\end{enumerate}

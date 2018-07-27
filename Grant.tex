@@ -1,15 +1,13 @@
-\subsection{Grant}\label{sec:Grant}
+\section{Grant}\label{sec:Grant}
 The \texttt{grant} operation can only be performed inside a domain on a TCB, Synchronous IPC, CNode, VSpace or Interrupt Controller object. 
 % !TEX root = Bachelorarbeit.tex
-\subsubsection{Grant on TCB, SEP, CNode, VSpace or IContr objects} 
+\subsection{Grant on TCB, SEP, CNode, VSpace or IContr objects} 
 Now I show that any grant operation inside a H domain on one of the named objects does not affect the values, capabilities or entities of an L domain. \\
 Because every given object behaves in the same way, I generalized e$_4$ = TCB $\vee$ SIPC $\vee$ CNode $\vee$ VSpace $\vee$ IContr.
-\begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantTCB}
 \caption{Noninterference for Grant on an TCB, Synchronous IPC Endpoint, CNode, VSpace or Interrupt Controller object}
 \end{figure}
-\end{flushleft}
 The the \texttt{grant} operation has no impact on the entities of the other domain because it adds a capability to an entity inside the same domain as the target and source entities are. \\ \\
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
@@ -17,61 +15,56 @@ The the \texttt{grant} operation has no impact on the entities of the other doma
 ** & grantOperation e$_2$ c$_1$ c$_2$ R s creates c$_3$ $\in$ D2 and does not change or create any \\
 & capability $\in$ D1 \\ 
 *** & legal (SysGrant e$_2$ c$_1$ c$_2$ R) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
 \textbf{Proof of the noninterference property for \texttt{grant} on TCB, Synchronous IPC Endpoint, CNode, VSpace and Interrupt Controller objects:}\\ \\
-$\forall$ e $\in$ D1. \\ 
+For all e $\in$ D1, we have: \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{grant} on TCB, Synchronous IPC Endpoint, CNode, VSpace and Interrupt Controller objects is fulfilled.} 
-\clearpage
-\subsubsection{Grant on other objects inside a domain} 
+\subsection{Grant on other objects inside a domain} 
 In this paragraph I check if an execution of the grant operation on another object than TCB, SEP, CNode, VSpace, Interrupt Controller or the object types that establish a communication interface between domains: AEP and SPage, alters the configuration of the other domain. \\ \\
-\begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantOthers}
 \caption{Noninterference for Grant on an object $\neq$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP object}
 \end{figure}
-\end{flushleft}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysGrant e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysGrant e$_2$ c$_1$ c$_2$ R) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
 \textbf{Proof of the noninterference property for \texttt{grant} on an object $\neq$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP:}\\ \\
-$\forall$ e $\in$ D1. \\ 
+For all e $\in$ D1, we have: \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\ \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{grant} on an object $\neq$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP is fulfilled.} 
 \clearpage
-\subsubsection{Grant on Asynchronous IPC Endpoint or Shared Page objects}
+\subsection{Grant on Asynchronous IPC Endpoint or Shared Page objects}
 The next figure illustrates grant on the two object types connecting different domains. In both cases the operation is not legal. So the new state equates the old one.
-\begin{flushleft}
 \begin{figure}[H]
 \pgfuseimage{GrantOutside}
 \caption{Noninterference for Grant on an Asychronous IPC Endpoint object}
 \end{figure}
-\end{flushleft}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1	\\ 
 ** & legal (SysGrant e$_2$ c$_1$ c$_2$) s = false $\Rightarrow$ s' = s \\ 
 *** & legal (SysGrant e$_2$ c$_1$ c$_2$) t = false $\Rightarrow$ t' = t
-\end{tabular}\\ \\ \\
+\end{tabular}\\ \\ 
 \textbf{Proof of the noninterference property for \texttt{grant} on an object = SPage or AEP:}\\ \\
-$\forall$ e $\in$ D1. \\ 
+For all e $\in$ D1, we have: \\ 
 \begin{tabular}{ll}
 & (value$\_$of s' e $\overset{\text{**}}{=}$ value$\_$of s e $\overset{\text{*}}{=}$ value$\_$of t e $\overset{\text{***}}{=}$ value$\_$of t' e \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
-\end{tabular} \\ \\
-$\Rightarrow$ aquiv$\_$nonin s' t' D1 $\Rightarrow$ s' $\overset{\text{D1}}{\sim}$ t' \\ \\
+\end{tabular} \\
+Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{grant} on an object = SPage or AEP is fulfilled.} 
