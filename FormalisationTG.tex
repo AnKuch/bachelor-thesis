@@ -30,12 +30,10 @@ A capability has two fields:
 	      & rights :: rights set
 	\end{tabular}} }
 	\\ \\ 
-	
 An entity has a set of capabilities: \\ \\
 	{\relsize{-1}
 	\textbf{record } \texttt{ 						
 	entity = caps :: cap set}} \\ \\
-	
 The systems' state includes two fields: 
 \begin{enumerate}
 \item The \texttt{heap}, which stores the entities of the system like an array from address \texttt{0} up to and excluding \texttt{next$\_$id}.
@@ -85,8 +83,7 @@ The \texttt{diminish} function applies this mask on the given acces rights: \\
 	| 	&	"legal 	&	(SysGrant e c$_1$ c$_2$ r) s & = & (isEntityOf s e $\wedge$  isEntityOf s (entity c$_1$) \\ & & & & $\wedge$ {c$_1$,c$_2$} $\subseteq$ caps$\_$of s e $\wedge$ Grant $\in$ rights c$_1$)" \\
 	| 	&	"legal 	&	(SysRemove e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ c$_1$ $\in$ caps$\_$of s e)" \\
 	|	&	"legal	&	(SysRevoke e c) s	&	=	&	isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e"
-	\end{tabular}}} \\ \\ 
-	
+	\end{tabular}}} \\ \\
 The function \texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}. \texttt{Caps$\_$of} issues the set of all capabilities  contained in the entity with the address \texttt{r} in state \texttt{s}. \\ \\
 	The \texttt{step'} and \texttt{step} functions define the execution of a single system operation. The original executions of \texttt{SysNoOp}, \texttt{SysRead} and \texttt{SysWrite} do not have an underlying function. All other functions are defined. \\ \\
 	The \texttt{step} function: \\ \\
@@ -120,4 +117,4 @@ The function \texttt{isEntityOf} tests the existence of an \texttt{entity$\_$id}
   s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$""\\ \\ \\
    removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "removeOperation c$_1$ c$_2$ s $\equiv$ \\
-  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}$\rrparenthesis$)$\rrparenthesis$"}}
+  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - c$_2\rrparenthesis$)$\rrparenthesis$"}}

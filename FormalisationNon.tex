@@ -5,11 +5,10 @@ For the validation I need a formalisation of the noninterference property. \\
 {\relsize{-1}
 \texttt{
 noninterference :: "bool" \textbf{where} \\
-"noninterference $\equiv$ $\forall$ \textit{a l h s t s' t'.}reachable \textit{s} $\wedge$ reachable \textit{t} $\wedge$ \textit{s $\overset{\text{l}}{\sim}$ t} $\wedge$ (\textit{h $\leadsto$ l $\longrightarrow$ \\
- s $\overset{\text{h}}{\sim}$ t}) $\wedge$ \textit{(s,s')}$\in$ Step \textit{a} $\wedge$ \textit{(t,t')}$\in$ Step \textit{a} $\longrightarrow$ \textit{s' $\overset{\text{l}}{\sim}$ t'}}"} \\ \\
-
+"noninterference $\equiv$ $\forall$ \textit{a l h s t s' t'.}reachable \textit{s} $\wedge$ reachable \textit{t} $\wedge$ \textit{s $\overset{\text{l}}{\sim}$ t} $\wedge$ (\textit{h $\leadsto$ l \\
+$\longrightarrow$ s $\overset{\text{h}}{\sim}$ t}) $\wedge$ \textit{(s,s')}$\in$ Step \textit{a} $\wedge$ \textit{(t,t')}$\in$ Step \textit{a} $\longrightarrow$ \textit{s' $\overset{\text{l}}{\sim}$ t'}}"} \\ \\
 "\texttt{a}" names the system operation, "\texttt{l}" a low level domain, "\texttt{h}" a high level domain, from the states "\texttt{s}" and "\texttt{t}" the system operation is executed and "\texttt{s'}" and "\texttt{t'}" are the resulting states. \\ \\
-The definition says that if the states \texttt{s} and \texttt{t} of a system are eyuivalent for a low level domain they still have to be equivalent for this domain after the execution of a program a, if the following preconditions are fulfilled: \\
+The definition says that if the states \texttt{s} and \texttt{t} of a system are eyuivalent for a low level domain they still have to be equivalent for this domain after the execution of a program a, if the following preconditions are fulfilled: 
 \begin{itemize}
 \item \texttt{s} and \texttt{t} are \texttt{reachable} in the system. That means there exists a command sequence as such that the state s is reachable with as from the initial state s$_0$ and a command sequence bs such that the state t is reachable with bs from s$_0$.
 \item If the policy says that information is allowed to flow from \texttt{h} to \texttt{l}, \texttt{s} and \texttt{t} have to be equivalent for the high level domain \texttt{h}.
@@ -26,9 +25,8 @@ My entity type: \\ \\
 	\begin{tabular}[t]{ll}
 	entity = & caps :: cap set \\
 			 & eValue :: nat 													
-	\end{tabular}}} \\ \\ \\
-I also had to modify the formalisation of the system operations as they should be able to \texttt{read} and \texttt{write} the value of an entity. \\ \\
-For that they need a fuction that returns the value of an entity: \\ \\
+	\end{tabular}}} \\ 
+I also had to modify the formalisation of the system operations as they should be able to \texttt{read} and \texttt{write} the value of an entity. For that they need a fuction that returns the value of an entity: \\ \\
 {\relsize{-1}
 \texttt{
 value$\_$of :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ nat" where \\
@@ -36,11 +34,13 @@ value$\_$of :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ nat" where \\
 The modified \texttt{read}, \texttt{write}, \texttt{create}, \texttt{grant} and \texttt{remove} operations: \\ \\
 	{\relsize{-1}	
 	\texttt{readOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
-	\texttt{"readOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(e := $\llparenthesis$caps = caps$\_$of s e, eValue = value$\_$of s (entity c)$\rrparenthesis$)$\rrparenthesis$"}}\\ \\
+	\texttt{"readOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(e := $\llparenthesis$caps = caps$\_$of s e, eValue = value$\_$of s (entity c)$\rrparenthesis$)$\rrparenthesis$"}}\\ 
+	
 	{\relsize{-1}	
 	\texttt{writeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
 	\texttt{"writeOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(entity c := $\llparenthesis$caps = caps$\_$of s (entity c), \\
-	eValue = value$\_$of s e|))|)"}}\\ \\
+	eValue = value$\_$of s e|))|)"}}\\ 
+	
 		{\relsize{-1}
 	\texttt{createOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
   \texttt{createOperation e c$_1$ c$_2$ s $\equiv$ \\
@@ -50,12 +50,17 @@ The modified \texttt{read}, \texttt{write}, \texttt{create}, \texttt{grant} and 
                 & newTarget = $\llparenthesis$caps = {newCap} ∪ caps$\_$of s (entity c$_2$), eValue = NULL$\rrparenthesis$ \\
              in & s$\llparenthesis$heap := (heap s)(entity c$_2$ := newTarget, next$\_$id s := nullEntity), next$\_$id := \\
                 & next$\_$id s+1$\rrparenthesis$"
-   \end{tabular} \\ \\ \\
-    grantOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ rights set $\Rightarrow$ modify$\_$state" \textbf{where} \\
+   \end{tabular} }}\\ 
+   
+    {\relsize{-1}	
+	\texttt{grantOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ rights set $\Rightarrow$ modify$\_$state" \textbf{where} \\
   "grantOperation e c$_1$ c$_2$ \textit{R} s $\equiv$ \\
-  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$), eValue = value$\_$of s \\(entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"\\ \\ \\
-   removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
-  "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}}\\ \\
+  s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = {diminish c$_2$ \textit{R}} $\cup$ caps$\_$of s (entity c$_1$), eValue = value$\_$of s \\(entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}}\\ 
+  
+   {\relsize{-1}	
+	\texttt{removeOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where} \\
+  "removeOperation c$_1$ c$_2$ s $\equiv$ s$\llparenthesis$heap := (heap s)(entity c$_1$ := $\llparenthesis$caps = caps$\_$of s (entity c$_1$) - {c$_2$}, eValue = value$\_$of s (entity c$_1$)$\rrparenthesis$)$\rrparenthesis$"}}\\ 
+  
 The modified \texttt{step} and \texttt{step'} functions: \\ \\
 {\relsize{-1}	
 	\texttt{step' :: "sysOPs $\Rightarrow$ state $\Rightarrow$ state" \textbf{where}} \\
@@ -66,32 +71,27 @@ The modified \texttt{step} and \texttt{step'} functions: \\ \\
 	|	&	"step'	&	(SysWrite e c) s &	=	&	writeOperation e c s" \\
 	|	&	"step'	&	(SysCreat e c$_1$ c$_2$) s & = & createOperation e c$_1$ c$_2$ s" \\
 	|	&	"step'	&	(SysGrant e c$_1$ c$_2$ \textit{R}) s & = & grantOperation e c$_1$ c$_2$ \textit{R} s" \\
-	|	&	"step'	&	(SysRemove e c$_1$ c$_2$) s & = & removeOperation e c$_1$ c$_2$ s" \\
+	|	&	"step'	&	(SysRemove e c$_1$ c$_2$) s & = & removeOperation e c$_1$ c$_2$ s"  \\
 	|	&	"step'	&	(SysRevoke	e c) s & =	&	revokeOperation e c s" 
 	\end{tabular}} \\ \\
 	\texttt{step :: "sysOps $\Rightarrow$ state $\Rightarrow$ state" \textbf{where} \\
 	step cmd s $\equiv$ if legal cmd s then step' cmd s else s}} \\ \\
 To check noninterference I had to define a few functions. \\
-	
 \begin{enumerate}
 \item The isolation by using subsystems: \\
 For the definition of Subsystems I need the option to check whether  the execution of a sequence of commands can lead to a state where an entity can leak information to the other. To ensure that we controll information flow over the whole system , only the symmetric, refelexive, transitive closure of the \texttt{leak} function is useful. \\
 The  \texttt{leak} fuction \cite{TakeG} indicates that in a state \texttt{s} , an entity \texttt{e} has the ability to give a capability to an entity e$_i$. Capabilities can be handed over with the \texttt{SysGrant} or \texttt{SysCreate} operations. They are legal if the initiating entity has at least \texttt{grant} rights in the capability, pointing to the modified entity. So the \texttt{leak} function checks if the entity \texttt{e} has at least \texttt{grant} authority on entity \texttt{e$_i$}. The symmetric closure is implemented by the fuction \texttt{connected}, written \texttt{s $\vdash$ e $\longleftrightarrow$ e$_i$}. It is true, if there exists a leak from \texttt{e} to \texttt{e$_i$} or from \texttt{e$_i$} to \texttt{e}. \\
 The tarnsitive closure is indicated with \texttt{s $\vdash$ e $\longleftrightarrow$* e$_i$}. \\
-\texttt{in$\_$conc$\_$connected s e e$_i$} is true  if the tansitive closure of \texttt{connected} for \texttt{e} and \texttt{e$_i$} in state s is true. \\ \\
-Now I can define Subsystems. First I need a new datatype \texttt{subSusT} to identify subsystems: \\ 
-
+\texttt{in$\_$conc$\_$connected s e e$_i$} is true  if the tansitive closure of \texttt{connected} for \texttt{e} and \texttt{e$_i$} in state s is true. \\ 
+Now I can define subsystems. First I need a new datatype \texttt{subSusT} to identify subsystems: \\ \\
 {\relsize{-1}\textbf{type$\_$synonym}
 \texttt{
-subSysT = "entity$\_$id set"}} \\ 
-
-The following function defines subsystems: \\
-
+subSysT = "entity$\_$id set"}} \\ \\
+The following function defines subsystems: \\ \\
 {\relsize{-1}
 \texttt{
 subSys :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ subSysT" where \\ 
-"subSys s e $\equiv$ $\{\forall$ e$_i$.in$\_$conc$\_$connected s e e$_i\}$"}} \\ \\
-
+"subSys s e $\equiv$ $\{\forall$ e$_i$.in$\_$conc$\_$connected s e e$_i\}$"}} 
 \item The equivalence relation "$\sim$": \\
 \texttt{s $\overset{\text{d}}{\sim}$ t} means that for every entity \texttt{e} reachable from an entity in the subsystem \texttt{d} the status of \texttt{e} in \texttt{s} and \texttt{t} has to be the same. \\
 An entity \texttt{e} is in a subsystem \texttt{d}, expanded by an entity \texttt{e$_i$} in state \texttt{s}, if \texttt{e $\in$ subSys s e$_i$}.

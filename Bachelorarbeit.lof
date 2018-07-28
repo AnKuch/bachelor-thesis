@@ -1,42 +1,42 @@
-\select@language {english}
-\select@language {english}
+\babel@toc {english}{}
+\babel@toc {english}{}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Internal representation of an application}}{6}{figure.caption.4}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Sample system architecture}}{7}{figure.caption.5}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces take rule}}{7}{figure.caption.6}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces grant rule}}{8}{figure.caption.7}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces create rule}}{8}{figure.caption.8}
-\contentsline {figure}{\numberline {2.6}{\ignorespaces remove rule}}{8}{figure.caption.9}
-\contentsline {figure}{\numberline {2.7}{\ignorespaces CDT}}{9}{figure.caption.10}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Internal representation of an application}}{7}{figure.caption.4}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Sample system architecture}}{8}{figure.caption.5}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces take rule}}{8}{figure.caption.6}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces grant rule}}{9}{figure.caption.7}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces create rule}}{9}{figure.caption.8}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces remove rule}}{9}{figure.caption.9}
+\contentsline {figure}{\numberline {2.7}{\ignorespaces CDT}}{10}{figure.caption.10}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Noninterfernce of Write 1\relax }}{19}{figure.caption.11}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Noninterfernce of Write 1\relax }}{21}{figure.caption.11}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces No confidentiality for Remove\relax }}{21}{figure.caption.12}
-\contentsline {figure}{\numberline {6.2}{\ignorespaces Objects and methods in the kernel\relax }}{23}{figure.caption.14}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces No confidentiality for Remove\relax }}{23}{figure.caption.12}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Objects and methods in the kernel\relax }}{26}{figure.caption.14}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Noninterference for Create on Untyped Memory Objects\relax }}{27}{figure.caption.15}
-\contentsline {figure}{\numberline {7.2}{\ignorespaces Noninterference for Create on object types $\not =$ Untyped Memory Objects\relax }}{28}{figure.caption.16}
-\contentsline {figure}{\numberline {7.3}{\ignorespaces Noninterference for Create on object types = AEP $\vee $ SPage\relax }}{29}{figure.caption.17}
-\contentsline {figure}{\numberline {7.4}{\ignorespaces Noninterference for Grant on an TCB, Synchronous IPC Endpoint, CNode, VSpace or Interrupt Controller object\relax }}{30}{figure.caption.18}
-\contentsline {figure}{\numberline {7.5}{\ignorespaces Noninterference for Grant on an object $\not =$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP object\relax }}{31}{figure.caption.19}
-\contentsline {figure}{\numberline {7.6}{\ignorespaces Noninterference for Grant on an Asychronous IPC Endpoint object\relax }}{32}{figure.caption.20}
-\contentsline {figure}{\numberline {7.7}{\ignorespaces Noninterference for Write on a TCB, Sychronous IPC Endpoint or Interrupt Handler object\relax }}{33}{figure.caption.21}
-\contentsline {figure}{\numberline {7.8}{\ignorespaces Noninterference for Write on objects $\not =$ TCB, SEP, IHandl, SPage and AEP\relax }}{34}{figure.caption.22}
-\contentsline {figure}{\numberline {7.9}{\ignorespaces Noninterference for Write on an object = AEP executed from an entity $\in $ Domain 2\relax }}{35}{figure.caption.23}
-\contentsline {figure}{\numberline {7.10}{\ignorespaces Noninterference for Write on an object = AEP executed from an entity $\in $ D1\relax }}{36}{figure.caption.24}
-\contentsline {figure}{\numberline {7.11}{\ignorespaces Noninterference for Read on a TCB or Sychronous IPC Endpoint object\relax }}{37}{figure.caption.25}
-\contentsline {figure}{\numberline {7.12}{\ignorespaces Noninterference for Read on objects $\not =$ TCB, Asynchronous IPC Endpoint, Sychronous IPC Endpoint or Shared Page\relax }}{38}{figure.caption.26}
-\contentsline {figure}{\numberline {7.13}{\ignorespaces Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 1\relax }}{39}{figure.caption.27}
-\contentsline {figure}{\numberline {7.14}{\ignorespaces Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 2\relax }}{40}{figure.caption.28}
-\contentsline {figure}{\numberline {7.15}{\ignorespaces Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity in the same domain\relax }}{41}{figure.caption.29}
-\contentsline {figure}{\numberline {7.16}{\ignorespaces Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity outside the H domain\relax }}{42}{figure.caption.30}
-\contentsline {figure}{\numberline {7.17}{\ignorespaces Noninterference for Remove on objects $\not =$ CNode, VSpace and ICont. The removed capability points to an entity in the same domain\relax }}{43}{figure.caption.31}
-\contentsline {figure}{\numberline {7.18}{\ignorespaces Noninterference for Remove on object types $\not =$ CNode, VSpace or IContr. The removed capability points to an entity outside the H domain\relax }}{44}{figure.caption.32}
-\contentsline {figure}{\numberline {7.19}{\ignorespaces Noninterference for Revoke on object types = CNode or Untyped. The removed capabilities point on entities in the same domain\relax }}{45}{figure.caption.33}
-\contentsline {figure}{\numberline {7.20}{\ignorespaces Noninterference for Revoke on object types = CNode or Untyped. The removed capabilities point on entities outside the H domain\relax }}{46}{figure.caption.34}
-\contentsline {figure}{\numberline {7.21}{\ignorespaces Noninterference for Revoke on objects $\not =$ CNodeand Untyped Memory. The removed capabilities point on entities in the same domain\relax }}{47}{figure.caption.35}
-\contentsline {figure}{\numberline {7.22}{\ignorespaces Noninterference for Revoke on object types $\not =$ CNode and Untyped where the removed capabilities point on entities outside the H domain\relax }}{48}{figure.caption.36}
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Noninterference for Create on Untyped Memory Objects\relax }}{28}{figure.caption.15}
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Noninterference for Create on object types $\not =$ Untyped Memory Objects\relax }}{30}{figure.caption.16}
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Noninterference for Create on object types = AEP $\vee $ SPage\relax }}{31}{figure.caption.17}
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Noninterference for Grant on an TCB, Synchronous IPC Endpoint, CNode, VSpace or Interrupt Controller object\relax }}{32}{figure.caption.18}
+\contentsline {figure}{\numberline {7.5}{\ignorespaces Noninterference for Grant on an object $\not =$ TCB, SEP, CNode, VSpace, IContr, SPage or AEP object\relax }}{33}{figure.caption.19}
+\contentsline {figure}{\numberline {7.6}{\ignorespaces Noninterference for Grant on an Asychronous IPC Endpoint object\relax }}{34}{figure.caption.20}
+\contentsline {figure}{\numberline {7.7}{\ignorespaces Noninterference for Write on a TCB, Sychronous IPC Endpoint or Interrupt Handler object\relax }}{36}{figure.caption.21}
+\contentsline {figure}{\numberline {7.8}{\ignorespaces Noninterference for Write on objects $\not =$ TCB, SEP, IHandl, SPage and AEP\relax }}{37}{figure.caption.22}
+\contentsline {figure}{\numberline {7.9}{\ignorespaces Noninterference for Write on an object = AEP executed from an entity $\in $ Domain 2\relax }}{38}{figure.caption.23}
+\contentsline {figure}{\numberline {7.10}{\ignorespaces Noninterference for Write on an object = AEP executed from an entity $\in $ D1\relax }}{39}{figure.caption.24}
+\contentsline {figure}{\numberline {7.11}{\ignorespaces Noninterference for Read on a TCB or Sychronous IPC Endpoint object\relax }}{40}{figure.caption.25}
+\contentsline {figure}{\numberline {7.12}{\ignorespaces Noninterference for Read on objects $\not =$ TCB, Asynchronous IPC Endpoint, Sychronous IPC Endpoint or Shared Page\relax }}{41}{figure.caption.26}
+\contentsline {figure}{\numberline {7.13}{\ignorespaces Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 1\relax }}{42}{figure.caption.27}
+\contentsline {figure}{\numberline {7.14}{\ignorespaces Noninterference for Read on object types = Asynchronous IPC Endpoint executed from Domain 2\relax }}{43}{figure.caption.28}
+\contentsline {figure}{\numberline {7.15}{\ignorespaces Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity in the same domain\relax }}{44}{figure.caption.29}
+\contentsline {figure}{\numberline {7.16}{\ignorespaces Noninterference for Remove on object types = CNode, VSpace or IContr. The removed capability points to an entity outside the H domain\relax }}{45}{figure.caption.30}
+\contentsline {figure}{\numberline {7.17}{\ignorespaces Noninterference for Remove on objects $\not =$ CNode, VSpace and ICont. The removed capability points to an entity in the same domain\relax }}{46}{figure.caption.31}
+\contentsline {figure}{\numberline {7.18}{\ignorespaces Noninterference for Remove on object types $\not =$ CNode, VSpace or IContr. The removed capability points to an entity outside the H domain\relax }}{48}{figure.caption.32}
+\contentsline {figure}{\numberline {7.19}{\ignorespaces Noninterference for Revoke on object types = CNode or Untyped. The removed capabilities point on entities in the same domain\relax }}{49}{figure.caption.33}
+\contentsline {figure}{\numberline {7.20}{\ignorespaces Noninterference for Revoke on object types = CNode or Untyped. The removed capabilities point on entities outside the H domain\relax }}{50}{figure.caption.34}
+\contentsline {figure}{\numberline {7.21}{\ignorespaces Noninterference for Revoke on objects $\not =$ CNodeand Untyped Memory. The removed capabilities point on entities in the same domain\relax }}{51}{figure.caption.35}
+\contentsline {figure}{\numberline {7.22}{\ignorespaces Noninterference for Revoke on object types $\not =$ CNode and Untyped where the removed capabilities point on entities outside the H domain\relax }}{52}{figure.caption.36}
 \addvspace {10\p@ }

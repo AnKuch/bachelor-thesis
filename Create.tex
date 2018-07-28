@@ -2,13 +2,12 @@
 \section{Create}\label{sec:Create}
 Create corresponds to the \textit{Retype} operation on untyped memory objects (UMOs). Each Domain has a own and fixed section of memory. So the UMO for the \texttt{retype} is located in the same Domain as the implementing entity. Furthermore the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
 \subsection{Create on UMO}
-The following picture shows how a create operation in a \texttt{H} domain changes or not the equivalence criteria in the \texttt{L} domain that is not allowed to get information from the former one. \\
-Each domain includes a subsystem. D1 includes the subsystem SS1 and D2 the subsystem SS2. Each figure has four subfigures. The first one in the left upper corner showes the state s before the execution of the \texttt{create} operation. The one on the right of it shows state s' after the execution of the \texttt{create} operation with the changed subsystems. \\
-The subfigure on left lower corner showes the state t before the execution of the \texttt{create} operation. The one on the right of it shows state t' after the execution of the \texttt{create} operation with the changed subsystems.
+The following picture shows how a create operation in a \texttt{H} domain changes or not the equivalence criteria in the \texttt{L} domain that is not allowed to get information from the former one. 
 \begin{figure}[H]
 \pgfuseimage{CreateUMO}
 \caption{Noninterference for Create on Untyped Memory Objects}
 \end{figure}
+Each domain includes a subsystem. D1 includes the subsystem SS1 and D2 the subsystem SS2. Each figure has four subfigures. The first one in the left upper corner showes the state s before the execution of the \texttt{create} operation. The one on the right of it shows state s' after the execution of the \texttt{create} operation with the changed subsystems. The subfigure in the left lower corner showes the state t before the execution of the \texttt{create} operation. The one on the right of it shows state t' after the execution of the \texttt{create} operation with the changed subsystems.\\
 I have to show that if s $\overset{\text{D1}}{\sim}$ t and (s,s') $\in$ Step a and (t,t') $\in$ Step a then s' $\overset{\text{D1}}{\sim}$ t'. 
 s $\overset{\text{D1}}{\sim}$ t was defined in Chapter \ref{ValNew} as the boolean fuction aquiv$\_$nonin s t D1. The function is true if all entities e $\in$ D1 have the same value in s and t (value$\_$of s e = value$\_$of t e), if they also have the same capabilities in s and t (caps$\_$of s e = caps$\_$of t e) and if D1 has the same entities in s and t (subSys s e = subSys t e).\\
 In the following Section I check if value$\_$of s' e = value$\_$of t' e, caps$\_$of s' e = caps$\_$of t’ e and subSys s' e = subSys t' e for all e $\in$ D1 after the execution of 

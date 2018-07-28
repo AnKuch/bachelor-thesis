@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,twoside]{book}
+\documentclass[11pt,a4paper, twoside, openright]{scrreprt}
 \usepackage{bachelorarbeit}
 \usepackage{subfigure}
 \usepackage{xspace}
@@ -14,7 +14,7 @@
 \usepackage[justification=centering]{caption}
 \usepackage{setspace}
 %\onehalfspacing
-\setstretch {0.99}
+\setstretch {1.2}
 
 \setlength{\headheight}{52pt}
 \setlength{\parindent}{0em} %Einrücken verhindern
@@ -42,7 +42,7 @@
 \geometry{
   left=2.5cm,
   right=3.5cm,
-  top=2.5cm,
+  top=3cm,
   bottom=2.5cm,
 }
 \setcounter{secnumdepth}{5}
@@ -81,19 +81,18 @@
 	
 % Declaration of authorship
 \declaration
+
 \pagenumbering{Roman}
 \selectlanguage{english}
 
 % Abstract
-\clearpage
-\section*{Abstract}
+\chapter*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
 	
 The thesis investigates the question whether the specification of the seL4 access control system is strong enough to verify Noninterference properties on it. I analyse the Take-Grant-Protection Model \cite{TakeG} and extend it for showing the Noninterference properties \cite{InfFlow} on each of its system operations. 
 As the specifications and proofs of the take-grant model are developed in the theorem proof assistant Isabelle/HOL, I use the same to formalise my datatypes and functions. 
 	
 
-\newpage
 %Abbildungsverzeichnis
 \listoffigures
 \newpage
@@ -117,7 +116,7 @@ As the specifications and proofs of the take-grant model are developed in the th
 \input{Redesign}
 \chapter{Validation with the new model}\label{ValNew}
 Now I whant to show that noninterference is valid for all system operations in the new defined model. \\ \\
-\textbf{Theorem 1:}\\ 
+\textbf{Theorem:}\\ 
 \textit{Let \texttt{s} an \texttt{t} be well defined states. That means: 
 \begin{itemize}
 \item They are reachable from the initial state s$_0$.
@@ -126,17 +125,15 @@ Now I whant to show that noninterference is valid for all system operations in t
 \item If information is also allowed to flow from domain 2 to domain 1 then s and t are equivalent for domain 2.
 \end{itemize}
 If \texttt{s} and \texttt{t} are equivalent for domain 1 (s $\overset{\text{D1}}{\sim}$ t) the the states \texttt{s'} and \texttt{t'} are still equivalent for D1 (s' $\overset{\text{D1}}{\sim}$ t'), after the execution of a system operation \texttt{a}.} \\ \\
-\textbf{Lemma 1:}\\
+\textbf{Lemma:}\\
 \textit{If the information flow policy allows information to flow from D1 to D2 the IRM gives D1 write right on the \texttt{SPage} and \texttt{AEP} and D2 read rights on both of them. If it is allowed to flow from D2 to D1 it is the other way arround. \\
 As the only way to get new rights on an object is through the \texttt{SysCreate} or \texttt{SysGrant} operations and the only connection out of daomains are those to the \texttt{SPages} and \texttt{AEPs}, the maximum of rights adomain can get on these objects is the set of rights it got from the \texttt{IRM} at boot time.} \\ \\
 \textbf{Proof:}
 I examine each operation of the protection model and distinguish therefore between the different object types. \\
-For this I assume that Domain 1 equates a low level domain and Domain 2 a high level domain. So  information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. \\ \\
-\textbf{D1$\leadsto$D2 but D2$\not\leadsto$D1} \\ \\
+For this I assume that Domain 1 equates a low level domain and Domain 2 a high level domain. So  information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1:\texttt{D1$\leadsto$D2 but D2$\not\leadsto$D1} \\ \\
 Further I assume:
 \begin{itemize}
-\item State s is equivalent to state t for Domain 1, what is represented by the function  \texttt{aquiv$\_$nonin}: \\ 
-\textbf{s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1}	\\ 
+\item State s is equivalent to state t for Domain 1, what is represented by the function \texttt{aquiv$\_$nonin: s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1}	
 \item The states s and t are reachable from the initial state s$_0$.
 \item The included object types correspond to those defined in Chapter \ref{Redesign}.
 \item Because of \textit{Lemma 1} I can assume that the connections on \texttt{SPages} and \texttt{AEPs} are well defined as claimed in \textit{Theorem 1}.
