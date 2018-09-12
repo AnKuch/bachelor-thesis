@@ -34,15 +34,23 @@
 \BOOKMARK [2][]{subsection.7.3.3}{Write on AEP or SPage objects from Domain 2}{section.7.3}% 34
 \BOOKMARK [2][]{subsection.7.3.4}{Write on an AEP or SPage object from Domain 1}{section.7.3}% 35
 \BOOKMARK [1][]{section.7.4}{Read}{chapter.7}% 36
-\BOOKMARK [2][]{subsubsection.7.4.0.1}{Read on TCB or Sychronous IPC Endpoint objects}{section.7.4}% 37
-\BOOKMARK [2][]{subsection.7.4.1}{Read on other object types inside a domain}{section.7.4}% 38
-\BOOKMARK [2][]{subsection.7.4.2}{Read on AEP or SPage objects from Domain 1}{section.7.4}% 39
-\BOOKMARK [2][]{subsection.7.4.3}{Read on AEP or SPage objects from Domain 2}{section.7.4}% 40
+\BOOKMARK [2][]{subsection.7.4.1}{Read on TCB or Synchronous IPC Endpoint objects}{section.7.4}% 37
+\BOOKMARK [2][]{subsection.7.4.2}{Read on other object types inside a domain}{section.7.4}% 38
+\BOOKMARK [2][]{subsection.7.4.3}{Read on AEP or SPage objects from Domain 1}{section.7.4}% 39
+\BOOKMARK [2][]{subsection.7.4.4}{Read on AEP or SPage objects from Domain 2}{section.7.4}% 40
 \BOOKMARK [1][]{section.7.5}{Remove}{chapter.7}% 41
 \BOOKMARK [2][]{subsection.7.5.1}{Remove on CNode, VSpace or Interrupt Controller objects}{section.7.5}% 42
-\BOOKMARK [2][]{subsection.7.5.2}{Remove on objects = CNode, VSpace and Interrupt Controller}{section.7.5}% 43
-\BOOKMARK [1][]{section.7.6}{Revoke}{chapter.7}% 44
-\BOOKMARK [2][]{subsection.7.6.1}{Revoke on CNode or Untyped Memory objects}{section.7.6}% 45
-\BOOKMARK [2][]{subsection.7.6.2}{Revoke on objects = CNode and Untyped Memory}{section.7.6}% 46
-\BOOKMARK [0][]{chapter.8}{Conclusion}{}% 47
-\BOOKMARK [0][]{chapter*.37}{Bibliography}{}% 48
+\BOOKMARK [3][]{subsubsection.7.5.1.1}{Target object is in the same domain}{subsection.7.5.1}% 43
+\BOOKMARK [3][]{subsubsection.7.5.1.2}{Target object = AEP or SPage object}{subsection.7.5.1}% 44
+\BOOKMARK [2][]{subsection.7.5.2}{Remove on objects = CNode, VSpace and Interrupt Controller}{section.7.5}% 45
+\BOOKMARK [3][]{subsubsection.7.5.2.1}{Target object of the removed capability is in the same domain}{subsection.7.5.2}% 46
+\BOOKMARK [3][]{subsubsection.7.5.2.2}{Target object = AEP or SPage}{subsection.7.5.2}% 47
+\BOOKMARK [1][]{section.7.6}{Revoke}{chapter.7}% 48
+\BOOKMARK [2][]{subsection.7.6.1}{Revoke on CNode or Untyped Memory objects}{section.7.6}% 49
+\BOOKMARK [3][]{subsubsection.7.6.1.1}{The targets of the deleted entities are in the same domain}{subsection.7.6.1}% 50
+\BOOKMARK [3][]{subsubsection.7.6.1.2}{Target object = AEP or SPage object}{subsection.7.6.1}% 51
+\BOOKMARK [2][]{subsection.7.6.2}{Revoke on objects = CNode and Untyped Memory}{section.7.6}% 52
+\BOOKMARK [3][]{subsubsection.7.6.2.1}{Target objects of the removed capabilities are in the same domain}{subsection.7.6.2}% 53
+\BOOKMARK [3][]{subsubsection.7.6.2.2}{Target objects = AEP or SPage}{subsection.7.6.2}% 54
+\BOOKMARK [0][]{chapter.8}{Conclusion}{}% 55
+\BOOKMARK [0][]{chapter*.37}{Bibliography}{}% 56

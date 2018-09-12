@@ -1,8 +1,9 @@
 % !TEX root = Bachelorarbeit.tex
 \chapter{Conclusion}
-Summarized I tried to show the noninterference property on the take-grant model as it was specified by the team of NICTA in the paper \href{http://ts.data61.csiro.au/publications/nicta_full_text/1474.pdf}{%
-		"Verified Protection Model of the seL4 Microkernel"}\cite{TakeG}. This attempt failed so I had to make the model more precise based on my alalysis in Chapter \ref{ValNon} of noninterference in the original model. That means I defined \texttt{read} and \texttt{write} operations, a value and object type for entities and a check if the object type is able to perform the particular system operation. \\
-		\textit{Theorem 1} in Chapter \ref{ValNon} formed the theory of this thesis. 
-		With the adaptions in Chapter \ref{Redesign} it was feasible to investigate \textit{Theorem 1} is fulfilled for the system operations of the take-grant model. \\ \\
-		The conclusion of the thesis is that the original model is not appropriate to show noninterference on it. With the extended one it was possible and every system operation fulfills it. \\ \\
-		As a next step the noninterference property should be specified and verified formally for the extended model. This can also be done with the theorem proof assistant Isabelle/HOL.  
+In the thesis I tried to show the noninterference properties on the take-grant model as it was specified by the team of NICTA in the paper \href{http://ts.data61.csiro.au/publications/nicta_full_text/1474.pdf}{%
+		"Verified Protection Model of the seL4 Microkernel"}\cite{TakeG}. As this attempt failed, I had to make the model more precise, based on my analysis in Chapter \ref{ValNon} of noninterference in the original model. That means I defined \texttt{read} and \texttt{write} operations, a value and object type for entities and a check if the object type is able to perform the particular system operation. \\
+		The \textit{Theorem} in Chapter \ref{ValNon} formed the theory of this thesis. 
+		With the adaptions in Chapter \ref{Redesign} it was feasible to investigate if the \textit{Theorem} is fulfilled for the system operations of the take-grant model. \\ \\
+		The conclusion of the thesis is that the original model is not appropriate to show noninterference on it. It worked, however, with the extended model, which fulfills noninterference for every system operation.\\ \\
+		As a next step the noninterference property should be specified and verified formally for the extended model. This can also be done with the theorem proof assistant Isabelle/HOL.  \\
+		In my introduction I mentioned the importance of secure microkernels for embedded systems and that, from day to day, the amount of these small computers, that control sections of our live, becomes more. This can be motivation to examine the safety and reliability of the seL4 microkernel relating to these particular systems. 

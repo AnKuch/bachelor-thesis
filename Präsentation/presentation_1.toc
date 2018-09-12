@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Zusammenfassung}{3}{0}{1}
+\beamer@sectionintoc {2}{Motivation}{4}{0}{2}
+\beamer@sectionintoc {3}{seL4}{6}{0}{3}
+\beamer@subsectionintoc {3}{1}{Kernel Objekte}{17}{0}{3}
+\beamer@sectionintoc {4}{Second Section}{21}{0}{4}

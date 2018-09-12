@@ -1,17 +1,17 @@
 % !TEX root = Bachelorarbeit.tex
 \section{Create}\label{sec:Create}
-Create corresponds to the \textit{Retype} operation on untyped memory objects (UMOs). Each Domain has a own and fixed section of memory. So the UMO for the \texttt{retype} is located in the same Domain as the implementing entity. Furthermore the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
+Create corresponds to the \texttt{Retype} operation on untyped memory objects (UMOs). Each Domain has a own and fixed section of memory. So the UMO for the \texttt{retype} is located in the same Domain as the implementing entity. Furthermore the created entity is placed in the same Domain as in the CDT it is a child of the UMO.  
 \subsection{Create on UMO}
-The following picture shows how a create operation in a \texttt{H} domain changes or not the equivalence criteria in the \texttt{L} domain that is not allowed to get information from the former one. 
+The following picture shows how a \texttt{create} operation in a \texttt{H} domain changes or not the equivalence criteria in the \texttt{L} domain that is not allowed to get information from the former one. 
 \begin{figure}[H]
 \pgfuseimage{CreateUMO}
-\caption{Noninterference for Create on Untyped Memory Objects}
+\caption{Noninterference for Create on Untyped Memory Objects.}
 \end{figure}
-Each domain includes a subsystem. D1 includes the subsystem SS1 and D2 the subsystem SS2. Each figure has four subfigures. The first one in the left upper corner showes the state s before the execution of the \texttt{create} operation. The one on the right of it shows state s' after the execution of the \texttt{create} operation with the changed subsystems. The subfigure in the left lower corner showes the state t before the execution of the \texttt{create} operation. The one on the right of it shows state t' after the execution of the \texttt{create} operation with the changed subsystems.\\
-I have to show that if s $\overset{\text{D1}}{\sim}$ t and (s,s') $\in$ Step a and (t,t') $\in$ Step a then s' $\overset{\text{D1}}{\sim}$ t'. 
-s $\overset{\text{D1}}{\sim}$ t was defined in Chapter \ref{ValNew} as the boolean fuction aquiv$\_$nonin s t D1. The function is true if all entities e $\in$ D1 have the same value in s and t (value$\_$of s e = value$\_$of t e), if they also have the same capabilities in s and t (caps$\_$of s e = caps$\_$of t e) and if D1 has the same entities in s and t (subSys s e = subSys t e).\\
-In the following Section I check if value$\_$of s' e = value$\_$of t' e, caps$\_$of s' e = caps$\_$of t’ e and subSys s' e = subSys t' e for all e $\in$ D1 after the execution of 
-createOperation e$_2$ c$_1$ c$_2$ s respectively createOperation e$_2$ c$_1$ c$_2$ t. If that is the case I can say that aquiv$\_$nonin s' t' D1 = true. From my definition of \texttt{aquiv$\_$nonin} this leads to s' $\overset{\text{D1}}{\sim}$ t'. \\ 
+Each domain includes a subsystem. D1 includes the subsystem SS1 and D2 the subsystem SS2. Each figure has four subfigures. The first one in the left upper corner shows the state s before the execution of the \texttt{create} operation. The one on the right of it shows state s' after the execution of the \texttt{create} operation with the changed subsystems. The subfigure in the left lower corner shows the state t before the execution of the \texttt{create} operation. The one on the right of it shows state t' after the execution of the \texttt{create} operation with the changed subsystems.\\
+I have to show that if s $\overset{\text{D1}}{\sim}$ t and (s,s') $\in$ Step a and (t,t') $\in$ Step a, then s' $\overset{\text{D1}}{\sim}$ t'. 
+s $\overset{\text{D1}}{\sim}$ t was defined in Chapter \ref{ValNew} as the boolean function \texttt{aquiv$\_$nonin s t D1}. The function is \texttt{true} if all entities \texttt{e $\in$ D1} have the same value in \texttt{s} and \texttt{t (value$\_$of s e = value$\_$of t e)}, if they also have the same capabilities in \texttt{s} and \texttt{t (caps$\_$of s e = caps$\_$of t e)} and if \texttt{D1} has the same entities in \texttt{s} and \texttt{t (subSys s e = subSys t e)}.\\
+In the following Section I check if \texttt{value$\_$of s' e = value$\_$of t' e, caps$\_$of s' e = caps$\_$of t’ e} and \texttt{subSys s' e = subSys t' e} for all \texttt{e $\in$ D1} after the execution of 
+\texttt{createOperation e$_2$ c$_1$ c$_2$ s} respectively \texttt{createOperation e$_2$ c$_1$ c$_2$ t}. If that is the case I can say that \texttt{aquiv$\_$nonin s' t' D1 = true}. From my definition of \texttt{aquiv$\_$nonin} this leads to s' $\overset{\text{D1}}{\sim}$ t'. \\ 
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
@@ -26,14 +26,15 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'. \\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on an untyped memory object is fulfilled.} 
+\clearpage
 \subsection{Create on all other object types inside a domain}
 If \texttt{create} is performed on another object type than an untyped memory object, the  function step' (SysCreate e c$_1$ c$_2$)s does nothing. So the new state \texttt{s'} equates the old state \texttt{s}. \\
 The following figure shows the createOperation for every other object type inside a domain.\\
 \begin{figure}[H]
 \pgfuseimage{CreateOther}
-\caption{Noninterference for Create on object types $\neq$ Untyped Memory Objects}
+\caption{Noninterference for Create on object types $\neq$ Untyped Memory Objects.}
 \end{figure} 
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
@@ -48,15 +49,15 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'. \\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on other object types in a domain is fulfilled.} 
 \subsection{Create on Asynchronous IPC Endpoint or Shared Page objects}
-Next I want to be sure that create has no impact on the entities in the L domain if it is executed on AEP or SPage objects.\\
+Next I want to be sure that \texttt{create} has no impact on the entities in the L domain if it is executed on AEP or SPage objects.\\
 \begin{figure}[H]
 \pgfuseimage{CreateOutside}
-\caption{Noninterference for Create on object types = AEP $\vee$ SPage}
+\caption{Noninterference for Create on object types = AEP $\vee$ SPage.}
 \end{figure}
-In this case the check if the execution is legal = false in both states. So in both states the step' function leads to the definition of the old state. \\ \\
+In this case the check, if the execution is legal, is false in both states. So in both states the step' function leads to the definition of the old state. \\ \\
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
 * & s $\overset{\text{D1}}{\sim}$ t $\equiv$ \texttt{aquiv$\_$nonin s t D1}	\\ 
@@ -70,5 +71,5 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'. \\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{create} on Asynchronous IPC Endpoint or Shared Page objects is fulfilled.} 

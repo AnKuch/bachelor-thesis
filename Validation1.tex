@@ -1,8 +1,8 @@
 % !TEX root = Bachelorarbeit.tex
 \chapter{Validation of Noninterference}\label{ValNon}
-After the formalisations in Chapter \ref{sec:Formalisation} and \ref{FormNon} I try to establish noninterference for the different system operations.\\ \\
+After the formalisations in Chapter \ref{sec:Formalisation} and \ref{FormNon}, I try to establish noninterference for the different system operations.\\ \\
 First I tried to identify the conditions under which noninterference holds. For this I constructed a small model of the system with one Low-level-Subsystem and one High-level-Subsystem, with entities in them and tested for different right-sets and different operations if the noninterference-property holds. \\
-The following displays this approach for the \texttt{write} operation from a low level domain on a high level domain. \\
+The following displays this approach for the \texttt{write} operation from a low level domain on a high level domain. \\ \\
 I assume: \\ 
 \begin{itemize}
 \item H denotes a High level domain that implements the subsystem 'H'
@@ -14,13 +14,13 @@ I assume: \\
 \pgfuseimage{WriteGraphic1}
 \caption{Noninterfernce of Write 1}
 \end{figure}
-To check noninterference I examine if the criterias for \texttt{aquiv$\_$nonin s' t' L} are fulfilled after the execution of the \texttt{write operation} and the named preconditions. \\ 
-The \texttt{write operation} in the extended model satisfies the noninterference property: 
+To check noninterference I examine if the criterias for \texttt{aquiv$\_$nonin s' t' L} are fulfilled after the execution of the \texttt{write} operation and the named preconditions. \\ 
+The \texttt{write} operation in the extended model satisfies the noninterference property: 
 \begin{itemize}
-\item We have \texttt{value$\_$of s' e = value$\_$of s e $\wedge$ caps$\_$of s' e = caps$\_$of s e} and \texttt{subSys s' e = subSys s e} as the \texttt{write operation} on the entity, \texttt{c$_1 \in e_2$} is pointing on, changes an entity e$_1 \in$ H and does not affect an entity $\in$ L.
-\item We have \texttt{value$\_$of s e = value$\_$of t e $\wedge$ caps$\_$of s e = caps$\_$of t e} and \texttt{subSys s e = subSys t e} as one of the preconditions was s $\overset{\text{L}}{\sim}$ t. I defined the equivalence relation with the function aquiv$\_$nonin s t L, which is equal to the requirement. 
+\item We have \texttt{value$\_$of s' e = value$\_$of s e $\wedge$ caps$\_$of s' e = caps$\_$of s e} and \texttt{subSys s' e = subSys s e} as the \texttt{write} operation on the entity, \texttt{c$_1 \in e_2$} is pointing on, changes an entity \texttt{e$_1 \in$ H} and does not affect an entity $\in$ L.
+\item We have \texttt{value$\_$of s e = value$\_$of t e $\wedge$ caps$\_$of s e = caps$\_$of t e} and \texttt{subSys s e = subSys t e} as one of the preconditions was s $\overset{\text{L}}{\sim}$ t. I defined the equivalence relation with the function \texttt{aquiv$\_$nonin s t L}, which is equal to the requirement. 
 \item The \texttt{step} function first checks whether the execution of the system operation is legal, if not the new state t' equals the old state t. \\
-\texttt{value$\_$of t e = value$\_$of t' e $\wedge$ caps$\_$of t e = caps$\_$of t' e} and \texttt{subSys t e = subSys t' e} as \texttt{write} is not part of c$_1$. So legal(SysWrite e$_2$ c$_1$) s = false what leads to t=t'. \\
+\texttt{value$\_$of t e = value$\_$of t' e $\wedge$ caps$\_$of t e = caps$\_$of t' e} and \texttt{subSys t e = subSys t' e} as \texttt{write} is not part of c$_1$. So \texttt{legal(SysWrite e$_2$ c$_1$) s = false} what leads to \texttt{t=t'}. \\
 \end{itemize} 
 \textbf{In the following cases the proof looks always the same. So I shorten it:} \\ \\
 \textbf{Preconditions:} \\ 
@@ -36,5 +36,5 @@ For all e$\in$L, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' L , what is equivalent to s' $\overset{\text{L}}{\sim}$ t' \\ \\
+Hence aquiv$\_$nonin s' t' L, what is equivalent to s' $\overset{\text{L}}{\sim}$ t'. \\ \\
 \textbf{With s' $\overset{\text{L}}{\sim}$ t' the noninterference property for \texttt{write} is fulfilled.} 

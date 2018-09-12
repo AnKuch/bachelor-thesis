@@ -1,6 +1,6 @@
 % !TEX root = Bachelorarbeit.tex
 \chapter{Formalisation of the Noninterference Model}\label{FormNon}
-For the validation I need a formalisation of the noninterference property. \\ 
+For the validation a formalisation of the noninterference property is required. \\ 
 
 {\relsize{-1}
 \texttt{
@@ -8,15 +8,15 @@ noninterference :: "bool" \textbf{where} \\
 "noninterference $\equiv$ $\forall$ \textit{a l h s t s' t'.}reachable \textit{s} $\wedge$ reachable \textit{t} $\wedge$ \textit{s $\overset{\text{l}}{\sim}$ t} $\wedge$ (\textit{h $\leadsto$ l \\
 $\longrightarrow$ s $\overset{\text{h}}{\sim}$ t}) $\wedge$ \textit{(s,s')}$\in$ Step \textit{a} $\wedge$ \textit{(t,t')}$\in$ Step \textit{a} $\longrightarrow$ \textit{s' $\overset{\text{l}}{\sim}$ t'}}"} \\ \\
 "\texttt{a}" names the system operation, "\texttt{l}" a low level domain, "\texttt{h}" a high level domain, from the states "\texttt{s}" and "\texttt{t}" the system operation is executed and "\texttt{s'}" and "\texttt{t'}" are the resulting states. \\ \\
-The definition says that if the states \texttt{s} and \texttt{t} of a system are eyuivalent for a low level domain they still have to be equivalent for this domain after the execution of a program a, if the following preconditions are fulfilled: 
+The definition says that if the states \texttt{s} and \texttt{t} of a system are equivalent for a low level domain they still have to be equivalent for this domain after the execution of a program \texttt{a}, if the following preconditions are fulfilled: 
 \begin{itemize}
-\item \texttt{s} and \texttt{t} are \texttt{reachable} in the system. That means there exists a command sequence as such that the state s is reachable with as from the initial state s$_0$ and a command sequence bs such that the state t is reachable with bs from s$_0$.
+\item \texttt{s} and \texttt{t} are \texttt{reachable} in the system. That means there exists a command sequence \texttt{as} such that the state \texttt{s} is reachable with \texttt{as} from the initial state \texttt{s$_0$} and a command sequence \texttt{bs} such that the state \texttt{t} is reachable with \texttt{bs} from \texttt{s$_0$}.
 \item If the policy says that information is allowed to flow from \texttt{h} to \texttt{l}, \texttt{s} and \texttt{t} have to be equivalent for the high level domain \texttt{h}.
-\item The program \texttt{a} has to be defined for the states s and t.
+\item The program \texttt{a} has to be defined for the states \texttt{s} and \texttt{t}.
 \end{itemize} 
-First I tried to validate confidentiality for the different system operations as they are defined in the take-grant-model. With this model it is impossible to decide whether a change of value has been recognized by another domain. \\
-In the paper an entity only includes a set of capabilites. For my purpose I need the option to access the content of the entities, because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
-Therefore I extend the original record \texttt{entity} by adding a \textit{value} modelled by a natural number. \\ 
+First I tried to validate noniterference for the different system operations as they are defined in the take-grant-model. With this model it is impossible to decide whether a change of value has been recognized by another domain. \\
+In the paper an entity only includes a set of capabilities. For my purpose I need the option to access the content of the entities, because the rules for noninterference state that no information is allowed to flow from one domain to another. This includes the information stored in the kernel objects. 
+Therefore I extend the original record \texttt{entity} by adding a \texttt{value} modelled by a natural number. \\ 
 
 My entity type: \\ \\
 	{\relsize{-1}
@@ -26,12 +26,12 @@ My entity type: \\ \\
 	entity = & caps :: cap set \\
 			 & eValue :: nat 													
 	\end{tabular}}} \\ 
-I also had to modify the formalisation of the system operations as they should be able to \texttt{read} and \texttt{write} the value of an entity. For that they need a fuction that returns the value of an entity: \\ \\
+I also had to modify the formalisation of the system operations as they should be able to \texttt{read} and \texttt{write} the value of an entity. For that they need a function that returns the value of an entity: \\ \\
 {\relsize{-1}
 \texttt{
 value$\_$of :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ nat" where \\
 "value$\_$of s sref $\equiv$ eValue(heap s sref)"}} \\ \\
-The modified \texttt{read}, \texttt{write}, \texttt{create}, \texttt{grant} and \texttt{remove} operations: \\ \\
+The, with the \texttt{eVal} modified \texttt{read}, \texttt{write}, \texttt{create}, \texttt{grant} and \texttt{remove} operations: \\ \\
 	{\relsize{-1}	
 	\texttt{readOperation :: "entity$\_$id $\Rightarrow$ cap $\Rightarrow$ modify$\_$state" \textbf{where}} \\
 	\texttt{"readOperation e c s $\equiv$ s$\llparenthesis$ heap := (heap s)(e := $\llparenthesis$caps = caps$\_$of s e, eValue = value$\_$of s (entity c)$\rrparenthesis$)$\rrparenthesis$"}}\\ 
@@ -76,11 +76,11 @@ The modified \texttt{step} and \texttt{step'} functions: \\ \\
 	\end{tabular}} \\ \\
 	\texttt{step :: "sysOps $\Rightarrow$ state $\Rightarrow$ state" \textbf{where} \\
 	step cmd s $\equiv$ if legal cmd s then step' cmd s else s}} \\ \\
-To check noninterference I had to define a few functions. \\
+To check noninterference I had to define a few functions: \\
 \begin{enumerate}
 \item The isolation by using subsystems: \\
-For the definition of Subsystems I need the option to check whether  the execution of a sequence of commands can lead to a state where an entity can leak information to the other. To ensure that we controll information flow over the whole system , only the symmetric, refelexive, transitive closure of the \texttt{leak} function is useful. \\
-The  \texttt{leak} fuction \cite{TakeG} indicates that in a state \texttt{s} , an entity \texttt{e} has the ability to give a capability to an entity e$_i$. Capabilities can be handed over with the \texttt{SysGrant} or \texttt{SysCreate} operations. They are legal if the initiating entity has at least \texttt{grant} rights in the capability, pointing to the modified entity. So the \texttt{leak} function checks if the entity \texttt{e} has at least \texttt{grant} authority on entity \texttt{e$_i$}. The symmetric closure is implemented by the fuction \texttt{connected}, written \texttt{s $\vdash$ e $\longleftrightarrow$ e$_i$}. It is true, if there exists a leak from \texttt{e} to \texttt{e$_i$} or from \texttt{e$_i$} to \texttt{e}. \\
+For the definition of subsystems I need the option to check whether  the execution of a sequence of commands can lead to a state where an entity can leak information to the other. To ensure that the information flow over the whole system can be controlled, only the symmetric, reflexive, transitive closure of the \texttt{leak} function is useful. \\
+The  \texttt{leak} fuction \cite{TakeG} indicates that in a state \texttt{s}, an entity \texttt{e} has the ability to give a capability to an entity e$_i$. Capabilities can be handed over with the \texttt{SysGrant} or \texttt{SysCreate} operations. They are legal if the initiating entity has at least \texttt{grant} rights in the capability, pointing to the modified entity. So the \texttt{leak} function checks if the entity \texttt{e} has at least \texttt{grant} authority on entity \texttt{e$_i$}. The symmetric closure is implemented by the function \texttt{connected}, written \texttt{s $\vdash$ e $\longleftrightarrow$ e$_i$}. It is true, if there exists a leak from \texttt{e} to \texttt{e$_i$} or from \texttt{e$_i$} to \texttt{e}. \\
 The tarnsitive closure is indicated with \texttt{s $\vdash$ e $\longleftrightarrow$* e$_i$}. \\
 \texttt{in$\_$conc$\_$connected s e e$_i$} is true  if the tansitive closure of \texttt{connected} for \texttt{e} and \texttt{e$_i$} in state s is true. \\ 
 Now I can define subsystems. First I need a new datatype \texttt{subSusT} to identify subsystems: \\ \\
@@ -96,7 +96,7 @@ subSys :: "state $\Rightarrow$ entity$\_$id $\Rightarrow$ subSysT" where \\
 \texttt{s $\overset{\text{d}}{\sim}$ t} means that for every entity \texttt{e} reachable from an entity in the subsystem \texttt{d} the status of \texttt{e} in \texttt{s} and \texttt{t} has to be the same. \\
 An entity \texttt{e} is in a subsystem \texttt{d}, expanded by an entity \texttt{e$_i$} in state \texttt{s}, if \texttt{e $\in$ subSys s e$_i$}.
 
-I named the function \texttt{aquiv$\_$nonin}. It compares the value and capabilities of \texttt{e} and the entities of the subsystem \texttt{e} is located in for \texttt{s} and \texttt{t}. \\ \\
+I named the function \texttt{aquiv$\_$nonin}. It compares the value and capabilities of \texttt{e} and the entities of the subsystem \texttt{e} is located in, for \texttt{s} and \texttt{t}. \\ \\
 {\relsize{-1}
 \texttt{
 aquiv$\_$nonin :: "state $\Rightarrow$ state $\Rightarrow$ subSysT $\Rightarrow$ bool" \textbf{where} \\

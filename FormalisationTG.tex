@@ -1,7 +1,7 @@
 % !TEX root = Bachelorarbeit.tex
 \chapter{Formalisation of the Take-Grant Model}\label{sec:Formalisation}
 \section{Capabilities}
-In the Take-Grant model for seL4 \cite{TakeG}, where I got the formalisation from, the authors waived the usual differentation between subjects and objects and called all kernel objects \textit{entities}. \\ 
+In the Take-Grant model for the seL4 microkernel \cite{TakeG}, where I got the formalisation from, the authors waived the usual differentiation between subjects and objects and called all kernel objects \texttt{entities}. \\ 
 The entities' memory address identifies them and is modeled as a natural number. \\ \\
 	{\relsize{-1}
 	\textbf{type$\_$synonym} \texttt{ entity$\_$id = nat}} \\ \\
@@ -13,7 +13,7 @@ With each capability a set of rights is associated. There are four access rights
 \item \textit{Read} authorises the reading of information from another entity. 
 \item \textit{Write} authorises the writing of information to another entity. 
 \item \textit{Grant} authorises the passing of a capability to another entity. 
-\item \textit{Create} authorises the creation of new entities, which models the behavior of untyped memory objects. 
+\item \textit{Create} authorises the creation of new entities, which models the behaviour of untyped memory objects. 
 \end{itemize} 
 	
 A capability has two fields:

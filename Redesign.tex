@@ -1,11 +1,11 @@
 % !TEX root = Bachelorarbeit.tex
 \chapter{Redesign of the Take-Grant-Model}\label{Redesign}
-This procedure worked until I came to the remove-operation. There I noticed the issue, that an entity in the given model is allowed to delete a capability and with that also an object in another domain without any restrictions:
+This procedure worked until I reached the \texttt{remove} operation. There I noticed the issue, that an entity in the given model is allowed to delete a capability and thus also an object in another domain without any restrictions:
 \begin{figure}[H]
 \pgfuseimage{RemoveGraphic1}
-\caption{No confidentiality for Remove}
+\caption{No noninterference for remove}
 \end{figure}
-In this example the L domain knows that the \texttt{removeOperation} was performed in the H domain as the capability c$_2$ was deleted. As a consequence the noninterference property is not achieved. \\
+In this example the L domain knows that the \texttt{remove} operation was performed in the H domain as the capability c$_2$ was deleted. As a consequence the noninterference property is not achieved. \\
 To study that problem I decided to classify the entities by their types, corresponding to the kernel specification \cite{Manual}:
 \begin{itemize}
 \item Untyped 
@@ -58,8 +58,8 @@ Interrupt Handler & Acknowledge interrupt & \textit{SysWrite}\\
 \hline
 \end{tabular}
 \caption{Relationship: operation of concrete kernel $\longleftrightarrow$ of protection model \cite{PhDseL4}} \end{table}
-To discern the different object types I need to revise the entity record and the preconditions for the different system operations. \\ \\ 
-New dataype for the object types: \\
+To discern the different object types, I need to revise the \texttt{entity} record and the preconditions for the different system operations. \\ \\ 
+New datatype for the object types: \\
 {\relsize{-1}
 	\textbf{datatype} 
 	\texttt{
@@ -96,15 +96,16 @@ The final version of the \texttt{entity} record: \\
 	| 	&	"legal 	&	(SysRemove e c$_1$ c$_2$) s	&  =	& (isEntityOf s e $\wedge$ c$_1$ $\in$ caps$\_$of s e)  $\wedge$ \\ & & & & eType (entity c$_1$) = CNode $\vee$ VSpace $\vee$ IContr" \\
 	|	&	"legal	&	(SysRevoke e c) s	&	=	&	isEntityOf s e $\wedge$ c $\in$ caps$\_$of s e  $\wedge$ \\ & & & & eType (entity c) = Untyped $\vee$ CNode"
 	\end{tabular}}} \\ \\ \\
-As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves whether a system operation is "legal" in state s. If it is, the system operation is performed. Otherwise the new state \texttt{s'} is defined as \texttt{s' = s}. This means that if a system operation is not legal nothing happens. 
+As mentioned in chapter \ref{sec:System Operations} (System Operations) the step function first proves whether a system operation is "legal" in state s. If it is, the system operation is performed. Otherwise the new state \texttt{s'} is defined as \texttt{s' = s}. This means, if a system operation is not legal, nothing happens. 
 For the validation I took a subsystem (SS1) of one domain (D1) and another subsystem (SS2) of a second domain (D2). \\
 In chapter \ref{sec:KernelObjects} (Kernel Objects) I explained that the only communication between domains goes through \textit{Asynchronous Endpoints} and \textit{Shared Pages}. \\
 Figure \ref{overview} pictures an example of how the objects and methods can be placed in the domains and how the connection to \textit{Asynchronous Endpoints} and \textit{Shared Pages} is implemented if the information is allowed to flow from domain 1 to domain 2: D1$\leadsto$D2 but D2$\not\leadsto$D1. \\ 
-The connections between the objects inside a domain are just examples. Exept from those from each TCB to a VSpace and a CSpace. At boot time the initial resourcemanager gives authorities to the applications. If information is allowed to flow from domain 1 to domain 2, domain 1 gets write rights on the shared SPage and AEP object and domain 2 only read on both of them. 
-\begin{flushleft}
+The connections between the objects inside a domain are just examples. Except from those from each TCB to a VSpace and a CSpace. At boot time the initial resourcemanager gives authorities to the applications. If information is allowed to flow from domain 1 to domain 2, domain 1 gets write rights on the shared SPage and AEP object and domain 2 only read on both of them. 
+\begin{landscape}
 \begin{figure}[H]
+\centering
 \pgfuseimage{OverviewObjects2}
 \caption{Objects and methods in the kernel}
 \label{overview}
 \end{figure}
-\end{flushleft}
+\end{landscape}

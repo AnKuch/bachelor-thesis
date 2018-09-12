@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper, twoside, openright]{scrreprt}
+\documentclass[11pt,a4paper, twoside, open=right]{scrreprt}
 \usepackage{bachelorarbeit}
 \usepackage{subfigure}
 \usepackage{xspace}
@@ -13,6 +13,7 @@
 \usepackage{latexsym}
 \usepackage[justification=centering]{caption}
 \usepackage{setspace}
+\usepackage{pdflscape}
 %\onehalfspacing
 \setstretch {1.2}
 
@@ -31,19 +32,19 @@
   menucolor=darkred,urlcolor=darkcyan]{hyperref}
 
 % Hier die eigenen Daten eintragen
-\global\arbeit{Bachelor-Thesis}
+\global\arbeit{Bachelorarbeit}
 \global\titel{Noninterference in the Take-Grant Model for the seL4 Microkernel}
 \global\bearbeiter{Andrea Kuchar}
-\global\betreuer{Dr Martin Hofmann, PD Dr Ulrich Sch\"opp}
-\global\abgabetermin{07-27-2018}
-\global\ort{Munich}
-\global\fach{Computer Science}
+\global\betreuer{Prof. Dr Martin Hofmann, PD Dr Ulrich Sch\"opp}
+\global\abgabetermin{31. Juli 2018}
+\global\ort{München}
+\global\fach{Informatik}
 
 \geometry{
   left=2.5cm,
   right=3.5cm,
   top=3cm,
-  bottom=2.5cm,
+  bottom=3cm,
 }
 \setcounter{secnumdepth}{5}
 
@@ -52,7 +53,7 @@
 \pgfdeclareimage [ width =14 cm ]{CreateUMO}{Pictures/CreateUMO/CreateUMO}
 \pgfdeclareimage [ width =14 cm ]{CreateOther}{Pictures/CreateUMO/CreateOther}
 \pgfdeclareimage [ width =14 cm ]{CreateOutside}{Pictures/CreateUMO/CreateOutside}
-\pgfdeclareimage [ width =15 cm ]{OverviewObjects2}{Pictures/OverviewObjects/OverviewObjectDomains2}
+\pgfdeclareimage [ width =20 cm ]{OverviewObjects2}{Pictures/OverviewObjects/OverviewObjectDomains2}
 \pgfdeclareimage [ width =14 cm ]{GrantTCB}{Pictures/GrantTCB/GrantTCB}
 \pgfdeclareimage [ width =14 cm ]{GrantOthers}{Pictures/GrantTCB/GrantOthers}
 \pgfdeclareimage [ width =14 cm ]{GrantOutside}{Pictures/GrantTCB/GrantOutside}
@@ -82,14 +83,14 @@
 % Declaration of authorship
 \declaration
 
-\pagenumbering{Roman}
 \selectlanguage{english}
-
+\cleardoublepage 
+\pagenumbering{Roman}
 % Abstract
 \chapter*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
 	
-The thesis investigates the question whether the specification of the seL4 access control system is strong enough to verify Noninterference properties on it. I analyse the Take-Grant-Protection Model \cite{TakeG} and extend it for showing the Noninterference properties \cite{InfFlow} on each of its system operations. 
+The thesis investigates the question whether the specification of the seL4 access control system is strong enough to verify Noninterference properties on it. I analyse the Take-Grant-Protection Model \cite{TakeG} and extend it to show the Noninterference properties \cite{InfFlow} on each of its system operations. 
 As the specifications and proofs of the take-grant model are developed in the theorem proof assistant Isabelle/HOL, I use the same to formalise my datatypes and functions. 
 	
 
@@ -100,7 +101,7 @@ As the specifications and proofs of the take-grant model are developed in the th
 \tableofcontents
 
 	
-\clearpage
+\cleardoublepage
 % Hier beginnt der eigentliche Text
 \input{Introduction}
 	 
@@ -115,30 +116,35 @@ As the specifications and proofs of the take-grant model are developed in the th
 \input{Validation1}
 \input{Redesign}
 \chapter{Validation with the new model}\label{ValNew}
-Now I whant to show that noninterference is valid for all system operations in the new defined model. \\ \\
+Now I want to show that noninterference is valid for all system operations in the new defined model. \\ 
+For the policy I assume that Domain 1 equates a low level domain and Domain 2 a high level domain. So  information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1: \texttt{D1$\leadsto$D2 but D2$\not\leadsto$D1} \\ \\
+\textbf{Definition (Admissible state):} \\ 
+A state is \textit{admissible}, for the given policy, if the following conditions are satisfied:
+\begin{itemize}
+\item The state is reachable from the initial state \texttt{s$_0$} and only includes the, in Chapter \ref{Redesign} defined object types. 
+\item An entity in one domain is not allowed to have a capability to an entity in another domain.
+\item If a capability from an entity \texttt{e} in D1 points to an entity \texttt{e$_1 \notin$ D1, e$_1$} must be an object type = AEP $\vee$ SPage and \texttt{e} should only have \texttt{write} rights on \texttt{e$_1$}, if it is an AEP, and \texttt{read} or \texttt{write} rights, if it is a SPage.
+\item If a capability from an entity \texttt{e} in D2 points to an entity \texttt{e$_1 \notin$ D2, e$_1$} must be an object type = AEP $\vee$ SPage and \texttt{e} should only have \texttt{read} rights on \texttt{e$_1$}. 
+\end{itemize} 
+At boot time, the \textit{Initial Resource Manager (IRM)} brings the system into an \texttt{admissible} state, corresponding to the given policy. \\ \\
 \textbf{Theorem:}\\ 
-\textit{Let \texttt{s} an \texttt{t} be well defined states. That means: 
-\begin{itemize}
-\item They are reachable from the initial state s$_0$.
-\item They only include the in Chapter \ref{Redesign} defined object types.
-\item The capabilities pointing on \texttt{Shared Pages (SPage)} and \texttt{Asynchronous IPC Endpoints (AEP)} correspond to the rights the \texttt{Initial Resource Manager (IRM)} assigned the domains at boottime, corresponding to the given information flow policy. I this case D1$\leadsto$D2.
-\item If information is also allowed to flow from domain 2 to domain 1 then s and t are equivalent for domain 2.
-\end{itemize}
-If \texttt{s} and \texttt{t} are equivalent for domain 1 (s $\overset{\text{D1}}{\sim}$ t) the the states \texttt{s'} and \texttt{t'} are still equivalent for D1 (s' $\overset{\text{D1}}{\sim}$ t'), after the execution of a system operation \texttt{a}.} \\ \\
+Let \texttt{s, t, s'} and \texttt{t'} be \texttt{admissible} states. 
+If the initial state \texttt{s$_0$} is \texttt{admissible}, \textit{noninterference}, as it was defined in Chapter \ref{FormNon}, holds. \\ \\
 \textbf{Lemma:}\\
-\textit{If the information flow policy allows information to flow from D1 to D2 the IRM gives D1 write right on the \texttt{SPage} and \texttt{AEP} and D2 read rights on both of them. If it is allowed to flow from D2 to D1 it is the other way arround. \\
-As the only way to get new rights on an object is through the \texttt{SysCreate} or \texttt{SysGrant} operations and the only connection out of daomains are those to the \texttt{SPages} and \texttt{AEPs}, the maximum of rights adomain can get on these objects is the set of rights it got from the \texttt{IRM} at boot time.} \\ \\
+If the initial state {s$_0$} \texttt{admissible}, and if \texttt{reachable s}, then the state \texttt{s} is \texttt{admissible} too.  \\ \\
+The Lemma is true, because the only way to get new rights on an object is through the \texttt{SysCreate} and \texttt{SysGrant} operations and the only connections out of domains are those to the \texttt{SPages} or \texttt{AEPs}. The maximum of rights a domain can get on these objects is the set of rights it got from the \texttt{IRM} at boot time. \\
 \textbf{Proof:}
-I examine each operation of the protection model and distinguish therefore between the different object types. \\
-For this I assume that Domain 1 equates a low level domain and Domain 2 a high level domain. So  information is allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1:\texttt{D1$\leadsto$D2 but D2$\not\leadsto$D1} \\ \\
-Further I assume:
+I examine each operation of the protection model and distinguish therefore between the different object types. \\ \\
+For this I assume:
 \begin{itemize}
+\item \texttt{D1$\leadsto$D2 but D2$\not\leadsto$D1}
 \item State s is equivalent to state t for Domain 1, what is represented by the function \texttt{aquiv$\_$nonin: s $\overset{\text{D1}}{\sim}$ t $\equiv$ aquiv$\_$nonin s t D1}	
 \item The states s and t are reachable from the initial state s$_0$.
 \item The included object types correspond to those defined in Chapter \ref{Redesign}.
-\item Because of \textit{Lemma 1} I can assume that the connections on \texttt{SPages} and \texttt{AEPs} are well defined as claimed in \textit{Theorem 1}.
+\item Because of \textit{Lemma 1}, I can assume that the connections on \texttt{SPages} and \texttt{AEPs} are well defined as claimed in \textit{Theorem 1}.
 \end{itemize} 
 In this Chapter I show that the criteria for the equivalence relation still holds in Domain 1, between s' and t', after the execution of every type of system operation. 
+\clearpage
 \input{Create}
 \clearpage
 \input{Grant}
@@ -153,6 +159,7 @@ In this Chapter I show that the criteria for the equivalence relation still hold
 \clearpage
 \input{Conclution}
 \clearpage
+
 	\begin{thebibliography}{99}
 
 	\bibitem{TakeG}

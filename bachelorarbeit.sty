@@ -51,10 +51,13 @@
          {\markboth{\thechapter.\ #1}{}}
 \renewcommand{\sectionmark}[1]%
          {\markright{\thesection\ #1}}
-\lhead[\fancyplain{}{\bfseries\thepage}]%
-    {\fancyplain{}{\bfseries\rightmark}}
-\rhead[\fancyplain{}{\bfseries\leftmark}]%
-    {\fancyplain{}{\bfseries\thepage}}
+\lhead[\fancyplain{}{\bfseries\rightmark}]%
+    {\fancyplain{}{}}
+\rhead[\fancyplain{}{}]%
+    {\fancyplain{}{\bfseries\leftmark}}
+\fancyfoot{} % Fußzeilen leeren
+\fancyfoot[LE]{\thepage}
+\fancyfoot[RO]{\thepage}
 \cfoot{}
 
 % subsubsections numerieren und ins Inhaltsverzeichnis aufnehmen
@@ -102,8 +105,8 @@
 
       \vspace{\fill}\normalsize
       \begin{tabular}{ll}
-        Advisor:        & \the\betreuer\\
-        Submission Date:     & \the\abgabetermin
+        Betreuer:        & \the\betreuer\\
+        Abgabetermin:     & \the\abgabetermin
       \end{tabular}
     
     \end{center}
@@ -122,15 +125,13 @@
     \vspace*{\fill}
     \parindent 0cm
     \begin{center}
-      \textbf{Declaration of authorship}
+      \textbf{Eigentständigkeitserklärung:}
 
       \vspace{1cm}
   
       \begin{minipage}{9.8cm}
-        I hereby declare that the thesis submitted is my own unaided work. All direct or indirect
-        sources used are acknowledged as references.
-
-        \vspace{1cm}
+        Hiermit versichere ich, dass ich die vorliegende Bachelorarbeit selbständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel verwendet habe. \\ \\
+  
         \the\ort, \the\abgabetermin
 
         \vspace{1.5cm}

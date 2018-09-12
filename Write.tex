@@ -5,7 +5,7 @@
 I start with the \texttt{write} operation on all executable objects inside a domain. So in the next figure e$_3$ = TCB $\vee$ SEP $\vee$ IHandl.
 \begin{figure}[H]
 \pgfuseimage{WriteTCB}
-\caption{Noninterference for Write on a TCB, Sychronous IPC Endpoint or Interrupt Handler object}
+\caption{Noninterference for Write on a TCB, Sychronous IPC Endpoint or Interrupt Handler object.}
 \end{figure}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
@@ -20,14 +20,14 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t' \\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'. \\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on TCB, SEP or IHandl objects is fulfilled.} 
 \subsection{Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}\label{WriteOthers}
-Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executeable with the \texttt{write} operation. Those are CNodes, VSpaces, UMOs and Interrupt Controllers. \\
+Like in \ref{sec:Create} Create and \ref{sec:Grant} Grant there are other object types inside a domain, which are not executable with the \texttt{write} operation. Those are CNodes, VSpaces, UMOs and Interrupt Controllers. \\
 \texttt{Write} operation on these objects: \\
 \begin{figure}[H]
 \pgfuseimage{WriteOthers}
-\caption{Noninterference for Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP}
+\caption{Noninterference for Write on objects $\neq$ TCB, SEP, IHandl, SPage and AEP.}
 \end{figure}
 \textbf{Preconditions:} \\ \\
 \begin{tabular}{ll}
@@ -42,14 +42,14 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'\\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'.\\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on objects $\neq$ TCB, SEP, IHandl, SPage and AEP is fulfilled.} 
 \subsection{Write on AEP or SPage objects from Domain 2}\label{WriteOut}
-In Chapter \ref{sec:ValNew} I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Asychronous Endpoints and Shared Pages are restricted to \texttt{read}. 
-If the write operation is called from Domain 2 it looks like it is illustrated in Figure \ref{fig:WriteOut1}. The policy prescribes that information is only allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. As a consequence \texttt{write} can not be part of c$_1$. 
+At the beginning of this chapter I defined the precondition $\Rightarrow$ D1$\leadsto$D2 but D2$\not\leadsto$D1. That means the rights from Domain 2 on Asynchronous Endpoints and Shared Pages are restricted to \texttt{read}. 
+If the \texttt{write} operation is called from Domain 2, it looks like illustrated in Figure \ref{fig:WriteOut1}. The policy prescribes that information is only allowed to flow from Domain 1 to Domain 2 but not from Domain 2 to Domain 1. As a consequence \texttt{write} can not be part of c$_1$. 
 \begin{figure}[H]
 \pgfuseimage{WriteOutside}
-\caption{Noninterference for Write on an object = AEP executed from an entity $\in$ Domain 2}
+\caption{Noninterference for Write on an object = AEP executed from an entity $\in$ Domain 2.}
 \label{fig:WriteOut1}
 \end{figure}
 \textbf{Preconditions:} \\ \\
@@ -65,14 +65,14 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'\\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'.\\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 2 is fulfilled.}  
 \clearpage
 \subsection{Write on an AEP or SPage object from Domain 1}\label{WriteOut2}
-Write on AEP objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} shows that this has no influence on the noninterference property.
+\texttt{Write} on AEP objects can be executed from Domain 1. Figure \ref{fig:WriteOut2} shows that this has no influence on the noninterference property.
 \begin{figure}[H]
 \pgfuseimage{WriteOutside2}
-\caption{Noninterference for Write on an object = AEP executed from an entity $\in$ D1}
+\caption{Noninterference for Write on an object = AEP executed from an entity $\in$ D1.}
 \label{fig:WriteOut2}
 \end{figure}
 \textbf{Preconditions:} \\ \\
@@ -89,5 +89,5 @@ For all e $\in$ D1, we have: \\
 $\wedge$ & caps$\_$of s' e $\overset{\text{**}}{=}$ caps$\_$of s e $\overset{\text{*}}{=}$ caps$\_$of t e $\overset{\text{***}}{=}$ caps$\_$of t' e \\
 $\wedge$ & subSys s' e $\overset{\text{**}}{=}$ subSys s e $\overset{\text{*}}{=}$ subSys t e $\overset{\text{***}}{=}$ subSys t' e)
 \end{tabular} \\
-Hence aquiv$\_$nonin s' t' D1 , what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'\\ \\ 
+Hence aquiv$\_$nonin s' t' D1, what is equivalent to s' $\overset{\text{D1}}{\sim}$ t'.\\ \\ 
 \textbf{With s' $\overset{\text{D1}}{\sim}$ t' the noninterference property for \texttt{write} on AEP or SPage objects from Domain 1 is fulfilled.} 
