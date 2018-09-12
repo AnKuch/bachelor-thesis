@@ -1,5 +1,9 @@
-\beamer@sectionintoc {1}{Zusammenfassung}{3}{0}{1}
-\beamer@sectionintoc {2}{Motivation}{4}{0}{2}
-\beamer@sectionintoc {3}{seL4}{6}{0}{3}
-\beamer@subsectionintoc {3}{1}{Kernel Objekte}{17}{0}{3}
-\beamer@sectionintoc {4}{Second Section}{21}{0}{4}
+\beamer@endinputifotherversion {3.24pt}
+\select@language {german}
+\beamer@sectionintoc {1}{Motivation}{3}{0}{1}
+\beamer@sectionintoc {2}{seL4}{5}{0}{2}
+\beamer@subsectionintoc {2}{1}{Kernel Objekte}{15}{0}{2}
+\beamer@subsectionintoc {2}{2}{Memory Allocation Model}{23}{0}{2}
+\beamer@sectionintoc {3}{Take-Grant Model}{24}{0}{3}
+\beamer@sectionintoc {4}{Noninterference}{29}{0}{4}
+\beamer@sectionintoc {5}{Formalisierung des Take-Grant Models}{30}{0}{5}
